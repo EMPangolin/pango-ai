@@ -123,7 +123,8 @@ const DetailTab = ({ position }: DetailTabProps) => {
     invert: false, // we don't want to invert the price, just the tokens
   });
 
-  const inverted = position?.token0 ? base?.equals(position?.token0) : undefined;
+  //const inverted = position?.token0 ? base?.equals(position?.token0) : undefined;
+  const inverted = false;
   const currentPrice = pool && formatPrice(inverted ? pool?.token1Price : pool?.token0Price, NumberType.TokenTx);
 
   const minPrice = formatTickPrice({
