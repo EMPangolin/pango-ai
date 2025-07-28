@@ -219,6 +219,8 @@ export default function RemoveLiquidity() {
       [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0],
     };
 
+    console.log(currencyAmountA.raw.toString())
+    console.log(currencyAmountB.raw.toString())
     console.log(amountsMin.CURRENCY_A.toString())
     console.log(amountsMin.CURRENCY_B.toString())
 
