@@ -3,8 +3,6 @@ import { useEffect } from 'react';
 import { useAddPopup, useBlockNumber } from '../applicationv3/hooks';
 import { AddTransactionDetails, TransactionDetails, useTransactionState } from './atom';
 import { useChainId, useLibrary } from '@/provider/pangolin';
-;
-import { useActiveWeb3React } from '@/hooks';
 
 export function shouldCheck(
   lastBlockNumber: number,

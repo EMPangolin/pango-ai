@@ -337,7 +337,7 @@ export default function WalletModal({ ENSName }: { ENSName?: string }) {
           </div>
         ) : (
           <div className="px-6 py-4 bg-slate-200">
-            <div className="inline-flex items-center space-x-2">Connect Wallet</div>
+            <div className="inline-flex items-center space-x-2">Connect to a wallet</div>
           </div>
         )}
         <div className="p-6 flex flex-col space-y-6">

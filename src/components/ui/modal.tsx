@@ -19,21 +19,9 @@ interface ModalProps {
   children?: ReactNode;
   footer?: ReactNode;
   size?: 'sm' | 'md' | 'lg';
-  maxWidth?: string;
-  maxHeight?: string;
 }
 
-export const Modal = ({
-  title,
-  description,
-  isOpen,
-  onClose,
-  children,
-  footer,
-  size = 'md',
-  maxWidth,
-  maxHeight,
-}: ModalProps) => {
+export const Modal = ({ title, description, isOpen, onClose, children, footer, size = 'md' }: ModalProps) => {
   const onChange = (open: boolean) => {
     if (!open) {
       onClose();
@@ -49,10 +37,6 @@ export const Modal = ({
           size === 'md' && 'max-w-md',
           size === 'lg' && 'max-w-6xl',
         )}
-        style={{
-          ...(maxWidth && { maxWidth }),
-          ...(maxHeight && { maxHeight }),
-        }}
       >
         <DialogHeader>
           <DialogTitle className="p-0">
@@ -60,7 +44,7 @@ export const Modal = ({
           </DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        {title ? <Separator /> : null}
+        <Separator />
         <>{children}</>
         {footer && <DialogFooter>{footer}</DialogFooter>}
       </DialogContent>

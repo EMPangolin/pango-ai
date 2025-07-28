@@ -313,7 +313,7 @@ export default function AddLiquidity() {
     <>
       <div className="bg-background p-8 rounded-lg lg:w-full lg:max-w-[500px] m-auto flex flex-col gap-4">
         <AddRemoveTabs creating={isCreate} adding={true} />
-        <Wrapper className="tt">
+        <Wrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={handleDismissConfirmation}

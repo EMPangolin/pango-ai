@@ -5,16 +5,13 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Loader } from '@/components/ui/loader';
 import { Modal } from '@/components/ui/modal';
-import { useActiveWeb3React } from '@/hooks';
 import { useChainId } from '@/provider';
-//import { useChainId } from '@/provider';
 import { Bound, Field } from '@/state/mint/atom';
 import { formatTickPrice } from '@/utils/formatTickPrice';
 import { unwrappedTokenV3 } from '@/utils/wrappedCurrency';
 import { Currency, Position } from '@pangolindex/sdk';
 import { AlertTriangle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
-;
 
 interface ConfirmDrawerProps {
   isOpen: boolean;

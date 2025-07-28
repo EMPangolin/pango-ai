@@ -6,7 +6,6 @@ import { AutoColumn } from '../Column';
 import { RowBetween } from '../Row';
 import { getEtherscanLink } from '../../utils';
 import { ChainId } from '@pangolindex/sdk';
-;
 
 const InputPanel = styled.div`
   position: relative;
@@ -65,7 +64,7 @@ export default function AddressInputPanel({
   // triggers whenever the typed value changes
   onChange: (value: string) => void;
 }) {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
 
   const { address, loading, name } = useENS(value);
 

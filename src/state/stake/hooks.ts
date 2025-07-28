@@ -65,13 +65,11 @@ import IPangolinPair from './IPangolinPair.sol/IPangolinPair.json';
 import REWARDERVIAMULTIPLIER_ABI from './rewarder-via-multiplier.json';
 
 import { useAccount } from 'wagmi';
-import { useAllTokens } from '../../hooks/useAllTokens';
+import { useAllTokens, useChainId } from '../../hooks/useAllTokens';
 import { useMiniChefContract, useMiniChefSPContract, useMiniChefSPV2Contract } from '../../hooks/useContract';
 import { isAddress } from '../../utils';
 import useUSDCPrice from '../../utils/useUSDCPrice';
 import { Call, ListenerOptions, parseCallKey, toCallKey, useMulticallAtom } from '../multicall/atom';
-import { useChainId } from '@/provider';
-;
 
 export const STAKING_GENESIS = 1600387200;
 
@@ -2897,7 +2895,7 @@ export const useMinichefStakingInfos = (version = 2, pairToFilterBy?: Pair | nul
 };
 
 export function useTotalBagEarned(): TokenAmount | undefined {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
   const bag = chainId ? CNR[chainId] : undefined;
   const stakingInfos = useStakingInfo(StakingType.BOTH);
 
@@ -2933,7 +2931,7 @@ export function useDerivedStakeInfo(
   let error: string | undefined;
 
   if (!account) {
-    error = 'Connect Wallet';
+    error = 'Connect to a wallet';
   }
 
   if (!parsedAmount) {
@@ -2964,7 +2962,7 @@ export function useDerivedUnstakeInfo(
   let error: string | undefined;
 
   if (!account) {
-    error = 'Connect Wallet';
+    error = 'Connect to a wallet';
   }
 
   if (!parsedAmount) {

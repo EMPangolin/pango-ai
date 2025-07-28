@@ -41,7 +41,6 @@ export default function PoolCardStakeV2({ stakingInfo }: { stakingInfo: StakingI
   );
   const derivedW = useDerivedStakeInfo(typedValueW, stakingInfo.stakedAmount.token, stakingInfo.stakedAmount);
   const [approval, approveCallback] = useApproveCallback(
-    chainId ?? ChainId.AVALANCHE,
     new TokenAmount(
       stakingInfo.stakedAmount.token,
       parsedAmount?.raw.toString() ?? '115792089237316195423570985008687907853269984665640564039457584007913129639935',
@@ -291,130 +290,122 @@ export default function PoolCardStakeV2({ stakingInfo }: { stakingInfo: StakingI
   }
 
   return (
-    <div>
-      <div className="bg-background rounded-md p-6 space-x-4 flex flex-col md:flex-row gap-6">
-        <div className="lg:min-w-60 flex gap-4 items-center">
-          <CurrencyLogo currency={currency0} className="size-12" />
-          <div className="shrink-0 md:px-6">
-            {currency0?.symbol}{' '}
-            {stakingInfo.stakingRewardAddress === '0xA1fB7219f2De81da27183D82587873A5b1be5979' && '(Pangolin LP)'}
+    <Accordion type="single" collapsible>
+      <AccordionItem value="item-1">
+        <AccordionTrigger className="bg-background rounded-md p-6 space-x-4 flex flex-col md:flex-row gap-6">
+          <div className="lg:min-w-60 flex gap-4 items-center">
+            <CurrencyLogo currency={currency0} size={'32px'} />
+            <div className="shrink-0 md:px-6">
+              {currency0?.symbol}{' '}
+              {stakingInfo.stakingRewardAddress === '0xA1fB7219f2De81da27183D82587873A5b1be5979' && '(Pangolin LP)'}
+            </div>
           </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 w-full">
-          <div className="flex flex-col items-center">
-            <span className="text-slate-400 text-sm lg:text-md">Your Stake</span>
-            {isStaking ? (
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 w-full">
+            <div className="flex flex-col items-center">
+              <span className="text-slate-400 text-sm lg:text-md">Your Stake</span>
+              {isStaking ? (
+                <span>
+                  {`${stakingInfo.stakedAmount.toSignificant(4, { groupSeparator: ',' })}`}{' '}
+                  {stakingInfo.stakingRewardAddress === '0x967fEA7074BA54E8DaD60A9512b1ECDc89D98453' ? 'WAVAX' : 'PNG'}
+                </span>
+              ) : (
+                <span>
+                  0.00{' '}
+                  {stakingInfo.stakingRewardAddress === '0x967fEA7074BA54E8DaD60A9512b1ECDc89D98453' ? 'WAVAX' : 'PNG'}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-slate-400 text-sm lg:text-md">APR</span>
+              <span>{`${apy.toFixed(0) ?? '-'}%`}</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-slate-400 text-sm lg:text-md">Total Staked</span>
               <span>
-                {`${stakingInfo.stakedAmount.toSignificant(4, { groupSeparator: ',' })}`}{' '}
-                {stakingInfo.stakingRewardAddress === '0x967fEA7074BA54E8DaD60A9512b1ECDc89D98453' ? 'WAVAX' : 'PNG'}
+                {`$${
+                  stakingInfo.totalStakedInUsd
+                    .divide(JSBI.BigInt(1000000000000))
+                    .toSignificant(4, { groupSeparator: ',' }) ?? '-'
+                }`}
               </span>
-            ) : (
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-slate-400 text-sm lg:text-md">Rewards</span>
               <span>
-                0.00{' '}
-                {stakingInfo.stakingRewardAddress === '0x967fEA7074BA54E8DaD60A9512b1ECDc89D98453' ? 'WAVAX' : 'PNG'}
+                {stakingInfo.rewardTokensArray.map((token: string) => (
+                  <img className="size-6 rounded-full" key={token} src={`${rewardsBaseUrl}${token}/logo_48.png`} />
+                ))}
               </span>
-            )}
+            </div>
           </div>
-          <div className="flex flex-col items-center">
-            <span className="text-slate-400 text-sm lg:text-md">APR</span>
-            <span>{`${apy.toFixed(0) ?? '-'}%`}</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-slate-400 text-sm lg:text-md">Total Staked</span>
-            <span>
-              {`$${
-                stakingInfo.totalStakedInUsd
-                  .divide(JSBI.BigInt(1000000000000))
-                  .toSignificant(4, { groupSeparator: ',' }) ?? '-'
-              }`}
-            </span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-slate-400 text-sm lg:text-md">Rewards</span>
-            <span>
-              {stakingInfo.rewardTokensArray.map((token: string) => (
-                <img className="size-6 rounded-full" key={token} src={`${rewardsBaseUrl}${token}/logo_48.png`} />
-              ))}
-            </span>
-          </div>
-        </div>
-      </div>
-      <div className="bg-background rounded-md mt-1 p-6">
-        <Tabs defaultValue="deposit">
-          <TabsList>
-            <TabsTrigger value="deposit">Deposit</TabsTrigger>
-            <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
-          </TabsList>
-          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 h-full my-4">
-            <div className="flex flex-col w-full text-sm bg-backgroundSoft p-4 rounded-md gap-6 h-full min-h-36">
-              <h4 className="text-muted-foreground font-medium">Wallet Balance</h4>
-              <div className="flex flex-col flex-1 justify-center">
-                <h2 className="!p-0">
+        </AccordionTrigger>
+        <AccordionContent className="bg-background rounded-md mt-1 p-6">
+          <Tabs defaultValue="deposit">
+            <TabsList>
+              <TabsTrigger value="deposit">Deposit</TabsTrigger>
+              <TabsTrigger value="withdraw">Withdraw</TabsTrigger>
+            </TabsList>
+            <div className="grid md:grid-cols-2 gap-4 my-4">
+              <div>
+                <div className="flex w-full text-sm">
+                  Wallet Balance: 
                   {!userLiquidityUnstaked ? (
                     0
                   ) : userLiquidityUnstaked.equalTo('0') ? (
                     0
                   ) : (
-                    <span>{userLiquidityUnstaked.toSignificant(6)}</span>
+                    <p>{userLiquidityUnstaked.toSignificant(6)}</p>
                   )}
-                </h2>
-                <span>{currency0?.symbol}</span>
-              </div>
-            </div>
-            <div className="flex flex-col w-full text-sm bg-backgroundSoft p-4 rounded-md gap-6 h-full min-h-36">
-              <h4 className="text-muted-foreground font-medium">Your Stake</h4>
-              <div className="flex flex-col flex-1 justify-center">
-                <h2 className="!p-0">{stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}</h2>
-                <span>{currency0?.symbol}</span>
-              </div>
-            </div>
-            <div className="flex flex-col w-full text-sm bg-backgroundSoft p-4 rounded-md gap-6 h-full min-h-36">
-              <h4 className="text-muted-foreground font-medium">Your Rate</h4>
-              <div className="flex flex-col flex-1 justify-center">
-                <h2 className="!p-0">
+                  <span style={{ color: '#b3983c', marginLeft: '5px' }}> {currency0?.symbol}</span>
+                </div>
+                <div className="flex w-full text-sm">
+                  Your Stake: <p>{stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}</p>
+                  <span style={{ color: '#b3983c', marginLeft: '5px' }}> {currency0?.symbol}</span>
+                </div>
+                <div className="flex w-full text-sm">
+                  Your Rate: 
                   {isStaking ? (
-                    stakingInfo.rewardRate?.multiply(`${60 * 60 * 24 * 7}`)?.toSignificant(4, { groupSeparator: ',' })
+                    <p>
+                      {`${stakingInfo.rewardRate
+                        ?.multiply(`${60 * 60 * 24 * 7}`)
+                        ?.toSignificant(4, { groupSeparator: ',' })} PNG / week`}
+                    </p>
                   ) : (
-                    <span>0</span>
+                    <p>0</p>
                   )}
-                </h2>
-                <span>PNG / week</span>
+                </div>
+              </div>
+              <div className="flex flex-col space-y-2 lg:flex-row lg:space-x-4 lg:space-y-0 place-content-end">
+                <div className="flex space-x-4 col-span-2 lg:col-span-1">
+                  {stakingInfo.rewardTokensArray.map((token: string) => (
+                    <div className="flex flex-col items-center space-y-1 shrink-0" key={token}>
+                      <img className="size-7 shrink-0" src={`${rewardsBaseUrl}${token}/logo_48.png`} alt="" />
+                      <span className="text-sm">{stakingInfo.earnedAmount.toSignificant(2)}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex space-x-2">
+                  <Button onClick={onHarvest} className="flex items-center space-x-2">
+                    <span>Harvest</span>
+                    <img src={CoinIcon} className="size-4" alt="" />
+                  </Button>
+                  <Button variant="outline" asChild>
+                    <a
+                      id={`buy-nav-link`}
+                      href={
+                        stakingInfo.stakedAmount.token.symbol === 'PNG'
+                          ? '/swap?outputCurrency=0x60781C2586D68229fde47564546784ab3fACA982'
+                          : '/swap?outputCurrency=0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7'
+                      }
+                    >
+                      Buy ${currency0?.symbol}
+                    </a>
+                  </Button>
+                </div>
               </div>
             </div>
-            <div className="flex flex-col w-full text-sm bg-backgroundSoft p-4 rounded-md gap-6 h-full min-h-36">
-              <div className="flex flex-col flex-1 justify-center">
-                {stakingInfo.rewardTokensArray.map((token: string) => (
-                  <div className="flex flex-col items-center space-y-2 shrink-0" key={token}>
-                    <img className="size-12 shrink-0" src={`${rewardsBaseUrl}${token}/logo_48.png`} alt="" />
-                    <h4 className="font-medium">{stakingInfo.earnedAmount.toSignificant(2)}</h4>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="flex flex-col h-full">
-              <Button onClick={onHarvest} className="flex items-center flex-col space-y-2 h-full">
-                <img src={CoinIcon} className="size-12" alt="" />
-                <h4 className="font-medium">Harvest</h4>
-              </Button>
-            </div>
-            <div className="flex flex-col h-full">
-              <Button variant="outline" asChild className="h-full text-xl font-medium">
-                <a
-                  id={`buy-nav-link`}
-                  href={
-                    stakingInfo.stakedAmount.token.symbol === 'PNG'
-                      ? '/swap?outputCurrency=0x60781C2586D68229fde47564546784ab3fACA982'
-                      : '/swap?outputCurrency=0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7'
-                  }
-                >
-                  Buy ${currency0?.symbol}
-                </a>
-              </Button>
-            </div>
-          </div>
-          <TabsContent value="deposit">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="w-full">
+            <TabsContent value="deposit">
+              <div className="flex flex-col space-y-2">
                 <CurrencyInputPanelV2
                   value={typedValue}
                   onUserInput={onUserInput}
@@ -426,34 +417,32 @@ export default function PoolCardStakeV2({ stakingInfo }: { stakingInfo: StakingI
                   disableCurrencySelect={true}
                   id="FarmV2-liquidity-token"
                 />
+                <div className="flex items-center space-x-4">
+                  <Button
+                    onClick={onAttemptToApprove}
+                    // confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                    disabled={approval !== ApprovalState.NOT_APPROVED || !parsedAmount || signatureData !== null}
+                  >
+                    {approval === ApprovalState.PENDING ? (
+                      <Dots>Approving</Dots>
+                    ) : approval === ApprovalState.APPROVED ? (
+                      'Approved'
+                    ) : (
+                      'Approve'
+                    )}
+                  </Button>
+                  <Button
+                    disabled={!!error || (signatureData === null && approval !== ApprovalState.APPROVED)}
+                    variant={!!error && !!parsedAmount ? 'destructive' : 'default'}
+                    onClick={onStake}
+                  >
+                    {error ?? 'Deposit'}
+                  </Button>
+                </div>
               </div>
-              <div className="flex items-center gap-4">
-                <Button
-                  onClick={onAttemptToApprove}
-                  // confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-                  disabled={approval !== ApprovalState.NOT_APPROVED || !parsedAmount || signatureData !== null}
-                >
-                  {approval === ApprovalState.PENDING ? (
-                    <Dots>Approving</Dots>
-                  ) : approval === ApprovalState.APPROVED ? (
-                    'Approved'
-                  ) : (
-                    'Approve'
-                  )}
-                </Button>
-                <Button
-                  disabled={!!error || (signatureData === null && approval !== ApprovalState.APPROVED)}
-                  variant={!!error && !!parsedAmount ? 'destructive' : 'default'}
-                  onClick={onStake}
-                >
-                  {error ?? 'Deposit'}
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
-          <TabsContent value="withdraw">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="w-full">
+            </TabsContent>
+            <TabsContent value="withdraw">
+              <div className="flex flex-col space-y-2">
                 <CurrencyInputPanelV2
                   value={typedValueW}
                   onUserInput={onUserInputW}
@@ -465,20 +454,20 @@ export default function PoolCardStakeV2({ stakingInfo }: { stakingInfo: StakingI
                   disableCurrencySelect={true}
                   id="FarmV2W-liquidity-token"
                 />
+                <div>
+                  <Button
+                    disabled={!!derivedW.error}
+                    variant={!!derivedW.error && !!derivedW.parsedAmount ? 'destructive' : 'default'}
+                    onClick={onWithdraw}
+                  >
+                    {derivedW.error ?? 'Withdraw PNG'}
+                  </Button>
+                </div>
               </div>
-              <div>
-                <Button
-                  disabled={!!derivedW.error}
-                  variant={!!derivedW.error && !!derivedW.parsedAmount ? 'destructive' : 'default'}
-                  onClick={onWithdraw}
-                >
-                  {derivedW.error ?? 'Withdraw PNG'}
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
+            </TabsContent>
+          </Tabs>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }

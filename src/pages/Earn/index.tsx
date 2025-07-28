@@ -11,8 +11,6 @@ import PoolCardV2 from '../../components/earn/PoolCardV2';
 import { useActiveWeb3React } from '../../hooks';
 import useDebounce from '../../hooks/useDebounce';
 import { STAKING_REWARDS_INFO, useMinichefStakingInfos } from '../../state/stake/hooks';
-import { useChainId } from '@/provider';
-;
 
 enum SortingType {
   totalStakedInUsd = 'totalStakedInUsd',
@@ -20,7 +18,7 @@ enum SortingType {
 }
 
 export default function Earn() {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
   const stakingInfos = useMinichefStakingInfos();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<any>({ field: '', desc: true });

@@ -45,6 +45,6 @@ export const ConnectWalletButton = () => {
       </Button>
     );
   } else {
-    return <Button onClick={onOpenDisclaimerModal}>Connect Wallet</Button>;
+    return <Button onClick={onOpenDisclaimerModal}>Connect to a wallet</Button>;
   }
 };

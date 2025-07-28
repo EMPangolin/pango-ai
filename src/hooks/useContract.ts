@@ -28,16 +28,14 @@ import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { MINICHEF_ADDRESS, ZERO_ADDRESS } from '../constants'
 import { getContract } from '../utils'
-import { useActiveWeb3React } from './index'
+import { useActiveWeb3React, useChainId } from './index'
 import { AIRDROP_ADDRESS } from '../constants'
 import { AUTOCOMPOUND_ADDRESS } from '../constants'
 import { BURNCNR_ADDRESS } from '../constants'
 import { PREDICTION_ADDRESS } from '../constants'
 import { MULTICALL_ABI_V3, MULTICALL_NETWORKS_V3 } from '@/constants/multicallv3'
-;
 
 import NonFungiblePositionManager from 'src/constants/abis/nonfungiblePositionManager.json';
-import { useChainId } from '@/provider'
 
 // returns null on errors
 export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {

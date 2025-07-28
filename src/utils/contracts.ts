@@ -4,7 +4,6 @@ import { CHAINS } from '@pangolindex/sdk';
 import NonFungiblePositionManager from 'src/constants/abis/nonfungiblePositionManager.json';
 import PangolinV3Pool from 'src/constants/abis/PangolinV3Pool.json';
 import TickLensABI from 'src/constants/abis/tickLens.json';
-import { useActiveWeb3React } from '@/hooks';
 import { useChainId } from '@/provider';
 
 export function useConcLiqNFTPositionManagerContract(withSignerIfPossible?: boolean): Contract | null {

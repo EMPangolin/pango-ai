@@ -1,6 +1,6 @@
 import { Icons } from '@/components/icons';
 import { useTailwindTheme } from '@/hooks/useTailwindTheme';
-//import { useChainId } from '@/provider';
+import { useChainId } from '@/provider';
 import { wrappedCurrency } from '@/state/stake/hooks';
 import { format } from 'd3';
 import { saturate } from 'polished';
@@ -14,9 +14,6 @@ import { Text } from '../TextV3';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { Chart } from './Chart';
 import { Bound, FeeAmount, LiquidityChartRangeInputProps, ZOOM_LEVELS } from './types';
-;
-import { useActiveWeb3React } from '@/hooks';
-import { useChainId } from '@/provider';
 
 function InfoBox({ message, icon }: { message?: ReactNode; icon: ReactNode }) {
   return (

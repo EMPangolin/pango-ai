@@ -3,10 +3,9 @@ import { DoubleCurrencyLogoV2 } from '@/components/DoubleLogoNew';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { usePoolDatasN } from '@/data/pools/poolDataN';
-import { useActiveWeb3React, useUnderlyingTokensHook } from '@/hooks';
+import { useUnderlyingTokensHook } from '@/hooks';
 import { useUSDCPriceHook } from '@/hooks/useUSDCPrice';
 import { useChainId } from '@/provider';
-//import { useChainId } from '@/provider';
 import { Field } from '@/state/mint/atom';
 import { useMintActionHandlers } from '@/state/mint/hooksElixir';
 import { unwrappedTokenV3 } from '@/utils/wrappedCurrency';
@@ -14,7 +13,6 @@ import { Currency, CurrencyAmount, ElixirPool, Fraction } from '@pangolindex/sdk
 import { ColumnDef } from '@tanstack/react-table';
 import numeral from 'numeral';
 import { useCallback, useMemo, useState } from 'react';
-;
 
 export const columns: ColumnDef<ElixirPool>[] = [
   {

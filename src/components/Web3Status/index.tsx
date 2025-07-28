@@ -115,7 +115,7 @@ function Web3StatusInner() {
   } else {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={onOpenDisclaimerModal} faded={!account}>
-        <Text style={{ fontWeight: 700 }}>{t('Connect Wallet')}</Text>
+        <Text style={{ fontWeight: 700 }}>{t('Connect to a wallet')}</Text>
       </Web3StatusConnect>
     );
   }

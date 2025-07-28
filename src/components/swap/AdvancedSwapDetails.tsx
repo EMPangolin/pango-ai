@@ -11,12 +11,10 @@ import { RowBetween, RowFixed } from '../Row';
 import { Separator } from '@/components/ui/separator';
 import FormattedPriceImpact from './FormattedPriceImpact';
 import SwapRoute from './SwapRoute';
-import { useChainId } from '@/provider';
-;
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade | ElixirTrade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext);
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade as Trade);
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT;
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage);

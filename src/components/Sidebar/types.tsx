@@ -6,7 +6,6 @@ export type SidebarProps = {
 };
 
 export enum MenuType {
-  allpools = 'allpools',
   v3pools = 'v3pools',
   v2pools = 'v2pools',
   allPositions = 'allPositions',

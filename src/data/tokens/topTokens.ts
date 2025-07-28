@@ -10,6 +10,7 @@ export const TOP_TOKENS = gql`
     }
   }
 `
+
 interface TopTokensResponse {
   tokens: {
     id: string

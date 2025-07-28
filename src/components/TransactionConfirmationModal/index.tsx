@@ -1,17 +1,14 @@
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
+import { useActiveWeb3React } from '@/hooks';
 import { getEtherscanLink } from '@/utils';
 import { ChainId } from '@pangolindex/sdk';
 import { AlertTriangle, ArrowUpCircle } from 'react-feather';
 import { Text } from 'rebass';
 import styled from 'styled-components';
-;
-import { CloseIcon } from '../CloseIcon';
 import { AutoColumn } from '../Column';
 import Modal from '../Modal';
 import { RowBetween } from '../Row';
-import { useActiveWeb3React } from '@/hooks';
-import { useChainId } from '@/provider';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -28,6 +25,10 @@ const BottomSection = styled(Section)`
 function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
   return (
     <div className="w-full flex flex-col items-center p-6 gap-6">
+      <RowBetween>
+        <div />
+        <Icons.x onClick={onDismiss} />
+      </RowBetween>
       <Icons.loader className="animate-spin size-32 text-primary" />
       <div className="flex flex-col items-center gap-3">
         <h4>Waiting For Confirmation</h4>
@@ -49,6 +50,10 @@ function TransactionSubmittedContent({
 }) {
   return (
     <div className="w-full flex flex-col items-center p-6 gap-6">
+      <RowBetween>
+        <div />
+        <Icons.x onClick={onDismiss} />
+      </RowBetween>
       <ArrowUpCircle className="size-32 text-primary" />
       <div className="flex flex-col items-center gap-3 w-full">
         <h4>Transaction Submitted</h4>
@@ -127,7 +132,7 @@ export default function TransactionConfirmationModal({
   pendingText,
   content,
 }: ConfirmationModalProps) {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
 
   if (!chainId) return null;
 

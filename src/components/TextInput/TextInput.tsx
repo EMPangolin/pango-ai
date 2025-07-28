@@ -24,7 +24,7 @@ const TextInput: FC<TextInputProps> = props => {
 
   return (
     <div className={cn('w-full', label && 'flex flex-col gap-2')}>
-      <div className={cn('flex items-center', label ? 'justify-between' : 'justify-end')}>
+      <div className={cn('flex', label ? 'justify-between' : 'justify-end')}>
         {label && <small>{label}</small>}
         {addonLabel && addonLabel}
       </div>

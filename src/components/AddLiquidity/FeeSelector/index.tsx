@@ -1,10 +1,10 @@
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useActiveWeb3React, usePoolsHook } from '@/hooks';
+import { usePoolsHook } from '@/hooks';
 import { PoolState } from '@/hooks/types';
 import usePrevious from '@/hooks/usePrevious';
-//import { useChainId } from '@/provider';
+import { useChainId } from '@/provider';
 import { cn } from '@/utils';
 import { FeeAmount } from '@pangolindex/sdk';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
@@ -13,8 +13,6 @@ import FeeOption from './FeeOption';
 import { FeeTierPercentageBadge } from './FeeTierPercentageBadge';
 import { FEE_AMOUNT_DETAIL } from './shared';
 import { FeeSelectorProps } from './types';
-import { useChainId } from '@/provider';
-;
 
 const FeeSelector: FC<FeeSelectorProps> = ({
   disabled = false,

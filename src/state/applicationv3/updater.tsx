@@ -6,7 +6,6 @@ import { useActiveWeb3React } from '@/hooks';
 import { useChainId, useLibrary } from '@/provider';
 import { useLastBlockHook } from '@/hooks/block';
 import useDebounce from '@/hooks/useDebounce';
-;
 
 export const EvmApplicationUpdater = () => {
   const chainId = useChainId();

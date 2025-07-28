@@ -7,7 +7,6 @@ import { useWeb3React } from '@web3-react/core';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { FC, ReactNode } from 'react';
 import { isAddress } from '../utils';
-import { useActiveWeb3React } from '@/hooks';
 
 interface Web3State {
   library: Web3ProviderEthers | undefined;

@@ -1,12 +1,12 @@
-import AvaxLogo from '@/assets/images/avalanche_token_round.png';
-import useHttpLocations from '@/hooks/useHttpLocations';
-import { useChainId } from '@/provider';
-import { WrappedTokenInfo } from '@/state/lists/hooks';
-import { cn } from '@/utils';
 import { CAVAX, ChainId, Currency, Token } from '@pangolindex/sdk';
-import { getAddress } from 'ethers/lib/utils';
 import { useMemo } from 'react';
+import AvaxLogo from '../../assets/images/avalanche_token_round.png';
+//import EthLogo from '../../assets/images/Ethereum-logo-gray.png'
+import { useActiveWeb3React } from '../../hooks';
+import useHttpLocations from '../../hooks/useHttpLocations';
+import { WrappedTokenInfo } from '../../state/lists/hooks';
 import Logo from '../Logo';
+import { getAddress } from 'ethers/lib/utils';
 //import { AAVEe, CNR, DAIe, ELK, JOE, LINKe, QI, SUSHIe, USDCe, USDTe, WBTCe, WETHe, YAK } from '../../constants'
 
 const getTokenLogoURL = (address: string) =>
@@ -18,14 +18,12 @@ const getTokenLogoURL = (address: string) =>
 export default function CurrencyLogo({
   currency,
   style,
-  className = '',
 }: {
   currency?: Currency;
   size?: string;
   style?: React.CSSProperties;
-  className?: string;
 }) {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined);
 
   const srcs: string[] = useMemo(() => {
@@ -35,35 +33,24 @@ export default function CurrencyLogo({
       if (currency instanceof WrappedTokenInfo) {
         return [
           ...uriLocations,
-          /*chainId == ChainId.SCROLL ? getTokenLogoURLScroll(currency.address) : */ getTokenLogoURL(
-            getAddress(currency.address),
-          ),
+          /*chainId == ChainId.SCROLL ? getTokenLogoURLScroll(currency.address) : */ getTokenLogoURL(getAddress(currency.address)),
         ];
       }
 
       return [
         ...uriLocations,
-        /*chainId == ChainId.SCROLL ? getTokenLogoURLScroll(currency.address) : */ getTokenLogoURL(
-          getAddress(currency.address),
-        ),
+        /*chainId == ChainId.SCROLL ? getTokenLogoURLScroll(currency.address) : */ getTokenLogoURL(getAddress(currency.address)),
       ];
     }
     return [];
   }, [chainId, currency, uriLocations]);
 
   if (currency === CAVAX[ChainId.AVALANCHE]) {
-    return <img src={AvaxLogo} className={cn('size-6', className)} style={style} />;
+    return <img src={AvaxLogo} className="size-6" style={style} />;
   }
   /*if (currency === CAVAX[ChainId.SCROLL]) {
     return <StyledEthereumLogo src={EthLogo} size={size} style={style} />
   }*/
   //console.log(currency?.symbol)
-  return (
-    <Logo
-      className={cn('size-6 rounded-full', className)}
-      srcs={srcs}
-      alt={`${currency?.symbol ?? 'token'} logo`}
-      style={style}
-    />
-  );
+  return <Logo className="size-6 rounded-full" srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />;
 }

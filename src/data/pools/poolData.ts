@@ -7,9 +7,6 @@ import { get2DayChange } from '@/utils/data'
 import { formatTokenName, formatTokenSymbol } from '@/utils/tokens'
 import { useActiveNetworkVersion, useClients } from '@/state/applicationInfo/hooks'
 import { Token } from '@pangolindex/sdk'
-//import { useChainId } from '@/provider'
-;
-import { useActiveWeb3React } from '@/hooks'
 import { useChainId } from '@/provider'
 
 export const POOLS_BULK = (block: number | undefined, pools: string[]) => {

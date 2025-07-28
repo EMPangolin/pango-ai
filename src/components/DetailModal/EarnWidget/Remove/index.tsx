@@ -16,7 +16,6 @@ import { Percent } from '@pangolindex/sdk';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RemoveProps } from './types';
-;
 
 const Remove = ({ position }: RemoveProps) => {
   const chainId = useChainId();

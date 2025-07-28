@@ -13,12 +13,11 @@ import MenuIcon from '../../assets/images/menu.svg';
 import { useActiveWeb3React } from '../../hooks';
 import { ApplicationModal } from '../../state/application/actions';
 import { useModalOpen, useToggleModal } from '../../state/application/hooks';
-;
 
 const MenuSoon = () => <Badge>Soon</Badge>;
 
 export default function MenuMob() {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
   const open = useModalOpen(ApplicationModal.MENUMOB);
   const toggle = useToggleModal(ApplicationModal.MENUMOB);
 

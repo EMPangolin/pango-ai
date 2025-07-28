@@ -1,31 +1,34 @@
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { calcAPR } from '@/hooks/usePoolMetrics';
-//import { useChainId } from '@/provider';
-import { ConnectWalletButtonRainbow } from '@/components/ui/connect-wallet-button-rainbow';
-import { useActiveWeb3React } from '@/hooks';
+import { usePoolDatasN } from '@/data/pools/poolDataN';
+import { calcAPR, calcTVL, calcVolume } from '@/hooks/usePoolMetrics';
+import { useUSDCPrice } from '@/hooks/useUSDCPrice/evm';
 import { useChainId } from '@/provider';
-import { PoolDataV2 } from '@/state/pools/reducer';
+import { useUnderlyingTokens } from '@/hooks/evm';
 import { unwrappedTokenV3 } from '@/utils/wrappedCurrency';
-import { Token } from '@pangolindex/sdk';
-import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Currency, ElixirPool, FeeAmount, Token } from '@pangolindex/sdk';
+import { FC, useEffect } from 'react';
+import { getTokenLogoURL } from '../CurrencyLogoV3/getTokenLogoURL';
 import { DoubleCurrencyLogoV2 } from '../DoubleLogoNew';
+import { formatDollarAmount } from '@/utils/numbers';
 import './NeonBonusRewards.css';
+import { PoolDataV2 } from '@/state/pools/reducer';
+import { useAllTokenData, useTokenData } from '@/state/tokens/hooks';
+import ReactTooltip from 'react-tooltip';
 
 interface PoolRowProps {
   pool: PoolDataV2;
 }
 
 export const PoolRowV2: FC<PoolRowProps> = ({ pool }) => {
-  const { account } = useActiveWeb3React();
+
   const chainId = useChainId();
 
   const currency0 = pool?.token0 ? unwrappedTokenV3(pool.token0 as Token, chainId) : undefined;
   const currency1 = pool?.token1 ? unwrappedTokenV3(pool.token1 as Token, chainId) : undefined;
 
   const apr = calcAPR(pool?.oneDayVolumeUSD, pool?.oneDayVolumeUSD, pool?.reserveUSD, 3000);
-
+  
   const formattedTVL = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -71,17 +74,10 @@ export const PoolRowV2: FC<PoolRowProps> = ({ pool }) => {
         </div>
       </div>
       <div className="lg:w-[160px]">
-        {!account ? (
-          <ConnectWalletButtonRainbow />
-        ) : (
-          <Link
-            to={`/add/${pool.token0.address === '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7' ? 'AVAX' : pool.token0.address}/${pool.token1.address === '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7' ? 'AVAX' : pool.token1.address}`}
-          >
-            <Button>
-              <Icons.plus className="mr-2 size-4" /> Add Liquidity
-            </Button>
-          </Link>
-        )}
+        <Button>
+          <Icons.plus className="mr-2 size-4" />
+          Add Liquidity
+        </Button>
       </div>
     </div>
   );

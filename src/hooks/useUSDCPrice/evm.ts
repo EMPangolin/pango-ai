@@ -5,7 +5,7 @@ import { PairState } from '@/types';
 import { wrappedCurrency } from '@/utils/wrappedCurrency';
 import { ChainId, Currency, JSBI, Price, WAVAX, currencyEquals } from '@pangolindex/sdk';
 import { useMemo } from 'react';
-import { useActiveWeb3React } from '..';
+//import { usePairsContract } from 'src/hooks/usePair/evm';
 
 /**
  * Returns the price in USDC of the input currency

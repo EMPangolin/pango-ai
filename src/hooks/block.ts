@@ -2,10 +2,7 @@ import { useLastSubgraphBlock } from '@/graphql/block';
 import { CHAINS, ChainId } from '@pangolindex/sdk';
 import axios from 'axios';
 import { useQuery } from 'react-query';
-//import { useChainId } from 'src/provider';
-;
-import { useActiveWeb3React } from '.';
-import { useChainId } from '@/provider';
+import { useChainId } from 'src/provider';
 
 export type RPCResponse<T> = {
   jsonrpc: string;

@@ -25,7 +25,7 @@ export default function Drawer({ isOpen, onClose, children, title }: DrawerProps
       <div className="bg-slate-900/50 backdrop-blur-sm absolute top-0 left-0 w-full h-full z-10" onClick={onClose} />
       <div
         className={cn(
-          'absolute overflow-hidden z-50 w-full flex flex-col h-full max-w-full rounded-md gap-4 bg-background p-4 transition-all',
+          'absolute overflow-hidden z-50 w-full flex flex-col h-full md:max-w-[75%] lg:max-w-[50%] rounded-md gap-4 bg-background p-4 transition-all',
           isOpen ? 'right-0' : 'right-full',
         )}
       >

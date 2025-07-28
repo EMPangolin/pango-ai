@@ -20,7 +20,7 @@ import { PoolState, TokenId, UsePositionTokenURIResult } from './types';
 import { ElixirPoolType, ElixirTick, useElixirPools } from '@/graphql/elixirPools';
 import { useMultipleContractSingleData, useSingleCallResult } from '@/state/multicallv3/hooks';
 import { useContract, usePangolinV3Rewarder, useTokenContract } from './useContract';
-//import { useChainId } from '@/provider';
+import { useChainId } from '@/provider';
 import { unwrappedTokenV3, wrappedCurrency } from '@/utils/wrappedCurrency';
 import { TokenReturnType } from '@/state/stake/hooks';
 import { useBlockNumber } from '@/state/applicationv3';
@@ -28,9 +28,6 @@ import { PANGOLIN_V3_REWARDER_ADDRESS } from '@/constants';
 import { useUSDCPrice } from './useUSDCPrice/evm';
 import { useCurrency } from './Tokens';
 import { useTokenData } from '@/state/tokens/hooks';
-;
-import { useActiveWeb3React } from '.';
-import { useChainId } from '@/provider';
 
 // Classes are expensive to instantiate, so this caches the recently instantiated pools.
 // This avoids re-instantiating pools as the other pools in the same request are loaded.

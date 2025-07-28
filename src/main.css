@@ -141,15 +141,4 @@
     -webkit-appearance: none;
     margin: 0;
   }
-
-  /* Hide scrollbar for webkit browsers */
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none !important;
-  }
-
-  /* Hide scrollbar for firefox and IE */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
 }

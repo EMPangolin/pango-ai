@@ -25,8 +25,6 @@ import BonusTokenItem from '@/components/BonusTokenItem';
 import { calculateGasMargin } from '@/utils';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
 import Loader from '@/components/Loader';
-;
-import { useComponentButton } from '@/contexts/ButtonContext';
 
 const DetailTab = ({ position }: DetailTabProps) => {
   const { t } = useTranslation();
@@ -43,7 +41,6 @@ const DetailTab = ({ position }: DetailTabProps) => {
   const [attemptingBonus, setAttemptingBonus] = useState<boolean>(false);
   const [hashBonus, setHashBonus] = useState<string | undefined>();
   const [errorBonus, setErrorBonus] = useState<string | undefined>();
-  const { setEnabled } = useComponentButton(position?.tokenId);
 
   const currency0 = position?.token0 ? unwrappedTokenV3(position?.token0, chainId) : undefined;
   const currency1 = position?.token1 ? unwrappedTokenV3(position?.token1, chainId) : undefined;
@@ -52,38 +49,38 @@ const DetailTab = ({ position }: DetailTabProps) => {
 
   const positionManager = useConcLiqNFTPositionManagerContract();
 
-  //const { setEnabled } = useButton();
-
   const shouldFetchReward = Boolean(
-    positionManager && !isNaN(tokenId) && tokenId > 0 && position?.liquidity?.gt?.('0'),
+    positionManager
+    && !isNaN(tokenId) && tokenId > 0
+    && position?.liquidity?.gt?.('0')
   );
 
   const rewardAmountCall = useSingleCallResult(
     shouldFetchReward ? positionManager : undefined,
     'positionReward',
-    shouldFetchReward ? [tokenId] : undefined,
+    shouldFetchReward ? [tokenId] : undefined
   );
 
-  const rewardAmount = useMemo(() => {
-    if (rewardAmountCall.loading || rewardAmountCall.error || !rewardAmountCall.result) {
-      return { totalReward: 0 };
-    }
-    return rewardAmountCall.result;
-  }, [rewardAmountCall]);
+const rewardAmount = useMemo(() => {
+  if (rewardAmountCall.loading || rewardAmountCall.error || !rewardAmountCall.result) {
+    return { totalReward: 0 };
+  }
+  return rewardAmountCall.result;
+}, [rewardAmountCall]);
 
-  const bonusEndTime = getBonusRewardEndTime(position?.token0, position?.token1, position?.fee);
+  //const bonusEndTime = getBonusRewardEndTime(position?.token0, position?.token1, position?.fee);
   const bonusTokens = getBonusRewardTokens(position?.token0, position?.token1, position?.fee);
-  const pendingRewards = getPendingRewards(
-    position?.token0,
-    position?.token1,
-    Number(position?.tokenId),
-    rewardAmount?.totalReward,
-    position?.fee,
-  );
-
+  const pendingRewards = getPendingRewards(position?.token0, position?.token1, Number(position?.tokenId), rewardAmount?.totalReward, position?.fee);
+  
   const listItems = bonusTokens?.[0]?.map((address: string, index: number) => (
-    <BonusTokenItem key={address} address={address} rewardValue={pendingRewards?.amounts?.[index]} chainId={chainId} />
+    <BonusTokenItem
+      key={address}
+      address={address}
+      rewardValue={pendingRewards?.amounts?.[index]}
+      chainId={chainId}
+    />
   ));
+  
 
   const useConcLiqPositionFees = useConcLiqPositionFeesHook[chainId];
   const useUSDCPrice = useUSDCPriceHook[chainId];
@@ -218,31 +215,28 @@ const DetailTab = ({ position }: DetailTabProps) => {
   };
 
   async function onHarvest() {
-    if (positionManager) {
-      try {
+      if (positionManager) {
+        try{
         setAttemptingBonus(true);
-        const gss = await positionManager.estimateGas['claimReward'](position?.tokenId, account).then(
-          estimatedGasLimit => {
-            positionManager
-              .claimReward(position?.tokenId, account, { gasLimit: calculateGasMargin(estimatedGasLimit) })
-              .then((response: TransactionResponse) => {
-                console.log(response);
-                setHashBonus(response.hash);
-                setEnabled(true);
-              })
-              .catch((error: any) => {
-                setAttemptingBonus(false);
-                console.log(error);
-              });
-          },
-        );
+        const gss = await positionManager.estimateGas['claimReward'](position?.tokenId, account).then(estimatedGasLimit => {
+          positionManager
+            .claimReward(position?.tokenId, account, { gasLimit: calculateGasMargin(estimatedGasLimit) })
+            .then((response: TransactionResponse) => {
+              console.log(response)
+              setHashBonus(response.hash)
+            })
+            .catch((error: any) => {
+              setAttemptingBonus(false)
+              console.log(error);
+            });
+        });
       } catch (err) {
         const _err = typeof err === 'string' ? new Error(err) : (err as any);
         setErrorBonus(_err?.message);
         console.error(_err);
       }
+      }
     }
-  }
 
   return (
     <div>
@@ -254,83 +248,77 @@ const DetailTab = ({ position }: DetailTabProps) => {
           <div>
             <h2>{userLiquidity.stat}</h2>
           </div>
-          <div className="border border-muted rounded-lg p-3 bg-slate-50 dark:bg-primary/5 flex flex-col gap-2">
+          <div className="border border-muted rounded-lg p-3 bg-slate-50 flex flex-col gap-2">
             {liquidityData.map((item, index) => (
               <DetailStats key={index} item={item} />
             ))}
           </div>
         </div>
-        <div
-          className={`flex flex-row lg:grid ${pendingRewards?.amounts?.[0] > 0 ? 'lg:grid-cols-2' : 'lg:grid-cols-1'} gap-6`}
-        >
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <h4>Fees</h4>
-            </div>
-            {!attempting && !hash && !error ? (
-              <>
-                <div className="flex items-center justify-end gap-2">
-                  <Button disabled={!canClaim} onClick={onClaim}>
-                    {t('earn.claimReward', { symbol: '' })}
-                  </Button>
-                </div>
-                <div className="border border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50 dark:bg-primary/5">
-                  {claimData.map((item, index) => (
-                    <DetailStats key={index} item={item} />
-                  ))}
-                </div>
+        <div className={`flex flex-row lg:grid ${pendingRewards?.amounts?.[0] > 0 ? 'lg:grid-cols-2' : 'lg:grid-cols-1'} gap-6`}>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <h4>Fees</h4>
+          </div>
+          {!attempting && !hash && !error ? (
+            <>
+              <div className="flex items-center justify-end gap-2">
+
+                <Button disabled={!canClaim} onClick={onClaim}>
+                  {t('earn.claimReward', { symbol: '' })}
+                </Button>
+              </div>
+              <div className="border border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50">
+                {claimData.map((item, index) => (
+                  <DetailStats key={index} item={item} />
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+            <div className="flex items-center justify-end gap-2">
+
+                <Button disabled={!canClaim} onClick={onClaim}>
+                  {t('earn.claimReward', { symbol: '' })}
+                </Button>
+              </div>
+            <div className="border py-7 items-center border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50">
+                <Loader size='24px'></Loader>
+              </div>
               </>
+          )}
+        </div>
+        {pendingRewards?.amounts?.[0] > 0 && (
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <h4>Bonus</h4>
+          </div>
+          {!attemptingBonus && !hashBonus && !errorBonus ? (
+            <>
+              <div className="flex items-center justify-end gap-2">
+
+                <Button disabled={!canClaim} onClick={onHarvest}>
+                  {t('earn.claimRewardBonus', { symbol: '' })}
+                </Button>
+              </div>
+              <div className="border border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50">
+                {listItems}
+              </div>
+            </>
             ) : (
               <>
-                <div className="flex items-center justify-end gap-2">
-                  <Button disabled={!canClaim} onClick={onClaim}>
-                    {t('earn.claimReward', { symbol: '' })}
+              <div className="flex items-center justify-end gap-2">
+  
+                  <Button disabled={!canClaim} onClick={onHarvest}>
+                    {t('earn.claimRewardBonus', { symbol: '' })}
                   </Button>
                 </div>
-                <div className="border py-7 items-center border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50 dark:bg-primary/5">
-                  <Loader size="24px"></Loader>
+              <div className="border py-7 items-center border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50">
+                  <Loader size='24px'></Loader>
                 </div>
-              </>
+                </>
             )}
-          </div>
-          {pendingRewards?.amounts?.[0] > 0 && (
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <h4>Bonus</h4>
-              </div>
-              {!attemptingBonus && !hashBonus && !errorBonus ? (
-                <>
-                  <div className="flex items-center justify-end gap-2">
-                    <Button
-                      disabled={!canClaim}
-                      onClick={() => {
-                        onHarvest();
-                      }}
-                    >
-                      {t('earn.claimRewardBonus', { symbol: '' })}
-                    </Button>
-                  </div>
-                  <div className="border border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50 dark:bg-primary/5">{listItems}</div>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-end gap-2">
-                    <Button
-                      disabled={!canClaim}
-                      onClick={() => {
-                        onHarvest();
-                      }}
-                    >
-                      {t('earn.claimRewardBonus', { symbol: '' })}
-                    </Button>
-                  </div>
-                  <div className="border py-7 items-center border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50 dark:bg-primary/5">
-                    <Loader size="24px"></Loader>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
+        </div>
+        )}
         </div>
         <div className="col-span-2 flex flex-col gap-2">
           <h4>Price Range</h4>

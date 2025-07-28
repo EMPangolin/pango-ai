@@ -10,7 +10,6 @@ import { AutoColumn } from '../Column';
 import CurrencyLogo from '../CurrencyLogo';
 import Modal from '../Modal';
 import { AutoRow, RowBetween } from '../Row';
-;
 
 const Wrapper = styled.div<{ error: boolean }>`
   padding: 0.75rem;
@@ -34,7 +33,7 @@ interface TokenWarningCardProps {
 }
 
 function TokenWarningCard({ token }: TokenWarningCardProps) {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
 
   const tokenSymbol = token?.symbol?.toLowerCase() ?? '';
   const tokenName = token?.name?.toLowerCase() ?? '';

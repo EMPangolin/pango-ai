@@ -1,13 +1,15 @@
+import { Currency } from '@pangolindex/sdk';
+import React, { useCallback } from 'react';
+import { Balance, CurrencyRoot } from './styled';
+import { useChainId, usePangolinWeb3 } from '@/provider';
 import CurrencyLogo from '@/components/CurrencyLogo';
-import Loader from '@/components/Loader';
+import { Text } from '@/components/TextV3';
+import { LoaderIcon } from 'lucide-react';
+import { useCurrencyBalanceV3 } from '@/state/wallet/hooks';
 import { Button } from '@/components/ui/button';
 import { useActiveWeb3React } from '@/hooks';
-import { useChainId, usePangolinWeb3 } from '@/provider';
-import { useCurrencyBalanceV3 } from '@/state/wallet/hooks';
-import { cn } from '@/utils';
-import { Currency } from '@pangolindex/sdk';
-import { LoaderIcon } from 'lucide-react';
-import React, { useCallback } from 'react';
+import Loader from '@/components/Loader';
+
 interface Props {
   currency: Currency;
   onSelect: (currency: Currency) => void;
@@ -15,8 +17,31 @@ interface Props {
   otherSelected: boolean;
 }
 
-const CurrencyGrid: React.FC<Props> = props => {
-  const { currency, onSelect, isSelected, otherSelected } = props;
+const CurrencyGrid1 = ({ currency, onSelect, isSelected }: Props) => {
+  const { account } = usePangolinWeb3();
+  const chainId = useChainId();
+  const balance = useCurrencyBalanceV3(chainId, account ?? undefined, currency);
+
+  const handleSelect = useCallback(() => {
+    onSelect(currency);
+  }, [onSelect, currency]);
+
+  return (
+    <Button
+      block
+      className="flex h-auto flex-col items-center justify-center"
+      onClick={handleSelect}
+      disabled={isSelected}
+    >
+      <CurrencyLogo currency={currency} />
+      <p className="!m-0 font-semibold">{currency?.symbol}</p>
+      <small>{balance ? balance.toSignificant(4) : account ? <LoaderIcon /> : '-'}</small>
+    </Button>
+  );
+};
+
+const CurrencyGrid: React.FC<Props> = (props) => {
+  const { currency, style, onSelect, isSelected, otherSelected } = props;
   const { account } = useActiveWeb3React();
   const chainId = useChainId();
 
@@ -27,20 +52,22 @@ const CurrencyGrid: React.FC<Props> = props => {
   }, [onSelect, currency]);
 
   return (
-    <div
-      className={cn(
-        'flex flex-col text-center rounded-lg p-4 justify-center items-center hover:bg-backgroundSoft transition-colors select-none gap-4 cursor-pointer',
-        isSelected ? 'border-2 bg-secondary' : '',
-        otherSelected ? 'border-2 bg-primary opacity-50' : '',
-      )}
-      onClick={handleSelect}
-    >
-      <CurrencyLogo currency={currency} className="size-9" />
-      <div className="flex flex-col items-center gap-1">
-        <small>{currency?.symbol}</small>
-        <span>{balance ? balance.toSignificant(4) : account ? <Loader /> : null}</span>
-      </div>
-    </div>
+    <CurrencyRoot style={style} onClick={handleSelect} disabled={isSelected} selected={otherSelected}>
+      <CurrencyLogo currency={currency} size={24} imageSize={48} />
+      <Text
+        color="swapWidget.primary"
+        fontSize={14}
+        title={currency?.name}
+        fontWeight={500}
+        marginBottom="10px"
+        marginTop="5px"
+      >
+        {currency?.symbol}
+      </Text>
+      <Balance color="swapWidget.primary" fontSize={14}>
+        {balance ? balance.toSignificant(4) : account ? <Loader /> : null}
+      </Balance>
+    </CurrencyRoot>
   );
 };
 

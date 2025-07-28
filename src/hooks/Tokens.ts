@@ -5,14 +5,12 @@ import { useSelectedTokenList } from '../state/lists/hooks';
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks';
 import { useUserAddedTokens } from '../state/user/hooks';
 import { isAddress } from '../utils';
-;
 
 import { useActiveWeb3React } from './index';
 import { useBytes32TokenContract, useTokenContract } from './useContract';
-import { useChainId } from '@/provider';
 
 export function useAllTokens(): { [address: string]: Token } {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
   const userAddedTokens = useUserAddedTokens();
   const allTokens = useSelectedTokenList();
 
@@ -54,7 +52,7 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
 // null if loading
 // otherwise returns the token
 export function useToken(tokenAddress?: string): Token | undefined | null {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
   const tokens = useAllTokens();
 
   const address = isAddress(tokenAddress);
@@ -109,7 +107,7 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 }
 
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
   const isAVAX = currencyId?.toUpperCase() === 'AVAX' || currencyId?.toUpperCase() === 'ETH';
   const token = useToken(isAVAX ? undefined : currencyId);
   return isAVAX ? CAVAX[chainId ?? ChainId.AVALANCHE] : token;

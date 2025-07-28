@@ -1,7 +1,10 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { ChevronDown } from 'react-feather';
 import TokenListOrigin from '../TokenListOrigin';
+import { DownArrow, ListLogo, PopoverContainer, RowRoot, Separator, ViewLink } from './styled';
 import { useTranslation } from 'react-i18next';
+import { Box } from '@/components/Box';
+import { Text } from '@/components/TextV3';
 import { Switch } from '@/components/Switch';
 import { useOnClickOutside } from '@/hooks/useOnClickOutside';
 import listVersionLabel from '@/utils/listVersionLabel';
@@ -45,44 +48,51 @@ const TokenListRow: React.FC<Props> = ({ listUrl }) => {
   if (!list) return null;
 
   return (
-    <div className="grid grid-cols-[max-content_auto_max-content_max-content] gap-2.5 py-3.5 items-center border-b border-border last:border-b-0">
-      {list?.logoURI ? <img className="w-6 h-6" src={list?.logoURI} alt="List logo" /> : <div className="w-6 h-6" />}
-      <div>
-        <div className="text-base text-primary overflow-hidden text-ellipsis">{list?.name}</div>
-        <div className="text-xs text-muted-foreground overflow-hidden text-ellipsis" title={listUrl}>
-          <TokenListOrigin listUrl={listUrl} />
-        </div>
-      </div>
-      <div ref={node as any} className="relative">
-        <div
-          className="w-5.5 h-5.5 rounded-full flex items-center justify-center cursor-pointer"
-          onClick={() => setOpen(!open)}
+    <RowRoot>
+      {list?.logoURI ? <ListLogo size={24} src={list?.logoURI} /> : <ListLogo as="div" size={24} />}
+      <Box>
+        <Text fontSize={16} color="swapWidget.primary" style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {list?.name}
+        </Text>
+        <Text
+          fontSize={12}
+          color="swapWidget.secondary"
+          style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+          title={listUrl}
         >
+          <TokenListOrigin listUrl={listUrl} />
+        </Text>
+      </Box>
+      <Box ref={node as any}>
+        <DownArrow onClick={() => setOpen(!open)}>
           <ChevronDown />
-        </div>
+        </DownArrow>
         {open && (
-          <div className="absolute z-[100] shadow-lg rounded-lg p-1.5 grid grid-rows-1 gap-2 text-base text-left bg-background border">
+          <PopoverContainer>
             <div>{list && listVersionLabel(list.version)}</div>
-            <div className="w-full h-px bg-border"></div>
-            <a
-              className="text-xs text-primary cursor-pointer"
+            <Separator />
+            <ViewLink
+              fontSize={13}
+              as="a"
+              color="swapWidget.primary"
               href={`https://tokenlists.org/token-list?url=${listUrl}`}
               target="_blank"
-              rel="noopener noreferrer"
             >
               {t('searchModal.viewList')}
-            </a>
-            <div
-              className={`text-xs text-primary cursor-pointer ${Object.keys(lists).length === 1 ? 'pointer-events-none opacity-50' : ''}`}
+            </ViewLink>
+            <ViewLink
+              fontSize={13}
+              color="swapWidget.primary"
               onClick={handleRemoveList}
+              disabled={Object.keys(lists).length === 1}
             >
               {t('searchModal.removeList')}
-            </div>
-          </div>
+            </ViewLink>
+          </PopoverContainer>
         )}
-      </div>
+      </Box>
       <Switch checked={isSelected} onChange={() => selectThisList()} />
-    </div>
+    </RowRoot>
   );
 };
 

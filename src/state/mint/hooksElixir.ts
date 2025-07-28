@@ -32,7 +32,6 @@ import { useActiveWeb3React } from '@/hooks';
 import { useCurrency } from '@/hooks/Tokens';
 import { useCurrencyBalances } from '../wallet/hooks/common';
 import { usePair } from '@/data/Reserves';
-;
 
 export function useMintState() {
   const { mintState } = useMintStateAtom();

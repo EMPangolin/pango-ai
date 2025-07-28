@@ -3,9 +3,7 @@ import { CurrencyAmount, Fraction, JSBI, Percent, TokenAmount, Trade, ChainId, E
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
-;
-import { useActiveWeb3React } from '@/hooks'
-import { useChainId } from '@/provider';
+import { useChainId } from '@/provider'
 
 const BASE_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))

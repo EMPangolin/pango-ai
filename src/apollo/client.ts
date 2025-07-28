@@ -46,7 +46,7 @@ export const stakingClient = new ApolloClient({
 
 export const blockClient = new ApolloClient({
   link: new HttpLink({
-    uri: 'https://gateway.thegraph.com/api/75b4f1fede4d0682187dd6a95a6212eb/subgraphs/id/9xYx6KDtoPk2jHi763nY4eayiCN2No81dudJBnMQDN2L',
+    uri: 'https://api.studio.thegraph.com/query/59684/avalanche-pangolin-blocks/version/latest',
   }),
   cache: new InMemoryCache(),
 })

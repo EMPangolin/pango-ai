@@ -17,7 +17,7 @@ import {
 import { Loader } from '@/components/ui/loader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BIG_INT_ZERO } from '@/constants';
-//import { useChainId } from '@/hooks';
+import { useChainId } from '@/hooks';
 import { useTransformedVolumeData } from '@/hooks/chart';
 import useDebounce from '@/hooks/useDebounce';
 import usePrevious from '@/hooks/usePrevious';
@@ -32,19 +32,10 @@ import { formatDollarAmount } from '@/utils/numbers';
 import moment from 'moment';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Area, AreaChart, Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { LoaderAreaChart } from '../ui/loader-area-chart';
 import { LoaderBarChart } from '../ui/loader-bar-chart';
-import PoolListAll from '../PoolListAll';
-import { useActiveWeb3React } from '@/hooks';
-import { useChainId } from '@/provider';
-import { useTokenBalancesWithLoadingIndicator } from '@/state/wallet/hooks';
-import { toV2LiquidityToken, useTrackedTokenPairs } from '@/state/user/hooks';
-import { ChainId, Pair } from '@pangolindex/sdk';
-import { usePairs } from '@/data/Reserves';
-import { Dots } from '../swap/styleds';
-import FullPositionCard from '../PositionCard';
 
 type SelectedStateType = {
   value: string | number | undefined;
@@ -54,7 +45,6 @@ type SelectedStateType = {
 const Elixir = () => {
   const { t } = useTranslation();
   const chainId = useChainId();
-  const { account } = useActiveWeb3React();
   const navigate = useNavigate();
   const useGetUserPositions = useGetUserPositionsHook[chainId];
   const { positions, loading: positionsLoading } = useGetUserPositions();
@@ -73,41 +63,11 @@ const Elixir = () => {
     value: undefined,
     date: undefined,
   });
-  const trackedTokenPairs = useTrackedTokenPairs();
-  const tokenPairsWithLiquidityTokens = useMemo(
-    () =>
-      trackedTokenPairs.map(tokens => ({
-        liquidityToken: toV2LiquidityToken(tokens, chainId ? chainId : ChainId.AVALANCHE),
-        tokens,
-      })),
-    [trackedTokenPairs, chainId],
-  );
-  const liquidityTokens = useMemo(
-    () => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken),
-    [tokenPairsWithLiquidityTokens],
-  );
-  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
-    account ?? undefined,
-    liquidityTokens,
-  );
-  const liquidityTokensWithBalances = useMemo(
-    () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0'),
-      ),
-    [tokenPairsWithLiquidityTokens, v2PairsBalances],
-  );
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens));
-  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair));
-  const hasV1Liquidity = undefined;
   const [activePoint, setActivePoint] = useState(null);
   const [volumeActivePoint, setVolumeActivePoint] = useState(null);
   const prevActivePoint = usePrevious<{ payload: { time: string } }>(activePoint);
   const prevVolumeActivePoint = usePrevious<{ payload: { time: string } }>(volumeActivePoint);
   const NOW = moment(Date.now()).format('DD.MM.YYYY');
-
-  const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair);
 
   const menuItems: Array<{ label: string; value: string }> = Object.keys(MenuType).map((key: string) => ({
     label: t(`pv3.${MenuType[key as keyof typeof MenuType]}`),
@@ -247,7 +207,7 @@ const Elixir = () => {
   // if hover value undefined, reset to current day value
   useEffect(() => {
     if (selectedVolume.value === undefined && protocolData) {
-      setSelectedVolume({ value: formatDollarAmount(protocolData.volumeUSD + 300000, 2, true), date: NOW });
+      setSelectedVolume({ value: formatDollarAmount(protocolData.volumeUSD, 2, true), date: NOW });
     }
   }, [selectedVolume, protocolData]);
 
@@ -304,7 +264,7 @@ const Elixir = () => {
   return (
     <div className="flex flex-col gap-10">
       <div className="grid grid-rows-2 lg:grid-cols-2 lg:grid-rows-none gap-4">
-        <div className="bg-background rounded-lg p-4 lg:p-8 flex flex-col gap-8">
+        <div className="bg-white rounded-lg p-4 lg:p-8 flex flex-col gap-8">
           <div className="flex flex-col">
             TVL
             <h2 className="font-semibold text-4xl">{selectedTVL.value ?? '-'}</h2>
@@ -365,7 +325,7 @@ const Elixir = () => {
             )}
           </div>
         </div>
-        <div className="bg-background rounded-lg p-4 lg:p-8 flex flex-col gap-8">
+        <div className="bg-white rounded-lg p-4 lg:p-8 flex flex-col gap-8">
           <div className="flex items-start justify-between">
             <div className="flex flex-col">
               Volume 24H
@@ -412,7 +372,7 @@ const Elixir = () => {
 
                       setVolumeActivePoint(e.activePayload[0]);
                       setSelectedVolume({
-                        value: formatDollarAmount(e.activePayload[0].value + 300000),
+                        value: formatDollarAmount(e.activePayload[0].value),
                         date: moment(e.activePayload[0].payload.time).format('DD.MM.YYYY'),
                       });
                     } else {
@@ -456,182 +416,142 @@ const Elixir = () => {
           }
         }}
       >
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <TabsList>
-            <TabsTrigger value={MenuType.allpools}>All Pools</TabsTrigger>
             <TabsTrigger value={MenuType.v3pools}>V3 Pools</TabsTrigger>
             <TabsTrigger value={MenuType.v2pools}>V2 Pools</TabsTrigger>
             <TabsTrigger value="myPositions">My Positions</TabsTrigger>
           </TabsList>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" block className="flex items-center w-full md:w-auto">
-                <Icons.plus className="mr-2 size-4" />
-                New pool
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="relative" onClick={openAddLiquidityModal}>
-                V3 <small className="absolute top-1.5 left-7 text-primary text-[10px]">NEW</small>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={navigateV2Liquidity}>V2 (LEGACY)</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" block className="flex items-center">
+                  <Icons.pool className="mr-2 size-4" />
+                  Create new pool
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem className="relative" onClick={openAddLiquidityModal}>
+                  V3 <small className="absolute top-1.5 left-7 text-primary text-[10px]">NEW</small>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={navigateV2Liquidity}>V2 (LEGACY)</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-        <TabsContent className="p-4 lg:p-8 bg-background rounded-lg shadow-sm" value={MenuType.allpools}>
-          <PoolListAll setMenu={handleSetMenu} activeMenu={activeMenu} menuItems={menuItems} />
-        </TabsContent>
-        <TabsContent className="p-4 lg:p-8 bg-background rounded-lg shadow-sm" value={MenuType.v3pools}>
+        <TabsContent className="p-4 lg:p-8 bg-white rounded-lg shadow-sm" value={MenuType.v3pools}>
           <PoolList setMenu={handleSetMenu} activeMenu={activeMenu} menuItems={menuItems} />
         </TabsContent>
-        <TabsContent className="p-4 lg:p-8 bg-background rounded-lg shadow-sm" value={MenuType.v2pools}>
+        <TabsContent className="p-4 lg:p-8 bg-white rounded-lg shadow-sm" value={MenuType.v2pools}>
           <PoolListV2 setMenu={handleSetMenu} activeMenu={activeMenu} menuItems={menuItems} />
         </TabsContent>
-        <TabsContent className="p-4 lg:p-8 bg-background rounded-lg shadow-sm" value="myPositions">
-          <Tabs defaultValue="v3-positions" className="w-full">
-            <TabsList>
-              <TabsTrigger value="v3-positions">V3 Positions</TabsTrigger>
-              <TabsTrigger value="v2-positions">V2 Positions</TabsTrigger>
-            </TabsList>
-            <TabsContent value="v3-positions">
-              <Tabs defaultValue={MenuType.allPositions} onValueChange={handleSetMenu}>
-                <div className="flex flex-col gap-2 md:flex-row md:gap-4">
-                  <TabsList className="flex justify-start w-full">
-                    <div className="flex items-center justify-between w-full">
-                      <div>
-                        <TabsTrigger value={MenuType.allPositions}>All</TabsTrigger>
-                        <TabsTrigger value={MenuType.openPositions}>Open</TabsTrigger>
-                        <TabsTrigger value={MenuType.closedPositions}>Closed</TabsTrigger>
-                      </div>
-                    </div>
-                  </TabsList>
+        <TabsContent className="p-4 lg:p-8 bg-white rounded-lg shadow-sm" value="myPositions">
+          <Tabs defaultValue={MenuType.allPositions} onValueChange={handleSetMenu}>
+            <div className="flex flex-col gap-2 md:flex-row md:gap-4">
+              <TabsList className="flex justify-start w-full">
+                <div className="flex items-center justify-between w-full">
+                  <div>
+                    <TabsTrigger value={MenuType.allPositions}>All</TabsTrigger>
+                    <TabsTrigger value={MenuType.openPositions}>Open</TabsTrigger>
+                    <TabsTrigger value={MenuType.closedPositions}>Closed</TabsTrigger>
+                  </div>
                 </div>
-                <TabsContent value={MenuType.allPositions}>
-                  <PositionList
-                    setMenu={handleSetMenu}
-                    activeMenu={activeMenu}
-                    menuItems={menuItems}
-                    handleSearch={handleSearch}
-                    onChangeSortBy={setSortBy}
-                    sortBy={sortBy}
-                    searchQuery={searchQuery}
-                    isLoading={false}
-                    doesNotPoolExist={finalPositions?.length === 0}
-                  >
-                    {finalPositions.map(position => (
-                      <PositionCard
-                        key={position.tokenId.toString()}
-                        token0={position.token0}
-                        token1={position.token1}
-                        feeAmount={position.fee}
-                        tokenId={position.tokenId}
-                        liquidity={position.liquidity}
-                        tickLower={position.tickLower}
-                        tickUpper={position.tickUpper}
-                        onClick={() => {
-                          onChangeDetailModalStatus(position);
-                        }}
-                      />
-                    ))}
-                  </PositionList>
-                </TabsContent>
-                <TabsContent value={MenuType.openPositions}>
-                  {positionsLoading ? (
-                    <Loader label="Loading open positions..." />
-                  ) : (
-                    <PositionList
-                      setMenu={handleSetMenu}
-                      activeMenu={activeMenu}
-                      menuItems={menuItems}
-                      handleSearch={handleSearch}
-                      onChangeSortBy={setSortBy}
-                      sortBy={sortBy}
-                      searchQuery={searchQuery}
-                      isLoading={false}
-                      doesNotPoolExist={finalPositions?.length === 0}
-                    >
-                      {finalPositions.map(position => (
-                        <PositionCard
-                          key={position.tokenId.toString()}
-                          token0={position.token0}
-                          token1={position.token1}
-                          feeAmount={position.fee}
-                          tokenId={position.tokenId}
-                          liquidity={position.liquidity}
-                          tickLower={position.tickLower}
-                          tickUpper={position.tickUpper}
-                          onClick={() => {
-                            onChangeDetailModalStatus(position);
-                          }}
-                        />
-                      ))}
-                    </PositionList>
-                  )}
-                </TabsContent>
-                <TabsContent value={MenuType.closedPositions}>
-                  {positionsLoading ? (
-                    <Loader label="Loading closed positions..." />
-                  ) : (
-                    <PositionList
-                      setMenu={handleSetMenu}
-                      activeMenu={activeMenu}
-                      menuItems={menuItems}
-                      handleSearch={handleSearch}
-                      onChangeSortBy={setSortBy}
-                      sortBy={sortBy}
-                      searchQuery={searchQuery}
-                      isLoading={false}
-                      doesNotPoolExist={finalPositions?.length === 0}
-                    >
-                      {finalPositions.map(position => (
-                        <PositionCard
-                          key={position.tokenId.toString()}
-                          token0={position.token0}
-                          token1={position.token1}
-                          feeAmount={position.fee}
-                          tokenId={position.tokenId}
-                          liquidity={position.liquidity}
-                          tickLower={position.tickLower}
-                          tickUpper={position.tickUpper}
-                          onClick={() => {
-                            onChangeDetailModalStatus(position);
-                          }}
-                        />
-                      ))}
-                    </PositionList>
-                  )}
-                </TabsContent>
-              </Tabs>
+              </TabsList>
+            </div>
+            <TabsContent value={MenuType.allPositions}>
+              <PositionList
+                setMenu={handleSetMenu}
+                activeMenu={activeMenu}
+                menuItems={menuItems}
+                handleSearch={handleSearch}
+                onChangeSortBy={setSortBy}
+                sortBy={sortBy}
+                searchQuery={searchQuery}
+                isLoading={false}
+                doesNotPoolExist={finalPositions?.length === 0}
+              >
+                {finalPositions.map(position => (
+                  <PositionCard
+                    key={position.tokenId.toString()}
+                    token0={position.token0}
+                    token1={position.token1}
+                    feeAmount={position.fee}
+                    tokenId={position.tokenId}
+                    liquidity={position.liquidity}
+                    tickLower={position.tickLower}
+                    tickUpper={position.tickUpper}
+                    onClick={() => {
+                      onChangeDetailModalStatus(position);
+                    }}
+                  />
+                ))}
+              </PositionList>
             </TabsContent>
-            <TabsContent value="v2-positions">
-              <div className="flex flex-col space-y-4">
-                {!account ? (
-                  <div className="text-center">Connect Wallet to view your liquidity.</div>
-                ) : v2IsLoading ? (
-                  <div className="p-4 flex flex-col text-center space-y-2 border rounded-md text-muted-foreground">
-                    <Dots>Loading</Dots>
-                  </div>
-                ) : allV2PairsWithLiquidity?.length > 0 ? (
-                  <>
-                    {allV2PairsWithLiquidity.map(v2Pair => (
-                      <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
-                    ))}
-                  </>
-                ) : (
-                  <div className="p-4 flex flex-col text-center space-y-2 border rounded-md text-muted-foreground">
-                    <span>No liquidity found.</span>
-                    <span className="text-sm">
-                      Important note: The liquidity added to farms is not visible on the pool page.
-                    </span>
-                  </div>
-                )}
-                <div className="text-center text-muted-foreground text-sm">
-                  {hasV1Liquidity ? 'Uniswap V1 liquidity found!' : "Don't see a pool you joined?"}{' '}
-                  <Link className="text-primary" to={hasV1Liquidity ? '/migrate/v1' : '/find'}>
-                    {hasV1Liquidity ? 'Migrate now.' : 'Import it.'}
-                  </Link>
-                </div>
-              </div>
+            <TabsContent value={MenuType.openPositions}>
+              {positionsLoading ? (
+                <Loader label="Loading open positions..." />
+              ) : (
+                <PositionList
+                  setMenu={handleSetMenu}
+                  activeMenu={activeMenu}
+                  menuItems={menuItems}
+                  handleSearch={handleSearch}
+                  onChangeSortBy={setSortBy}
+                  sortBy={sortBy}
+                  searchQuery={searchQuery}
+                  isLoading={false}
+                  doesNotPoolExist={finalPositions?.length === 0}
+                >
+                  {finalPositions.map(position => (
+                    <PositionCard
+                      key={position.tokenId.toString()}
+                      token0={position.token0}
+                      token1={position.token1}
+                      feeAmount={position.fee}
+                      tokenId={position.tokenId}
+                      liquidity={position.liquidity}
+                      tickLower={position.tickLower}
+                      tickUpper={position.tickUpper}
+                      onClick={() => {
+                        onChangeDetailModalStatus(position);
+                      }}
+                    />
+                  ))}
+                </PositionList>
+              )}
+            </TabsContent>
+            <TabsContent value={MenuType.closedPositions}>
+              {positionsLoading ? (
+                <Loader label="Loading closed positions..." />
+              ) : (
+                <PositionList
+                  setMenu={handleSetMenu}
+                  activeMenu={activeMenu}
+                  menuItems={menuItems}
+                  handleSearch={handleSearch}
+                  onChangeSortBy={setSortBy}
+                  sortBy={sortBy}
+                  searchQuery={searchQuery}
+                  isLoading={false}
+                  doesNotPoolExist={finalPositions?.length === 0}
+                >
+                  {finalPositions.map(position => (
+                    <PositionCard
+                      key={position.tokenId.toString()}
+                      token0={position.token0}
+                      token1={position.token1}
+                      feeAmount={position.fee}
+                      tokenId={position.tokenId}
+                      liquidity={position.liquidity}
+                      tickLower={position.tickLower}
+                      tickUpper={position.tickUpper}
+                      onClick={() => {
+                        onChangeDetailModalStatus(position);
+                      }}
+                    />
+                  ))}
+                </PositionList>
+              )}
             </TabsContent>
           </Tabs>
         </TabsContent>

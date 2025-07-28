@@ -1,14 +1,17 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import Scrollbars from 'react-custom-scrollbars';
 import TokenListRow from './TokenListRow';
+import { AddInputWrapper, List } from './styled';
 import { useFetchListCallback } from '@/hooks/useFetchListCallbackV3';
 import { parseENSAddress } from '@/utils/parseENSAddress';
 import { useTranslation } from 'react-i18next';
 import uriToHttp from '@/utils/uriToHttp';
 import Drawer from '@/components/Drawer';
+import { Box } from '@/components/Box';
 import { TextInput } from '@/components/TextInput';
+import ButtonV3 from '@/components/Button/ButtonV3';
+import { Text } from '@/components/TextV3';
 import { useListsStateAtom } from '@/state/listsV3';
-import { Button } from '@/components/ui/button';
 
 interface Props {
   isOpen: boolean;
@@ -35,7 +38,7 @@ const TokenListDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
       .then(() => {
         setListUrlInput('');
       })
-      .catch(error => {
+      .catch((error) => {
         setAddError(error.message);
         removeList(listUrlInput);
       });
@@ -46,7 +49,7 @@ const TokenListDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
   }, [listUrlInput]);
 
   const handleEnterKey = useCallback(
-    (e: { key: string }) => {
+    (e: { key: string; }) => {
       if (validUrl && e.key === 'Enter') {
         handleAddList();
       }
@@ -57,7 +60,7 @@ const TokenListDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
   const sortedLists = useMemo(() => {
     const listUrls = Object.keys(lists);
     return listUrls
-      .filter(listUrl => {
+      .filter((listUrl) => {
         return Boolean(lists[listUrl].current);
       })
       .sort((u1, u2) => {
@@ -67,8 +70,8 @@ const TokenListDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
           return l1.name.toLowerCase() < l2.name.toLowerCase()
             ? -1
             : l1.name.toLowerCase() === l2.name.toLowerCase()
-              ? 0
-              : 1;
+            ? 0
+            : 1;
         }
         if (l1) return -1;
         if (l2) return 1;
@@ -79,8 +82,8 @@ const TokenListDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
   return (
     <Drawer title={t('searchModal.manageLists')} isOpen={isOpen} onClose={onClose}>
       {/* Render Search Token Input */}
-      <div className="px-5">
-        <div className="grid grid-cols-[auto_100px] gap-2.5">
+      <Box padding="0px 20px">
+        <AddInputWrapper>
           <TextInput
             placeholder="https:// or ipfs://"
             onChange={(value: any) => {
@@ -90,23 +93,23 @@ const TokenListDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
             onKeyDown={handleEnterKey}
             value={listUrlInput}
           />
-          <Button disabled={!validUrl} onClick={handleAddList}>
+          <ButtonV3 variant="primary" padding={'0px'} isDisabled={!validUrl} onClick={handleAddList} height="50px">
             {t('searchModal.add')}
-          </Button>
-        </div>
+          </ButtonV3>
+        </AddInputWrapper>
 
         {addError ? (
-          <div className="text-destructive text-xs mt-2" title={addError}>
+          <Text title={addError} color="error" fontSize={12}>
             {addError}
-          </div>
+          </Text>
         ) : null}
-      </div>
+      </Box>
       <Scrollbars>
-        <div className="py-2.5 px-5">
-          {sortedLists.map(url => (
+        <List>
+          {sortedLists.map((url) => (
             <TokenListRow listUrl={url} key={url} />
           ))}
-        </div>
+        </List>
       </Scrollbars>
     </Drawer>
   );

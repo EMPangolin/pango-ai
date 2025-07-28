@@ -28,7 +28,6 @@ import { cn } from '@/utils';
 import { CHAINS, Currency, FeeAmount, wrappedCurrency } from '@pangolindex/sdk';
 import { useCallback, useState } from 'react';
 import { Box } from '../Box';
-import { TextInput } from '../TextInput';
 import { Text } from '../TextV3';
 import ConfirmDrawer from './ConfirmDrawer';
 import FeeSelector from './FeeSelector';
@@ -39,8 +38,9 @@ import {
   Buttons,
   CurrencyInputTextBox,
   DynamicSection,
+  InputText,
   InputValue,
-  InputWrapper
+  InputWrapper,
 } from './styles';
 
 const AddLiquidity = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
@@ -328,12 +328,6 @@ const AddLiquidity = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                 currency1={currency1}
               />
 
-              <Alert variant="warning" className='py-1 px-2'>
-                <AlertDescription className='text-xs py-0'>
-                  Position fees can be adjusted based on market conditions to help investors remain profitable.
-                </AlertDescription>
-              </Alert>
-
               <FeeSelector
                 handleFeePoolSelect={handleFeePoolSelect}
                 disabled={!currency0 || !currency1}
@@ -403,23 +397,9 @@ const AddLiquidity = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                   id="add-liquidity-currency-input"
                   addonLabel={
                     account && (
-                      <div className="flex items-center gap-2">
-                        <small>
-                          {!!currency0 && selectedCurrencyBalanceA ? selectedCurrencyBalanceA?.toSignificant(4) : ' -'}
-                        </small>
-                        <Button
-                          size="sm"
-                          className="py-1 px-2"
-                          variant="outline"
-                          onClick={() => {
-                            if (selectedCurrencyBalanceA) {
-                              onFieldAInput(selectedCurrencyBalanceA?.toSignificant(4));
-                            }
-                          }}
-                        >
-                          Max
-                        </Button>
-                      </div>
+                      <small>
+                        {!!currency0 && selectedCurrencyBalanceA ? selectedCurrencyBalanceA?.toSignificant(4) : ' -'}
+                      </small>
                     )
                   }
                 />
@@ -453,23 +433,9 @@ const AddLiquidity = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                   id="swap-currency-input"
                   addonLabel={
                     account && (
-                      <div className="flex items-center gap-2">
-                        <small>
-                          {!!currency0 && selectedCurrencyBalanceB ? selectedCurrencyBalanceB?.toSignificant(4) : ' -'}
-                        </small>
-                        <Button
-                          size="sm"
-                          className="py-1 px-2"
-                          variant="outline"
-                          onClick={() => {
-                            if (selectedCurrencyBalanceB) {
-                              onFieldBInput(selectedCurrencyBalanceB?.toSignificant(4));
-                            }
-                          }}
-                        >
-                          Max
-                        </Button>
-                      </div>
+                      <small>
+                        {!!currency1 && selectedCurrencyBalanceB ? selectedCurrencyBalanceB?.toSignificant(4) : ' -'}
+                      </small>
                     )
                   }
                 />
@@ -542,7 +508,7 @@ const AddLiquidity = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                 {noLiquidity && <small>Initialized liquidity</small>}
 
                 <InputWrapper>
-                  <TextInput
+                  <InputText
                     value={startPriceTypedValue}
                     onChange={(value: any) => {
                       onStartPriceInput(value);

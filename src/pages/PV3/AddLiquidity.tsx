@@ -37,7 +37,6 @@ import PriceRange from './PriceRange';
 import SelectPair from './SelectPair';
 import useTransactionDeadline from '@/hooks/useTransactionDeadline';
 import { MixPanelEvents, useMixpanel } from '@/hooks/mixpanel';
-;
 
 export const PV3AddLiquidity = () => {
   const { t } = useTranslation();

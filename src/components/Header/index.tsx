@@ -17,11 +17,10 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useTheme } from '@/provider/theme-provider';
 import { cn } from '@/utils';
 import { ChainId } from '@pangolindex/sdk';
-import { ArrowLeft, ChevronDown, Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
-import { useChainId } from '@/provider';
 
 const MenuSoon = () => <Badge>Soon</Badge>;
 
@@ -43,7 +42,7 @@ interface Menu {
 }
 
 export default function Header() {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
   const { theme } = useTheme();
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const isDarkMode = theme === 'dark' || (theme === 'system' && prefersDarkMode);
@@ -111,6 +110,23 @@ export default function Header() {
           ],
         },
         {
+          label: 'SuperFarms',
+          url: '/superfarmsv2',
+          type: 'link',
+          isVisible: isAvalanche,
+        },
+        {
+          label: 'Farm',
+          url: '/earn',
+          type: 'link',
+          isVisible: isAvalanche,
+        },
+        {
+          label: 'OKX Airdrop',
+          url: '/airdrop',
+          type: 'link',
+        },
+        {
           label: 'Vote',
           url: '/vote',
           type: 'link',
@@ -122,15 +138,6 @@ export default function Header() {
             </span>
           ),
           url: isAvalanche ? 'https://core.app/bridge/' : 'https://scroll.io/bridge',
-          type: 'link',
-        },
-        {
-          label: (
-            <span>
-              Pangolin V2 <span>↗</span>
-            </span>
-          ),
-          url: 'http://v2.pangolin.exchange/',
           type: 'link',
         },
       ],

@@ -75,7 +75,7 @@ export default function Pool() {
         <TabsContent value="my-pools" className="bg-background rounded-lg">
           <div className="flex flex-col space-y-4 p-8">
             {!account ? (
-              <div className="text-center">Connect Wallet to view your liquidity.</div>
+              <div className="text-center">Connect to a wallet to view your liquidity.</div>
             ) : v2IsLoading ? (
               <div className="p-4 flex flex-col text-center space-y-2 border rounded-md text-muted-foreground">
                 <Dots>Loading</Dots>

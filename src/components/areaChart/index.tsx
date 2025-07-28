@@ -37,7 +37,7 @@ export const PNGAreaChart = ({ data, currency1 }) => {
             {value} ({percentage}%)
           </div>
         </div>
-        <div className="text-sm text-black/40 dark:text-muted-foreground">
+        <div className="text-sm text-black/40">
           {!activePoint
             ? moment(parseFloat(formattedData[formattedData.length - 1].timestamp)).format('MMM DD, YYYY, hh:mm A')
             : moment(activePoint.payload.timestamp).format('MMM DD, YYYY, hh:mm A')}

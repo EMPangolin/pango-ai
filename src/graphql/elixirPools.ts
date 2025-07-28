@@ -1,13 +1,10 @@
 import gql from 'graphql-tag'; // eslint-disable-line import/no-named-as-default
 //import { useQuery } from 'react-query';
-//import { useChainId } from 'src/provider';
+import { useChainId } from 'src/provider';
 import { validateAddressMapping } from 'src/utils/common';
 import { SubgraphEnum, useSubgraphClient } from './client';
 import { useQuery } from '@tanstack/react-query';
 import { avalancheClient } from '@/apolloInfo/client';
-;
-import { useActiveWeb3React } from '@/hooks';
-import { useChainId } from '@/provider';
 
 export type ElixirTick = {
   id: string;

@@ -1,12 +1,11 @@
 import { Icons } from '@/components/icons';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useChainId } from '@/provider';
-import { wrappedCurrency } from '@/utils/wrappedCurrency';
+import { unwrappedTokenV3, wrappedCurrency } from '@/utils/wrappedCurrency';
 import { useTranslation } from 'react-i18next';
 import { Bound } from 'src/state/mint/atom';
 import PriceInput from './PriceInput';
 import { PriceRangeProps } from './types';
-import { Button } from '@/components/ui/button';
 
 const PriceRange: React.FC<PriceRangeProps> = props => {
   const {
@@ -50,10 +49,7 @@ const PriceRange: React.FC<PriceRangeProps> = props => {
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" className="flex gap-2" onClick={onClickFullRange}>
-                Full Range
-                <Icons.code className="size-4 cursor-pointer" />
-              </Button>
+              <Icons.code className="size-4 cursor-pointer" onClick={onClickFullRange} />
             </TooltipTrigger>
             <TooltipContent align="end">Click to choose full range</TooltipContent>
           </Tooltip>

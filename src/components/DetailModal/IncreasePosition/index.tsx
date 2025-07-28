@@ -26,7 +26,6 @@ import { CHAINS } from '@pangolindex/sdk';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IncreasePositionProps } from './types';
-;
 
 const IncreasePosition = ({ isOpen, position: positionDetails, onClose }: IncreasePositionProps) => {
   const { t } = useTranslation();

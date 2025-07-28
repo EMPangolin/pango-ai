@@ -13,6 +13,13 @@ import { AutoColumn } from '../Column';
 import { RowBetween } from '../Row';
 import TransactionSettings from '../TransactionSettings';
 
+const EmojiWrapper = styled.div`
+  position: absolute;
+  bottom: -6px;
+  right: 0px;
+  font-size: 14px;
+`;
+
 const StyledMenu = styled.div`
   margin-left: 0.5rem;
   display: flex;
@@ -37,7 +44,7 @@ export default function SettingsTab() {
   return (
     <StyledMenu ref={node as any}>
       <Modal title="Are you sure?" isOpen={showConfirmation} onClose={() => setShowConfirmation(false)}>
-        <div className="flex flex-col gap-4">
+        <div className='flex flex-col gap-4'>
           <p>
             Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in
             bad rates and lost funds.
@@ -58,15 +65,13 @@ export default function SettingsTab() {
       </Modal>
       <h4>Market Order</h4>
       <Button variant="outline" size="icon" onClick={toggle} id="open-settings-dialog-button">
-        <Icons.gear className="size-4" />
+        <Icons.gear />
         {expertMode ? (
-          <span
-            role="img"
-            className="absolute -top-2 -right-2 px-0.5 py-0.5 rounded-lg bg-destructive"
-            aria-label="wizard-icon"
-          >
-            🧙
-          </span>
+          <EmojiWrapper>
+            <span role="img" aria-label="wizard-icon">
+              🧙
+            </span>
+          </EmojiWrapper>
         ) : null}
       </Button>
       {open && (

@@ -15,8 +15,6 @@ import CurrencyList from './CurrencyList';
 import { filterTokens } from './filtering';
 import SortButton from './SortButton';
 import { useTokenComparator } from './sorting';
-import { useChainId } from '@/provider';
-;
 
 interface CurrencySearchProps {
   isOpen: boolean;
@@ -37,7 +35,7 @@ export function CurrencySearch({
   isOpen,
   onChangeList,
 }: CurrencySearchProps) {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
 
   const fixedList = useRef<FixedSizeList>();
   const [searchQuery, setSearchQuery] = useState<string>('');

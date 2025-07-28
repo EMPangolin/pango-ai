@@ -18,13 +18,13 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import 'src/main.css';
 import { WagmiProvider } from 'wagmi';
+import { avalanche } from 'wagmi/chains';
 import { TooltipProvider } from './components/ui/tooltip';
 import { NetworkContextName } from './constants';
 import ApplicationContextProvider from './contexts/Application';
 import GlobalDataContextProvider from './contexts/GlobalData';
 import LocalStorageContextProvider, { Updater as LocalStorageContextUpdater } from './contexts/LocalStorage';
 import PairDataContextProvider, { Updater as PairDataContextUpdater } from './contexts/PairData';
-import { ButtonProvider } from "./contexts/ButtonContext";
 import App from './pages/App';
 import { ModalProvider } from './provider';
 import { ThemeProvider } from './provider/theme-provider';
@@ -39,6 +39,7 @@ import TransactionUpdater from './state/transactions/updater';
 import TransactionUpdaterV3 from './state/transactionsv3/updater';
 import UserUpdater from './state/user/updater';
 import getLibrary from './utils/getLibrary';
+
 import { client } from '@/apolloInfo/client';
 import { ApolloProvider } from '@apollo/client/react';
 import { ThemeOptions } from 'node_modules/@rainbow-me/rainbowkit/dist/themes/baseTheme';
@@ -46,34 +47,11 @@ import ApplicationUpdaterInfo from './state/applicationInfo/updater';
 import PoolUpdater from './state/pools/updater';
 import ProtocolUpdater from './state/protocol/updater';
 import TokenUpdater from './state/tokens/updater';
-import { defineChain } from 'viem';
-
-// Custom Avalanche chain
-const avalancheCustom = defineChain({
-  id: 43114,
-  name: 'Avalanche',
-  nativeCurrency: {
-    name: 'Avalanche',
-    symbol: 'AVAX',
-    decimals: 18,
-  },
-  rpcUrls: {
-    default: {
-      http: ['https://api.avax.network/ext/bc/C/rpc'],
-    },
-    public: {
-      http: ['https://api.avax.network/ext/bc/C/rpc'],
-    },
-  },
-  blockExplorers: {
-    default: { name: 'SnowTrace', url: 'https://snowtrace.io' },
-  },
-});
 
 const wagmiConfig = getDefaultConfig({
   appName: 'pangolin',
   projectId: import.meta.env.VITE_APP_RAINBOW_PROJECT_ID,
-  chains: [avalancheCustom],
+  chains: [avalanche],
   wallets: [
     {
       groupName: 'Recommended',
@@ -149,7 +127,6 @@ const rainbowCustomTheme: ThemeOptions = {
 const root = document.getElementById('root') as HTMLElement;
 
 createRoot(root).render(
-  <ButtonProvider>
   <BrowserRouter>
     <ThemeProvider defaultTheme="system" storageKey="pangolin-theme">
       <LocalStorageContextProvider>
@@ -186,6 +163,5 @@ createRoot(root).render(
         </GlobalDataContextProvider>
       </LocalStorageContextProvider>
     </ThemeProvider>
-  </BrowserRouter>
-  </ButtonProvider>,
+  </BrowserRouter>,
 );

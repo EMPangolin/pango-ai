@@ -1,14 +1,17 @@
-import { Box } from '@/components/BoxV3';
+import CurrencyLogo from '@/components/CurrencyLogo';
 import Drawer from '@/components/Drawer';
+import { Icons } from '@/components/icons';
 import { useTokenComparator } from '@/components/SearchModal/sorting';
 import { TextInput } from '@/components/TextInput';
-import { Text } from '@/components/TextV3';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { useActiveWeb3React } from '@/hooks';
 import { useTokenHook } from '@/hooks/tokens/index';
 import { useAllTokens } from '@/hooks/useAllTokens';
 import usePrevious from '@/hooks/usePrevious';
 import { useChainId } from '@/provider';
-import { useSelectedListInfo } from '@/state/listsV3';
-import { useAddUserToken } from '@/state/userv3';
+//import { useSelectedListInfo } from '@/state/lists/hooks';
+import { useCurrencyBalance } from '@/state/wallet/hooks';
 import { Field } from '@/types';
 import { isAddress } from '@/utils';
 import { filterTokenOrChain } from '@/utils/common';
@@ -16,11 +19,16 @@ import { CAVAX, ChainId, Currency, currencyEquals, Token, WAVAX } from '@pangoli
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import CurrencyGrid from './components/CurrencyGrid';
 import TokenListDrawer from './components/TokenListDrawer';
-import { ListLogo } from './components/TokenListDrawer/styled';
+import { useSelectedListInfo } from '@/state/listsV3';
+import { Box } from '@/components/BoxV3';
+import { Text } from '@/components/TextV3';
 import { CurrencyList, ManageList } from './styled';
+import { ListLogo } from './components/TokenListDrawer/styled';
+import { FixedSizeGrid } from 'react-window';
+import { useAddUserToken } from '@/state/userv3';
+import CurrencyGrid from './components/CurrencyGrid';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 interface Props {
   isOpen: boolean;
@@ -38,11 +46,11 @@ const currencyKey = (columnIndex: number, rowIndex: number, data: Currency[], ch
   return currency instanceof Token
     ? currency.address
     : currency === CAVAX[chainId] && CAVAX[chainId]?.symbol
-      ? (CAVAX[chainId]?.symbol as string)
-      : `${rowIndex}-${columnIndex}`;
+    ? (CAVAX[chainId]?.symbol as string)
+    : `${rowIndex}-${columnIndex}`;
 };
 
-const TokenDrawer: React.FC<Props> = props => {
+const TokenDrawer: React.FC<Props> = (props) => {
   const { isOpen, onClose, onCurrencySelect, otherSelectedCurrency, selectedCurrency, seletedField } = props;
   const chainId = useChainId();
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -92,14 +100,14 @@ const TokenDrawer: React.FC<Props> = props => {
     const symbolMatch = searchQuery
       .toLowerCase()
       .split(/\s+/)
-      .filter(s => s.length > 0);
+      .filter((s) => s.length > 0);
     if (symbolMatch.length > 1) return sorted;
 
     return [
       ...(searchToken ? [searchToken] : []),
       // sort any exact symbol matches first
-      ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
-      ...sorted.filter(token => token.symbol?.toLowerCase() !== symbolMatch[0]),
+      ...sorted.filter((token) => token.symbol?.toLowerCase() === symbolMatch[0]),
+      ...sorted.filter((token) => token.symbol?.toLowerCase() !== symbolMatch[0]),
     ];
   }, [filteredTokens, searchQuery, searchToken, tokenComparator]);
 
@@ -109,7 +117,7 @@ const TokenDrawer: React.FC<Props> = props => {
 
     if (searchQuery === '') {
       // remove Currency from array and add in first position
-      const _tokens = filteredSortedTokens.filter(token => token !== CAVAX[chainId]);
+      const _tokens = filteredSortedTokens.filter((token) => token !== CAVAX[chainId]);
       // Need to check when implement near
       // return CHAINS[chainId]?.evm ? [CAVAX[chainId], ..._tokens] : [..._tokens];
       return [currency, ..._tokens];
@@ -119,7 +127,7 @@ const TokenDrawer: React.FC<Props> = props => {
   //const currencies = useMemo(() => [Currency.CAVAX, ...filteredSortedTokens], [filteredSortedTokens]);
 
   const onSelect = useCallback(
-    currency => {
+    (currency) => {
       onCurrencySelect(currency);
       // workaround for now, if it's a custom token we will force add it
       if (currency && !allTokens[currency?.address || '']) {
@@ -128,6 +136,36 @@ const TokenDrawer: React.FC<Props> = props => {
       onClose();
     },
     [onCurrencySelect, onClose],
+  );
+
+  const Item = useCallback(
+    ({ data, columnIndex, rowIndex, style }) => {
+      const index = rowIndex * 4 + columnIndex;
+      const currency: Currency = data?.[index];
+      const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency));
+      const otherSelected = Boolean(otherSelectedCurrency && currencyEquals(otherSelectedCurrency, currency));
+
+      // add gap
+      const styles = {
+        ...style,
+        right: Number(style.left) + 10,
+        top: Number(style.top) + 10,
+        width: Number(style.width) - 10,
+        height: Number(style.height) - 10,
+      };
+
+      return currency ? (
+        <CurrencyGrid
+          style={styles}
+          currency={currency}
+          isSelected={isSelected}
+          onSelect={onSelect}
+          otherSelected={otherSelected}
+        />
+      ) : null;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedCurrency, otherSelectedCurrency, onCurrencySelect, onClose],
   );
 
   return (
@@ -153,27 +191,19 @@ const TokenDrawer: React.FC<Props> = props => {
         {currencies.length > 0 ? (
           <AutoSizer>
             {({ height, width }) => (
-              <div style={{ height, width, overflowY: 'auto', overflowX: 'hidden' }} className="grid grid-cols-4 gap-2">
-                {currencies.map((currency, index) => {
-                  const rowIndex = Math.floor(index / 4);
-                  const columnIndex = index % 4;
-                  const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency));
-                  const otherSelected = Boolean(
-                    otherSelectedCurrency && currencyEquals(otherSelectedCurrency, currency),
-                  );
-
-                  return (
-                    <div key={currencyKey(columnIndex, rowIndex, currencies, chainId)} style={{ height: 110 }}>
-                      <CurrencyGrid
-                        currency={currency}
-                        isSelected={isSelected}
-                        onSelect={onSelect}
-                        otherSelected={otherSelected}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
+              <FixedSizeGrid
+                height={height}
+                columnWidth={(width - 10) / 4}
+                rowHeight={110}
+                columnCount={4}
+                rowCount={Math.ceil(currencies.length / 4)}
+                width={width}
+                itemData={currencies}
+                itemKey={({ columnIndex, rowIndex, data }) => currencyKey(columnIndex, rowIndex, data, chainId)}
+                style={{ overflowX: 'hidden' }}
+              >
+                {Item}
+              </FixedSizeGrid>
             )}
           </AutoSizer>
         ) : (

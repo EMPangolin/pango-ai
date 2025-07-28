@@ -1,9 +1,7 @@
 import { TransactionResponse } from '@ethersproject/providers';
 import { useCallback, useMemo } from 'react';
 import { TransactionDetails, useTransactionState } from './atom';
-import { useActiveWeb3React } from '@/hooks';
-import { useChainId } from '@/provider';
-;
+import { useActiveWeb3React, useChainId } from '@/hooks';
 
 type TransactionOnlyWithHash = Pick<TransactionResponse, 'hash'>;
 
@@ -51,7 +49,7 @@ export function useAllTransactionsClearer() {
 
 // returns all the transactions for the current chain
 export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
   const { transactions } = useTransactionState();
   const state = transactions;
 

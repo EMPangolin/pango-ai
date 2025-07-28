@@ -3,26 +3,19 @@ import { Icons } from '@/components/icons';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { usePool } from '@/hooks/common';
-//import { useChainId } from '@/provider';
+import { useChainId } from '@/provider';
 import { Field } from '@/state/mint/atom';
 import { useMintActionHandlers } from '@/state/mint/hooksElixir';
 import { unwrappedTokenV3 } from '@/utils/wrappedCurrency';
-import { Currency, CurrencyAmount } from '@pangolindex/sdk';
+import { Currency } from '@pangolindex/sdk';
 import { useCallback, useMemo, useState } from 'react';
 import RemoveDrawer from '../EarnWidget/RemoveDrawer';
 import IncreasePosition from '../IncreasePosition';
 import { HeaderProps } from './types';
 import { useConcLiqNFTPositionManagerContract } from '@/utils/contracts';
 import { useSingleCallResult } from '@/state/multicallv3';
-import { getBonusRewardTokens, getPendingRewards } from '@/hooks/evm';
+import { getPendingRewards } from '@/hooks/evm';
 import ReactTooltip from 'react-tooltip';
-;
-import { useUSDCPrice } from '@/hooks/useUSDCPrice/evm';
-import { useToken } from '@/hooks/tokens/evm';
-import { useCurrency } from '@/hooks/Tokens';
-import { useComponentButton } from '@/contexts/ButtonContext';
-import { useActiveWeb3React } from '@/hooks';
-import { useChainId } from '@/provider';
 
 const Header = ({ position, statItems, token0, token1, addModal }: HeaderProps) => {
   const chainId = useChainId();
@@ -30,12 +23,9 @@ const Header = ({ position, statItems, token0, token1, addModal }: HeaderProps) 
   const [isRemoveDrawerVisible, setShowRemoveDrawer] = useState(false);
   const [isIncreasePositionVisible, setShowIncreasePosition] = useState(false);
 
-  //const { enabled } = useButton();
-
   const currency0 = token0 && unwrappedTokenV3(token0, chainId);
   const currency1 = token1 && unwrappedTokenV3(token1, chainId);
   const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, position?.fee);
-  const { enabled } = useComponentButton(position?.tokenId);
 
   const isClosedPosition = position?.liquidity.isZero();
   const isOutOfRange: boolean =
@@ -109,7 +99,7 @@ const Header = ({ position, statItems, token0, token1, addModal }: HeaderProps) 
 
         <div>
           <span className="text-slate-400 lg:hidden">APR</span>
-          {!enabled ? (
+          {pendingRewards?.amounts?.[0] > 0 ? (
             <>
               <h5 data-tip={`Please claim your bonus rewards before removing the position.`} className="lg:text-center" data-html={true} >
                 <Button

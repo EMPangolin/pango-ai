@@ -62,7 +62,7 @@
     "unclaimedReward": "Unclaimed {{ symbol }}",
     "claim": "Claim",
     "claimReward": "Claim {{ symbol }}",
-    "claimRewardBonus": "Claim {{ symbol }}",
+    "claimRewardBonus": "Claim {{ symbol }} Bonus",
     "claimRewards": "Claim Rewards",
     "liquidityRemainsPool": "When you claim without withdrawing your liquidity remains in the mining pool.",
     "withdrawingLiquidity": "Withdrawing {{ amount }} {{ symbol }}",
@@ -275,7 +275,7 @@
   },
   "walletModal": {
     "errorConnecting": "Error connecting, try again.",
-    "connectToWallet": "Connect Wallet",
+    "connectToWallet": "Connect to a wallet",
     "connectWallet": "Connect Wallet",
     "disconnect": "Disconnect",
     "initializing": "Initializing...",
@@ -292,7 +292,7 @@
     "pending": "Pending",
     "wrongNetwork": "Wrong Network",
     "error": "Error",
-    "connectToWallet": "Connect Wallet"
+    "connectToWallet": "Connect to a wallet"
   },
   "gasFeeAlert": {
     "gasFeeReduction": "!!! Gas Fee Reduction !!!",
@@ -323,7 +323,7 @@
   "airdrop": {
     "claimPngAirdrop": "Claim {{ pngSymbol }} from Airdrop",
     "claimPeriodEnded": "The airdrop claim period has ended.",
-    "connectWalletViewLiquidity": "Connect Wallet to view your liquidity.",
+    "connectWalletViewLiquidity": "Connect to a wallet to view your liquidity.",
     "noAvailableClaim": "You have no {{ pngSymbol }} available claim.",
     "noUniNoSushi": "You have no UNI or SUSHI tokens. Please follow the tutorial here to add UNI or SUSHI tokens to your wallet.",
     "youHave": "You have ",
@@ -380,7 +380,7 @@
     "yourLiquidity": "Your liquidity",
     "createPair": "Create a pair",
     "addLiquidity": "Add liquidity",
-    "connectWalletToView": "Connect Wallet to view your liquidity.",
+    "connectWalletToView": "Connect to a wallet to view your liquidity.",
     "loading": "Loading",
     "noLiquidity": "No liquidity found.",
     "uniswapV1Found": "Uniswap V1 liquidity found!",
@@ -416,7 +416,7 @@
     "yourAverageAPR": "Your Average APR"
   },
   "poolFinder": {
-    "connectToFind": "Connect Wallet to find pools",
+    "connectToFind": "Connect to a wallet to find pools",
     "selectTokenToFind": "Select a token to find your liquidity.",
     "selectToken": "Select a Token",
     "poolFound": "Pool Found!",
@@ -482,7 +482,7 @@
     "watchList": "WatchList",
     "yourPortFolio": "Your Portfolio",
     "comingSoon": "Coming Soon",
-    "connectWalletViewPortFolio": "Connect Wallet to check your portfolio.",
+    "connectWalletViewPortFolio": "Connect to a wallet to check your portfolio.",
     "limitOrders": "Limit Orders",
     "cancelOrder": "Cancel Order",
     "all": "ALL",

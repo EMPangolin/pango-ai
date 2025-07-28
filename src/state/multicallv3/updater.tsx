@@ -9,10 +9,8 @@ import { useBlockNumber } from '../application/hooks';
 import { getChainByNumber } from '@/utils/common';
 import { CancelledError, retry, RetryableError } from '@/utils/retry';
 import useDebounce from '@/hooks/useDebounce';
-;
-import chunkArray from '@/utils/chunkArray';
-import { useActiveWeb3React } from '@/hooks';
 import { useChainId } from '@/provider';
+import chunkArray from '@/utils/chunkArray';
 
 // chunk calls so we do not exceed the gas limit
 const CALL_CHUNK_SIZE = 500;
@@ -31,7 +29,7 @@ async function fetchChunk(
   minBlockNumber: number,
   chainId: ChainId,
 ): Promise<{ results: string[]; blockNumber: number }> {
-  console.debug('Fetching chunk v3', multicallContract, chunk, minBlockNumber);
+  console.debug('Fetching chunk', multicallContract, chunk, minBlockNumber);
 
   const chain = getChainByNumber(chainId);
   const args: any = [chunk.map((obj) => [obj.address, obj.callData])];
@@ -48,9 +46,9 @@ async function fetchChunk(
     console.debug('Failed to fetch chunk inside retry', error);
     throw error;
   }
-  /*if (resultsBlockNumber.toNumber() < minBlockNumber) {
+  if (resultsBlockNumber.toNumber() < minBlockNumber) {
     throw new RetryableError('Fetched for old block number');
-  }*/
+  }
 
   return { results: returnData, blockNumber: resultsBlockNumber.toNumber() };
 }

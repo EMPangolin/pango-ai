@@ -136,7 +136,7 @@ export default function Home() {
 
   useEffect(() => {
     if (selectedVolume.value === undefined && protocolData) {
-      setSelectedVolume({ value: formatDollarAmount(protocolData.volumeUSD+300000, 2, true), date: NOW });
+      setSelectedVolume({ value: formatDollarAmount(protocolData.volumeUSD, 2, true), date: NOW });
     }
   }, [selectedVolume, protocolData]);
 
@@ -257,7 +257,7 @@ export default function Home() {
 
                       setVolumeActivePoint(e.activePayload[0]);
                       setSelectedVolume({
-                        value: formatDollarAmount(e.activePayload[0].value+300000),
+                        value: formatDollarAmount(e.activePayload[0].value),
                         date: moment(e.activePayload[0].payload.time).format('DD.MM.YYYY'),
                       });
                     } else {

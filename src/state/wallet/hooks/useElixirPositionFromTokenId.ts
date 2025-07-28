@@ -1,8 +1,6 @@
 import { BigNumber } from 'ethers';
 import { UseElixirPositionResults } from '../types';
 import { useElixirPositionsFromTokenIdsHook } from './index';
-;
-import { useActiveWeb3React } from '@/hooks';
 import { useChainId } from '@/provider';
 
 export function useElixirPositionFromTokenId(tokenId: BigNumber | undefined): UseElixirPositionResults {
