@@ -219,6 +219,9 @@ export default function RemoveLiquidity() {
       [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0],
     };
 
+    console.log(amountsMin.CURRENCY_A.toString())
+    console.log(amountsMin.CURRENCY_B.toString())
+
     if (!currencyA || !currencyB) throw new Error('missing tokens');
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY];
     if (!liquidityAmount) throw new Error('missing liquidity amount');
