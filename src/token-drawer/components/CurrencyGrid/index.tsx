@@ -1,0 +1,47 @@
+import CurrencyLogo from '@/components/CurrencyLogo';
+import Loader from '@/components/Loader';
+import { Button } from '@/components/ui/button';
+import { useActiveWeb3React } from '@/hooks';
+import { useChainId, usePangolinWeb3 } from '@/provider';
+import { useCurrencyBalanceV3 } from '@/state/wallet/hooks';
+import { cn } from '@/utils';
+import { Currency } from '@pangolindex/sdk';
+import { LoaderIcon } from 'lucide-react';
+import React, { useCallback } from 'react';
+interface Props {
+  currency: Currency;
+  onSelect: (currency: Currency) => void;
+  isSelected: boolean;
+  otherSelected: boolean;
+}
+
+const CurrencyGrid: React.FC<Props> = props => {
+  const { currency, onSelect, isSelected, otherSelected } = props;
+  const { account } = useActiveWeb3React();
+  const chainId = useChainId();
+
+  const balance = useCurrencyBalanceV3(chainId, account ?? undefined, currency);
+
+  const handleSelect = useCallback(() => {
+    onSelect(currency);
+  }, [onSelect, currency]);
+
+  return (
+    <div
+      className={cn(
+        'flex flex-col text-center rounded-lg p-4 justify-center items-center hover:bg-backgroundSoft transition-colors select-none gap-4 cursor-pointer',
+        isSelected ? 'border-2 bg-secondary' : '',
+        otherSelected ? 'border-2 bg-primary opacity-50' : '',
+      )}
+      onClick={handleSelect}
+    >
+      <CurrencyLogo currency={currency} className="size-9" />
+      <div className="flex flex-col items-center gap-1">
+        <small>{currency?.symbol}</small>
+        <span>{balance ? balance.toSignificant(4) : account ? <Loader /> : null}</span>
+      </div>
+    </div>
+  );
+};
+
+export default CurrencyGrid;
