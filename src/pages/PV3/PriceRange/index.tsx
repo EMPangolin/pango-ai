@@ -7,10 +7,12 @@ import { PriceInputs } from './styles';
 import { PriceRangeProps } from './types';
 import { useTranslation } from 'react-i18next';
 import { wrappedCurrency } from '@/utils/wrappedCurrency';
-import { useChainId } from '@/provider';
 import { Box } from '@/components/BoxV3';
 import Tooltip from '@/components/TooltipV3';
 import { Text } from '@/components/TextV3';
+;
+import { useActiveWeb3React } from '@/hooks';
+import { useChainId } from '@/provider';
 
 const PriceRange: React.FC<PriceRangeProps> = props => {
   const {

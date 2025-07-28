@@ -1,7 +1,7 @@
 import { CurrencyAmount, Fraction } from '@pangolindex/sdk';
 import numeral from 'numeral';
 import React, { useMemo } from 'react';
-import { useUnderlyingTokensHook } from 'src/hooks';
+import { useActiveWeb3React, useUnderlyingTokensHook } from 'src/hooks';
 import {
   BlackBox,
   BlackBoxContent,
@@ -17,7 +17,7 @@ import {
 } from './styles';
 import { PoolCardProps } from './types';
 import { ButtonPrimary } from '@/components/Button';
-import { useChainId } from '@/provider';
+//import { useChainId } from '@/provider';
 import { useTranslation } from 'react-i18next';
 import { useUSDCPriceHook } from '@/hooks/useUSDCPrice';
 import { unwrappedTokenV3 } from '@/utils/wrappedCurrency';
@@ -26,6 +26,8 @@ import { Box } from '@/components/BoxV3';
 import { Text } from '@/components/TextV3';
 import { Button } from '@/components/ButtonV3';
 import { DoubleCurrencyLogo } from '@/components/DoubleCurrencyLogo';
+import { useChainId } from '@/provider';
+;
 
 const PoolCard: React.FC<PoolCardProps> = props => {
   const { pool, onClick } = props;

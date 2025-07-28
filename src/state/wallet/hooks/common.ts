@@ -2,7 +2,8 @@ import { CAVAX, ChainId, Currency, CurrencyAmount, Token, TokenAmount } from '@p
 import { useMemo } from 'react';
 import { useAllTokens } from 'src/hooks/useAllTokens';
 import { useAccountBalanceHook, useTokenBalancesHook } from './index';
-import { useActiveWeb3React, useChainId } from '@/hooks';
+import { useActiveWeb3React } from '@/hooks';
+;
 
 export function useCurrencyBalances(
   chainId: ChainId,

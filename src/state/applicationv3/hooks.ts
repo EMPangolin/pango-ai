@@ -1,5 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { ApplicationModal, PopupContent, PopupList, useApplicationState } from './atom';
+;
+import { useActiveWeb3React } from '@/hooks';
 import { useChainId } from '@/provider';
 
 export function useBlockNumber(): number | undefined {

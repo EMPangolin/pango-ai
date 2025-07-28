@@ -7,6 +7,7 @@ import { getEtherscanLink } from '../../utils';
 import { AutoColumn, ColumnCenter } from '../Column';
 import { Icons } from '../icons';
 import { RowBetween } from '../Row';
+;
 
 const ConfirmOrLoadingWrapper = styled.div`
   width: 100%;
@@ -25,7 +26,6 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
         <Icons.x onClick={onDismiss} />
       </RowBetween>
       <ConfirmedIcon>
-        <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
       </ConfirmedIcon>
       <AutoColumn gap="100px" justify={'center'}>
         {children}
@@ -44,7 +44,7 @@ export function SubmittedView({
   onDismiss: () => void;
   hash: string | undefined;
 }) {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
 
   return (
     <ConfirmOrLoadingWrapper>

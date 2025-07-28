@@ -2,9 +2,10 @@ import { useTokenHook } from '@/hooks/tokens/index';
 import { useChainId } from '@/provider';
 import { unwrappedTokenV3 } from '@/utils/wrappedCurrency';
 import { Percent, Position, Token, TokenAmount } from '@pangolindex/sdk';
-import { useConcLiqPositionFeesHook } from 'src/hooks';
+import { useActiveWeb3React, useConcLiqPositionFeesHook } from 'src/hooks';
 import { useDerivedPositionInfo } from 'src/state/wallet/hooks/evm';
 import { PositionDetails } from 'src/state/wallet/types';
+;
 
 export function useDerivedBurnInfo(
   position?: PositionDetails,

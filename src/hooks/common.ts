@@ -11,10 +11,12 @@ import {
   nearestUsableTick,
 } from '@pangolindex/sdk';
 import { useMemo } from 'react';
-import { usePoolsHook } from 'src/hooks';
+import { useActiveWeb3React, usePoolsHook } from 'src/hooks';
 import { Bound } from 'src/state/mint/atom';
 import { PoolState } from './types';
 import { useChainId } from '@/provider';
+//import { useChainId } from '@/provider';
+;
 
 export function usePool(
   currencyA: Currency | undefined,

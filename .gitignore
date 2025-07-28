@@ -34,3 +34,8 @@ cypress/screenshots
 cypress/fixtures/example.json
 # Local Netlify folder
 .netlify
+
+# lock dosyalarini eklemesin
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

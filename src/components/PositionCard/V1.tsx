@@ -7,6 +7,7 @@ import { AutoColumn } from '../Column';
 import DoubleCurrencyLogo from '../DoubleLogo';
 import { RowBetween, RowFixed } from '../Row';
 import { FixedHeightRow, HoverCard } from './index';
+;
 
 interface PositionCardProps extends RouteComponentProps<{}> {
   token: Token;
@@ -14,7 +15,7 @@ interface PositionCardProps extends RouteComponentProps<{}> {
 }
 
 function V1PositionCard({ token, V1LiquidityBalance }: PositionCardProps) {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
 
   return (
     <HoverCard>

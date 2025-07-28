@@ -10,12 +10,15 @@ import './footer.css';
 import { useTheme } from '@/provider/theme-provider';
 import { useMediaQuery } from '@mui/material';
 
+import ChatWidget from '../ChatWidget';
+
 export default function Footer() {
   const footerRef = useRef(null);
   const { theme } = useTheme();
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const isDarkMode = theme === 'dark' || (theme === 'system' && prefersDarkMode);
   const [footerVisible, setFooterVisible] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
     if (!footerRef.current) return;
@@ -25,6 +28,17 @@ export default function Footer() {
     });
     obs.observe(footerRef.current);
     return () => obs.disconnect();
+  }, []);
+  
+  useEffect(() => {
+    const open = () => setChatOpen(true);
+    const close = () => setChatOpen(false);
+    window.addEventListener('open-chat', open);
+    window.addEventListener('close-chat', close);
+    return () => {
+      window.removeEventListener('open-chat', open);
+      window.removeEventListener('close-chat', close);
+    };
   }, []);
 
   return (
@@ -168,8 +182,7 @@ export default function Footer() {
             <h5 className="font-semibold text-lg mb-2">Pango AI</h5>
             <a
               className="text-muted-foreground hover:text-primary transition-colors"
-              href="https://t.me/pangolinv3"
-              target="_blank"
+              onClick={() => window.dispatchEvent(new Event('open-chat'))}
             >
               <video
                 src={PangolinAI}
@@ -289,20 +302,20 @@ export default function Footer() {
           </Link>
         </div>
       </div>
-      {!footerVisible && (
+      {!footerVisible && !chatOpen && (
         <div className="pangolin-ai-fixed">
           <h5 className="font-semibold text-lg mb-2" style={{ paddingLeft: '10px' }}>
             Pango AI
           </h5>
           <a
             className="text-muted-foreground hover:text-primary transition-colors"
-            href="https://t.me/pangolinv3"
-            target="_blank"
+            onClick={() => window.dispatchEvent(new Event('open-chat'))}
           >
             <video src={PangolinAI} autoPlay width={'100'} />
           </a>
         </div>
       )}
+      <ChatWidget/>
     </div>
   );
 }

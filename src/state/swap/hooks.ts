@@ -17,7 +17,9 @@ import useToggledVersion from '../../hooks/useToggledVersion';
 import { useUserSlippageTolerance } from '../user/hooks';
 import { computeSlippageAdjustedAmounts } from '../../utils/prices';
 import { ROUTER_ADDRESS, FACTORY_ADDRESS, PNG } from '../../constants';
+;
 import { useAccount } from 'wagmi';
+import { useChainId } from '@/provider';
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap);
@@ -29,7 +31,7 @@ export function useSwapActionHandlers(): {
   onUserInput: (field: Field, typedValue: string) => void;
   onChangeRecipient: (recipient: string | null) => void;
 } {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
   const dispatch = useDispatch<AppDispatch>();
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
@@ -188,7 +190,7 @@ export function useDerivedSwapInfo(refreshInterval?: number) {
 
   let inputError: string | undefined;
   if (!account) {
-    inputError = 'Connect to a wallet';
+    inputError = 'Connect Wallet';
   }
 
   if (!parsedAmount) {
@@ -309,7 +311,7 @@ export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId)
 export function useDefaultsFromURLSearch():
   | { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined }
   | undefined {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
   const dispatch = useDispatch<AppDispatch>();
   const parsedQs = useParsedQueryString();
   const [result, setResult] = useState<

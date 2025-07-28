@@ -1,11 +1,11 @@
 import { Icons } from '@/components/icons';
+import { Button } from '@/components/ui/button';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { ArrowLeft } from 'react-feather';
 import ReactGA from 'react-ga';
 import { usePopper } from 'react-popper';
 import { useDispatch, useSelector } from 'react-redux';
 import { Text } from 'rebass';
-import styled from 'styled-components';
 import { useFetchListCallback } from '../../hooks/useFetchListCallback';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import useToggle from '../../hooks/useToggle';
@@ -15,51 +15,10 @@ import { useSelectedListUrl } from '../../state/lists/hooks';
 import listVersionLabel from '../../utils/listVersionLabel';
 import { parseENSAddress } from '../../utils/parseENSAddress';
 import uriToHttp from '../../utils/uriToHttp';
-import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../Button';
 import Column from '../Column';
 import ListLogo from '../ListLogo';
 import QuestionHelper from '../QuestionHelper';
 import Row, { RowBetween } from '../Row';
-import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds';
-import { Button } from '../ui/button';
-
-const PopoverContainer = styled.div<{ show: boolean }>`
-  z-index: 100;
-  visibility: ${props => (props.show ? 'visible' : 'hidden')};
-  opacity: ${props => (props.show ? 1 : 0)};
-  transition:
-    visibility 150ms linear,
-    opacity 150ms linear;
-  box-shadow:
-    0px 0px 1px rgba(0, 0, 0, 0.01),
-    0px 4px 8px rgba(0, 0, 0, 0.04),
-    0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-gap: 8px;
-  font-size: 1rem;
-  text-align: left;
-`;
-
-const StyledMenu = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  border: none;
-`;
-
-const StyledListUrlText = styled.div`
-  max-width: 160px;
-  opacity: 0.6;
-  margin-right: 0.5rem;
-  font-size: 14px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
 
 function ListOrigin({ listUrl }: { listUrl: string }) {
   const ensName = useMemo(() => parseENSAddress(listUrl)?.ensName, [listUrl]);
@@ -93,7 +52,7 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
 
   const [open, toggle] = useToggle(false);
   const node = useRef<HTMLDivElement>();
-  const [referenceElement, setReferenceElement] = useState<HTMLDivElement>();
+  const [referenceElement, setReferenceElement] = useState<HTMLButtonElement>();
   const [popperElement, setPopperElement] = useState<HTMLDivElement>();
 
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
@@ -166,30 +125,31 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
             marginTop: '4px',
           }}
         >
-          <StyledListUrlText title={listUrl}>
+          <div className="max-w-40 opacity-60 mr-2 text-sm overflow-hidden text-ellipsis" title={listUrl}>
             <ListOrigin listUrl={listUrl} />
-          </StyledListUrlText>
+          </div>
         </Row>
       </Column>
-      <StyledMenu ref={node as any}>
-        <ButtonOutlined
-          style={{
-            width: '2rem',
-            padding: '.8rem .35rem',
-            borderRadius: '12px',
-            fontSize: '14px',
-            marginRight: '0.5rem',
-          }}
+      <div className="flex justify-center items-center relative border-none">
+        <Button
+          variant="outline"
+          size="sm"
           onClick={toggle}
           ref={setReferenceElement}
+          className="w-8 p-2 rounded-xl text-sm mr-2"
         >
           <Icons.chevronDown />
-        </ButtonOutlined>
+        </Button>
 
         {open && (
-          <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
+          <div
+            className="z-[100] visible opacity-100 transition-all duration-150 shadow-lg rounded-lg p-4 grid grid-rows-1 gap-2 text-base text-left bg-background border"
+            ref={setPopperElement as any}
+            style={styles.popper}
+            {...attributes.popper}
+          >
             <div>{list && listVersionLabel(list.version)}</div>
-            <SeparatorDark />
+            <div className="w-full h-px bg-border"></div>
             <a href={`https://tokenlists.org/token-list?url=${listUrl}`}>View list</a>
             <Button variant="ghost" onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
               Remove list
@@ -199,49 +159,21 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
                 Update list
               </Button>
             )}
-          </PopoverContainer>
+          </div>
         )}
-      </StyledMenu>
+      </div>
       {isSelected ? (
-        <ButtonPrimary
-          disabled={true}
-          className="select-button"
-          style={{ width: '5rem', minWidth: '5rem', padding: '0.5rem .35rem', borderRadius: '12px', fontSize: '14px' }}
-        >
+        <Button disabled={true} className="w-20 min-w-20 py-2 px-1.5 rounded-xl text-sm">
           Selected
-        </ButtonPrimary>
+        </Button>
       ) : (
-        <>
-          <ButtonPrimary
-            className="select-button"
-            style={{
-              width: '5rem',
-              minWidth: '4.5rem',
-              padding: '0.5rem .35rem',
-              borderRadius: '12px',
-              fontSize: '14px',
-            }}
-            onClick={selectThisList}
-          >
-            Select
-          </ButtonPrimary>
-        </>
+        <Button onClick={selectThisList} className="w-20 min-w-18 py-2 px-1.5 rounded-xl text-sm">
+          Select
+        </Button>
       )}
     </Row>
   );
 });
-
-const AddListButton = styled(ButtonSecondary)`
-  max-width: 4rem;
-  margin-left: 1rem;
-  border-radius: 12px;
-  padding: 10px 18px;
-`;
-
-const ListContainer = styled.div`
-  flex: 1;
-  overflow: auto;
-`;
 
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
   const [listUrlInput, setListUrlInput] = useState<string>('');
@@ -251,7 +183,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   const adding = Boolean(lists[listUrlInput]?.loadingRequestId);
   const [addError, setAddError] = useState<string | null>(null);
 
-  const handleInput = useCallback(e => {
+  const handleInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setListUrlInput(e.target.value);
     setAddError(null);
   }, []);
@@ -285,7 +217,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   }, [listUrlInput]);
 
   const handleEnterKey = useCallback(
-    e => {
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (validUrl && e.key === 'Enter') {
         handleAddList();
       }
@@ -317,7 +249,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
-      <PaddedColumn>
+      <div className="p-5 pb-3">
         <RowBetween>
           <div>
             <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
@@ -327,17 +259,18 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
           </Text>
           <Icons.x onClick={onDismiss} />
         </RowBetween>
-      </PaddedColumn>
+      </div>
 
-      <Separator />
+      <div className="w-full h-px bg-border"></div>
 
-      <PaddedColumn gap="14px">
+      <div className="p-5 pb-3 flex flex-col gap-3.5">
         <Text fontWeight={600}>
           Add a list{' '}
           <QuestionHelper text="Token lists are an open specification for lists of ERC20 tokens. You can use any token list by entering its URL below. Beware that third party token lists can contain fake or malicious ERC20 tokens." />
         </Text>
         <Row>
-          <SearchInput
+          <input
+            className="relative flex p-4 items-center w-full whitespace-nowrap bg-transparent border-none outline-none rounded-2xl text-lg transition-all duration-100 focus:outline-none bg-slate-500"
             type="text"
             id="list-add-input"
             placeholder="https:// or ipfs://"
@@ -346,25 +279,25 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
             onKeyDown={handleEnterKey}
             style={{ height: '2.75rem', borderRadius: 12, padding: '12px' }}
           />
-          <AddListButton onClick={handleAddList} disabled={!validUrl}>
+          <Button onClick={handleAddList} disabled={!validUrl}>
             Add
-          </AddListButton>
+          </Button>
         </Row>
         {addError ? (
           <span className="text-destructive" title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>
             {addError}
           </span>
         ) : null}
-      </PaddedColumn>
+      </div>
 
-      <Separator />
+      <div className="w-full h-px bg-border"></div>
 
-      <ListContainer>
+      <div className="flex-1 overflow-auto">
         {sortedLists.map(listUrl => (
           <ListRow key={listUrl} listUrl={listUrl} onBack={onBack} />
         ))}
-      </ListContainer>
-      <Separator />
+      </div>
+      <div className="w-full h-px bg-border"></div>
     </Column>
   );
 }

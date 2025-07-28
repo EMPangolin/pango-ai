@@ -1,6 +1,6 @@
 import { FeeAmount } from '@pangolindex/sdk';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { usePoolsHook } from 'src/hooks';
+import { useActiveWeb3React, usePoolsHook } from 'src/hooks';
 import { PoolState } from 'src/hooks/types';
 import { useFeeTierDistributionHook } from '../../../hooks/FeeTier';
 import FeeOption from './FeeOption';
@@ -15,10 +15,11 @@ import {
   SelectFeeTierWrapper,
 } from './styles';
 import { FeeSelectorProps } from './types';
-import { useChainId } from '@/provider';
 import { useTranslation } from 'react-i18next';
 import usePrevious from '@/hooks/usePrevious';
 import ButtonV3 from '@/components/Button/ButtonV3';
+import { useChainId } from '@/provider';
+;
 
 const FeeSelector: React.FC<FeeSelectorProps> = props => {
   const { disabled = false, feeAmount, handleFeePoolSelect, currency0, currency1 } = props;

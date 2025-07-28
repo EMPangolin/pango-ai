@@ -13,6 +13,7 @@ import { SINGLE_SIDE_STAKING_REWARDS_INFO } from './singleSideConfig';
 import { getRouterContract } from '../../utils';
 import { useAccount } from 'wagmi';
 import { useActiveWeb3React } from '@/hooks';
+;
 
 export const STAKING_GENESIS = 1600387200;
 
@@ -1129,7 +1130,7 @@ export function useStakingInfoFor(
 }
 
 export function useTotalBagEarned(): TokenAmount | undefined {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
   const bag = chainId ? CNR[chainId] : undefined;
   const stakingInfos = useStakingInfo(StakingType.BOTH);
 
@@ -1165,7 +1166,7 @@ export function useDerivedStakeInfo(
   let error: string | undefined;
 
   if (!account) {
-    error = 'Connect to a wallet';
+    error = 'Connect Wallet';
   }
 
   if (!parsedAmount) {
@@ -1196,7 +1197,7 @@ export function useDerivedUnstakeInfo(
   let error: string | undefined;
 
   if (!account) {
-    error = 'Connect to a wallet';
+    error = 'Connect Wallet';
   }
 
   if (!parsedAmount) {

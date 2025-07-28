@@ -64,19 +64,13 @@ export default function Vote() {
         onDismiss={toggleDelegateModal}
         title={showUnlockVoting ? 'votePage.unlockVotes' : 'votePage.updateDelegation'}
       />
-      <PageHeader
-        variant="vote"
-        title="Pangolin Governance"
-        description="PNG tokens represent voting shares in Pangolin governance. You can vote on each proposal yourself or delegate your votes to a third party"
-        image={voteImage}
-      />
-      <h5 className="font-semibold text-2xl">Proposals</h5>
-      {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
+      {allProposals.length !== 0 && <h5 className="font-semibold text-2xl">Proposals</h5>}
+      {(!allProposals || allProposals.length === 0) && <Loader />}
       {showUnlockVoting ? (
         <ButtonPrimary style={{ width: 'fit-content' }} padding="8px" borderRadius="8px" onClick={toggleDelegateModal}>
           Unlock Voting
         </ButtonPrimary>
-      ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.raw) ? (
+      ) : availableVotes && allProposals.length !== 0 && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.raw) ? (
         <p>
           <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
         </p>
@@ -84,13 +78,14 @@ export default function Vote() {
         pngBalance &&
         userDelegatee &&
         userDelegatee !== ZERO_ADDRESS &&
-        JSBI.notEqual(JSBI.BigInt(0), pngBalance?.raw) && (
+        JSBI.notEqual(JSBI.BigInt(0), pngBalance?.raw) &&
+        allProposals.length !== 0 && (
           <p>
             <FormattedCurrencyAmount currencyAmount={pngBalance} /> Votes
           </p>
         )
       )}
-      {!showUnlockVoting && userDelegatee && userDelegatee !== ZERO_ADDRESS && (
+      {!showUnlockVoting && userDelegatee && userDelegatee !== ZERO_ADDRESS && allProposals.length !== 0 && (
         <RowFixed>
           <p>Delegated To</p>
           <AddressButton>
@@ -103,15 +98,14 @@ export default function Vote() {
           </AddressButton>
         </RowFixed>
       )}
-      {allProposals?.length === 0 && (
+      {/*allProposals?.length === 0 && (
         <div className="p-4 flex flex-col text-center space-y-2 border rounded-md text-muted-foreground">
           <span>No Proposals Found</span>
           <span className="text-sm">Proposal Community Members</span>
         </div>
-      )}
+      )*/}
       <div className="rounded-md flex flex-col space-y-0.5 overflow-hidden">
         {allProposals?.map((proposal: ProposalData, i) => {
-          console.log(proposal);
           return (
             <div className="flex items-center justify-between p-4 bg-background" key={i}>
               <div className="flex items-start space-x-4">

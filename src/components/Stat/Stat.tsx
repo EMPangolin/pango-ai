@@ -1,6 +1,6 @@
 import AnalyticsIcon from '@/assets/images/analytics.svg';
 import CurrencyLogo from '@/components/CurrencyLogoV3';
-import { useChainId } from '@/provider';
+//import { useChainId } from '@/provider';
 import { ThemeColorsType } from '@/theme';
 import { cn } from '@/utils';
 import { Currency, Token, WAVAX } from '@pangolindex/sdk';
@@ -10,6 +10,10 @@ import { ThemeContext } from 'styled-components';
 import { Text } from '../Text';
 import Tooltip from '../TooltipV3';
 import { AnalyticsLink } from './styled';
+;
+import { useActiveWeb3React } from '@/hooks';
+import { useChainId } from '@/provider';
+
 
 export interface StatProps {
   title?: ReactNode;

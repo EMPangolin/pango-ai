@@ -1,37 +1,20 @@
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+import { BIG_INT_ZERO } from '@/constants';
+import { useTotalSupply } from '@/data/TotalSupply';
+import { useActiveWeb3React } from '@/hooks';
+import { useTokenBalance } from '@/state/wallet/hooks';
+import { currencyId } from '@/utils/currencyId';
+import { unwrappedToken } from '@/utils/wrappedCurrency';
 import { JSBI, Pair, Percent } from '@pangolindex/sdk';
-import { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'react-feather';
 import { Link } from 'react-router-dom';
 import { Text } from 'rebass';
-import styled from 'styled-components';
-import { BIG_INT_ZERO } from '../../constants';
-import { useTotalSupply } from '../../data/TotalSupply';
-import { useActiveWeb3React } from '../../hooks';
-import { useColor } from '../../hooks/useColor';
-import { useTokenBalance } from '../../state/wallet/hooks';
-import { currencyId } from '../../utils/currencyId';
-import { unwrappedToken } from '../../utils/wrappedCurrency';
-import { ButtonEmpty, ButtonPrimary } from '../Button';
-import Card, { GreyCard, LightCard } from '../Card';
+import { GreyCard, LightCard } from '../Card';
 import { AutoColumn } from '../Column';
 import CurrencyLogo from '../CurrencyLogo';
 import DoubleCurrencyLogo from '../DoubleLogo';
-import { CardNoise } from '../pool/styled';
-import { RowBetween, RowFixed } from '../Row';
+import { RowFixed } from '../Row';
 import { Dots } from '../swap/styleds';
-
-export const FixedHeightRow = styled(RowBetween)`
-  height: 24px;
-`;
-
-export const HoverCard = styled(Card)`
-  border: 1px solid transparent;
-`;
-const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
-  border: none;
-  position: relative;
-  overflow: hidden;
-`;
 
 interface PositionCardProps {
   pair: Pair;
@@ -44,8 +27,6 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 
   const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0);
   const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(pair.token1);
-
-  const [showMore, setShowMore] = useState(false);
 
   const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken);
   const totalPoolTokens = useTotalSupply(pair.liquidityToken);
@@ -70,66 +51,66 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     <>
       {userPoolBalance && JSBI.greaterThan(userPoolBalance.raw, JSBI.BigInt(0)) ? (
         <GreyCard border={border}>
-          <AutoColumn gap="12px">
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontWeight={500} fontSize={16}>
-                  Your position
-                </Text>
-              </RowFixed>
-            </FixedHeightRow>
-            <FixedHeightRow onClick={() => setShowMore(!showMore)}>
-              <RowFixed>
-                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
-                <Text fontWeight={500} fontSize={20}>
-                  {currency0.symbol}/{currency1.symbol}
-                </Text>
-              </RowFixed>
-              <RowFixed>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="position" className="border-none">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-3">
+                  <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
+                  <div className="flex flex-col items-start">
+                    <Text fontWeight={500} fontSize={16}>
+                      Your position
+                    </Text>
+                    <Text fontWeight={500} fontSize={20}>
+                      {currency0.symbol}/{currency1.symbol}
+                    </Text>
+                  </div>
+                </div>
                 <Text fontWeight={500} fontSize={20}>
                   {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
                 </Text>
-              </RowFixed>
-            </FixedHeightRow>
-            <AutoColumn gap="4px">
-              <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
-                  Your pool share:
-                </Text>
-                <Text fontSize={16} fontWeight={500}>
-                  {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
-                </Text>
-              </FixedHeightRow>
-              <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
-                  {currency0.symbol}:
-                </Text>
-                {token0Deposited ? (
-                  <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      {token0Deposited?.toSignificant(6)}
+              </AccordionTrigger>
+              <AccordionContent>
+                <AutoColumn gap="4px">
+                  <div className="h-6 flex items-center justify-between">
+                    <Text fontSize={16} fontWeight={500}>
+                      Your pool share:
                     </Text>
-                  </RowFixed>
-                ) : (
-                  '-'
-                )}
-              </FixedHeightRow>
-              <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
-                  {currency1.symbol}:
-                </Text>
-                {token1Deposited ? (
-                  <RowFixed>
-                    <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                      {token1Deposited?.toSignificant(6)}
+                    <Text fontSize={16} fontWeight={500}>
+                      {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
                     </Text>
-                  </RowFixed>
-                ) : (
-                  '-'
-                )}
-              </FixedHeightRow>
-            </AutoColumn>
-          </AutoColumn>
+                  </div>
+                  <div className="h-6 flex items-center justify-between">
+                    <Text fontSize={16} fontWeight={500}>
+                      {currency0.symbol}:
+                    </Text>
+                    {token0Deposited ? (
+                      <RowFixed>
+                        <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                          {token0Deposited?.toSignificant(6)}
+                        </Text>
+                      </RowFixed>
+                    ) : (
+                      '-'
+                    )}
+                  </div>
+                  <div className="h-6 flex items-center justify-between">
+                    <Text fontSize={16} fontWeight={500}>
+                      {currency1.symbol}:
+                    </Text>
+                    {token1Deposited ? (
+                      <RowFixed>
+                        <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                          {token1Deposited?.toSignificant(6)}
+                        </Text>
+                      </RowFixed>
+                    ) : (
+                      '-'
+                    )}
+                  </div>
+                </AutoColumn>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </GreyCard>
       ) : (
         <LightCard>
@@ -152,8 +133,6 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
   const currency0 = unwrappedToken(pair.token0);
   const currency1 = unwrappedToken(pair.token1);
 
-  const [showMore, setShowMore] = useState(false);
-
   const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken);
   const totalPoolTokens = useTotalSupply(pair.liquidityToken);
 
@@ -173,54 +152,28 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
       ? pair.getLiquidityValues(totalPoolTokens, userPoolBalance, { feeOn: false })
       : [undefined, undefined];
 
-  const backgroundColor = useColor(pair?.token0);
-
   return (
-    <StyledPositionCard border={border} bgColor={backgroundColor}>
-      <CardNoise />
-      <AutoColumn gap="12px">
-        <FixedHeightRow>
-          <RowFixed>
+    <Accordion type="single" collapsible className="w-full">
+      <AccordionItem value="position" className="border-none bg-muted rounded-lg">
+        <AccordionTrigger className="hover:no-underline px-6 py-6">
+          <div className="flex items-center gap-3">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
             <Text fontWeight={500} fontSize={20}>
               {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
             </Text>
-          </RowFixed>
-
-          <RowFixed gap="8px">
-            <ButtonEmpty
-              padding="6px 8px"
-              borderRadius="12px"
-              width="fit-content"
-              onClick={() => setShowMore(!showMore)}
-            >
-              {showMore ? (
-                <>
-                  {' '}
-                  Manage
-                  <ChevronUp size="20" style={{ marginLeft: '10px' }} />
-                </>
-              ) : (
-                <>
-                  Manage
-                  <ChevronDown size="20" style={{ marginLeft: '10px' }} />
-                </>
-              )}
-            </ButtonEmpty>
-          </RowFixed>
-        </FixedHeightRow>
-
-        {showMore && (
-          <AutoColumn gap="8px">
-            <FixedHeightRow>
+          </div>
+        </AccordionTrigger>
+        <AccordionContent>
+          <div className='flex flex-col gap-4 p-6'>
+            <div className="h-6 flex items-center justify-between">
               <Text fontSize={16} fontWeight={500}>
                 Your pool tokens:
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
               </Text>
-            </FixedHeightRow>
-            <FixedHeightRow>
+            </div>
+            <div className="h-6 flex items-center justify-between">
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
                   Pooled {currency0.symbol}:
@@ -236,9 +189,9 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               ) : (
                 '-'
               )}
-            </FixedHeightRow>
+            </div>
 
-            <FixedHeightRow>
+            <div className="h-6 flex items-center justify-between">
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
                   Pooled {currency1.symbol}:
@@ -254,40 +207,28 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               ) : (
                 '-'
               )}
-            </FixedHeightRow>
+            </div>
 
-            <FixedHeightRow>
+            <div className="h-6 flex items-center justify-between">
               <Text fontSize={16} fontWeight={500}>
                 Your pool share:
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}
               </Text>
-            </FixedHeightRow>
+            </div>
 
-            <RowBetween marginTop="10px">
-              <ButtonPrimary
-                padding="8px"
-                borderRadius="8px"
-                as={Link}
-                to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
-                width="48%"
-              >
-                Add
-              </ButtonPrimary>
-              <ButtonPrimary
-                padding="8px"
-                borderRadius="8px"
-                as={Link}
-                width="48%"
-                to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
-              >
-                Remove
-              </ButtonPrimary>
-            </RowBetween>
-          </AutoColumn>
-        )}
-      </AutoColumn>
-    </StyledPositionCard>
+            <div className="flex items-center gap-4 w-full mt-2">
+              <Link to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`} className="flex-1">
+                <Button className="w-full">Add</Button>
+              </Link>
+              <Link to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`} className="flex-1">
+                <Button className="w-full">Remove</Button>
+              </Link>
+            </div>
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }

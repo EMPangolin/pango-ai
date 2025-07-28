@@ -1,11 +1,13 @@
 // src/hooks/usePoolMetrics.ts
 import { useMemo } from 'react';
 import { usePoolDatasN } from '@/data/pools/poolDataN';
-import { useChainId } from '@/provider';
-import { useUnderlyingTokensHook } from '@/hooks';
+//import { useChainId } from '@/provider';
+import { useActiveWeb3React, useUnderlyingTokensHook } from '@/hooks';
 import { getBonusRewardEndTime, getBonusRewardTokens } from '@/hooks/evm';
 import { CurrencyAmount, Fraction, FeeAmount, Token } from '@pangolindex/sdk';
 import { useUSDCPriceHook } from './useUSDCPrice';
+import { useChainId } from '@/provider';
+;
 
 export function calcVolume(data): number {
   if (!data) return 0;

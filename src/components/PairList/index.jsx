@@ -15,6 +15,7 @@ import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
 import { useActiveWeb3React } from '../../hooks'
 import { ChainId } from '@pangolindex/sdk'
+;
 
 dayjs.extend(utc)
 
@@ -197,7 +198,7 @@ function PairList({ pairs, color, disbaleLinks, maxItems = 10 }) {
     }
   }
 
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
 
   const pairList =
     pairs &&

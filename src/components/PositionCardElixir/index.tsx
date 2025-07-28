@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import useIsTickAtLimit, { getPriceOrderingFromPositionForUI, usePool } from '@/hooks/common';
 import { useUSDCPrice } from '@/hooks/useUSDCPrice/evm';
 import { useTranslation } from '@/locales';
-import { useChainId } from '@/provider';
+//import { useChainId } from '@/provider';
 import { formatTickPrice } from '@/utils/formatTickPrice';
 import { unwrappedTokenV3 } from '@/utils/wrappedCurrency';
 import { CurrencyAmount, Fraction, Position } from '@pangolindex/sdk';
@@ -15,6 +15,9 @@ import { PositionCardProps } from './types';
 import { cn } from '@/utils';
 import { getBonusRewardEndTime, getBonusRewardTokens } from '@/hooks/evm';
 import { getTokenLogoURL } from '../CurrencyLogoV3/getTokenLogoURL';
+;
+import { useActiveWeb3React } from '@/hooks';
+import { useChainId } from '@/provider';
 
 const PositionCard = ({
   tokenId,
@@ -118,7 +121,7 @@ const PositionCard = ({
     <div
       className={cn(
         'bg-slate-50 dark:bg-muted border rounded-lg p-4 flex justify-between cursor-pointer flex-col md:flex-row gap-4',
-        closed && 'bg-gradient-to-tl from-destructive to-slate-50 from-0% to-70% border-destructive',
+        closed && 'bg-gradient-to-tl from-destructive to-slate-50 from-0% to-70% border-destructive dark:to-background',
       )}
       onClick={onClick}
     >

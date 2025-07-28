@@ -156,7 +156,7 @@ export function useDerivedMintInfo(
   let error: string | undefined;
 
   if (!account) {
-    error = 'Connect to a wallet';
+    error = 'Connect Wallet';
   }
 
   if (pairState === PairState.INVALID) {

@@ -11,6 +11,7 @@ import PoolCardV2SuperV2 from '../../components/earn/PoolCardV2SuperV2';
 import { useActiveWeb3React } from '../../hooks';
 import useDebounce from '../../hooks/useDebounce';
 import { STAKING_REWARDS_SP_V2_INFO, useMinichefSPStakingInfosV2 } from '../../state/stake/hooks';
+;
 
 enum SortingType {
   totalStakedInUsd = 'totalStakedInUsd',
@@ -18,7 +19,7 @@ enum SortingType {
 }
 
 export default function SuperFarmsV2() {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
   const stakingInfos = useMinichefSPStakingInfosV2();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<any>({ field: '', desc: true });

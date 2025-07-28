@@ -3,6 +3,9 @@ import React, { useMemo } from 'react';
 import { LogoSize } from 'src/constants';
 import { getTokenLogoURL } from './getTokenLogoURL';
 import { StyledLogo } from './styles';
+//import { useChainId } from '@/provider';
+;
+import { useActiveWeb3React } from '@/hooks';
 import { useChainId } from '@/provider';
 
 export default function CurrencyLogo({

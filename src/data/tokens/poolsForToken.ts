@@ -50,6 +50,7 @@ export async function fetchPoolsForToken(
       variables: {
         address: address,
       },
+      fetchPolicy: 'cache-first',
     })
 
     if (loading || error || !data) {

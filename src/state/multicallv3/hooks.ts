@@ -4,6 +4,8 @@ import { Contract } from '@ethersproject/contracts';
 import { useEffect, useMemo } from 'react';
 import { useBlockNumber } from '../application/hooks';
 import { Call, ListenerOptions, parseCallKey, toCallKey, useMulticallAtom } from './atom';
+;
+import { useActiveWeb3React } from '@/hooks';
 import { useChainId } from '@/provider';
 
 export interface Result extends ReadonlyArray<any> {

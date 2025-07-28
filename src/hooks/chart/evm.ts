@@ -17,9 +17,12 @@ import { useTickLensContract } from 'src/utils/contracts';
 import { TickProcessed } from './types';
 import { TickData, Ticks, useAllV3TicksQuery } from '@/graphql/allTicks';
 import { useSingleContractMultipleData } from '@/state/multicallv3';
-import { useChainId } from '@/provider';
+//import { useChainId } from '@/provider';
 import { wrappedCurrency } from '@/state/stake/hooks';
 import { ZERO_ADDRESS } from '@/constants';
+;
+import { useActiveWeb3React } from '..';
+import { useChainId } from '@/provider';
 
 export function useDensityChartData({
   currencyA,

@@ -4,10 +4,13 @@ import { useMemo } from 'react';
 import { NEVER_RELOAD, useMultipleContractSingleData, useSingleCallResult } from 'src/state/multicall/hooks';
 import { useAllTokens } from '../useAllTokens';
 import { TokenReturnType } from './constant';
-import { useChainId } from '@/provider';
+//import { useChainId } from '@/provider';
 import { isAddress } from '@/utils/common';
 import { useBytes32TokenContract, useTokenContract } from '../useContract';
 import ERC20_INTERFACE, { ERC20_BYTES32_INTERFACE } from '@/constants/abis/erc20';
+;
+import { useActiveWeb3React } from '..';
+import { useChainId } from '@/provider';
 
 // parse a name or symbol from a token response
 const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/;

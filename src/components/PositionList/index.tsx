@@ -55,7 +55,7 @@ const PositionList = ({
           ) : (
             <Alert>
               <Icons.inbox />
-              <AlertTitle>Connect to a wallet</AlertTitle>
+              <AlertTitle>Connect Wallet</AlertTitle>
               <AlertDescription>You have no position in this wallet.</AlertDescription>
               <div className="mt-4">
                 <ConnectWalletButtonRainbow />

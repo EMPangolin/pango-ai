@@ -89,7 +89,7 @@ export default function Vote() {
       <Confetti start={Boolean(claimConfirmed)} />
       {!account ? (
         <Card padding="40px">
-          <p className="text-center">Connect to a wallet to view Airdrop.</p>
+          <p className="text-center">Connect Wallet to view Airdrop.</p>
         </Card>
       ) : canClaim ? (
         <Card padding="40px">

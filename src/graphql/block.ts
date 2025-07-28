@@ -1,7 +1,10 @@
 import gql from 'graphql-tag'; // eslint-disable-line import/no-named-as-default
 import { useQuery } from '@tanstack/react-query';
-import { useChainId } from 'src/provider';
+//import { useChainId } from 'src/provider';
 import { SubgraphEnum, useSubgraphClient } from './client';
+;
+import { useActiveWeb3React } from '@/hooks';
+import { useChainId } from '@/provider';
 
 export const GET_BLOCK = gql`
   query blocks($timestampFrom: Int!, $timestampTo: Int!) {

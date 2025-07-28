@@ -8,8 +8,6 @@ export const ConnectWalletButtonRainbow = () => {
   return (
     <ConnectButton.Custom>
       {({ account, chain, openAccountModal, openChainModal, openConnectModal, authenticationStatus, mounted }) => {
-        // Note: If your app doesn't use authentication, you
-        // can remove all 'authenticationStatus' checks
         const ready = mounted && authenticationStatus !== 'loading';
         const connected =
           ready && account && chain && (!authenticationStatus || authenticationStatus === 'authenticated');
@@ -29,7 +27,7 @@ export const ConnectWalletButtonRainbow = () => {
               if (!connected) {
                 return (
                   <Button onClick={onOpenDisclaimerModal} type="button">
-                    Connect to a wallet
+                    Connect Wallet
                   </Button>
                 );
               }
@@ -43,13 +41,8 @@ export const ConnectWalletButtonRainbow = () => {
               }
 
               return (
-                <div style={{ display: 'flex', gap: 12 }}>
-                  <Button
-                    variant="outline"
-                    onClick={openChainModal}
-                    style={{ display: 'flex', alignItems: 'center' }}
-                    type="button"
-                  >
+                <div className="flex gap-3">
+                  <Button variant="outline" className="flex items-center" type="button" onClick={openChainModal}>
                     {chain.hasIcon && (
                       <div
                         style={{
@@ -69,7 +62,7 @@ export const ConnectWalletButtonRainbow = () => {
                     {chain.name}
                   </Button>
 
-                  <Button variant="outline" onClick={openAccountModal} type="button">
+                  <Button variant="outline" type="button" onClick={openAccountModal}>
                     {account.displayName}
                     {account.displayBalance ? ` (${account.displayBalance})` : ''}
                   </Button>

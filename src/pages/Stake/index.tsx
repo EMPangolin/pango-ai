@@ -6,20 +6,14 @@ import { Loader } from '@/components/ui/loader';
 import PoolCardStakeV2 from '../../components/earn/PoolCardStakeV2';
 import { useActiveWeb3React } from '../../hooks';
 import { STAKING_REWARDS_INFO, StakingType, useStakingInfo } from '../../state/stake/hooksSingle';
-
+import { useChainId } from '@/provider';
 export default function Stake() {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
   const stakingInfos = useStakingInfo(StakingType.SINGLE);
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0);
 
   return (
     <>
-      <PageHeader
-        variant="stake"
-        title="Pangolin Single Staking"
-        description="Stake your PNG and earn more PNG! Also maximize your earnings with autocompound"
-        image={stakeImage}
-      />
       {!stakingRewardsExist
         ? 'No active rewards'
         : stakingInfos
@@ -44,7 +38,7 @@ export default function Stake() {
 
       {stakingRewardsExist && stakingInfos?.length === 0 && (
         <>
-          <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '960px' }}>
+          <AutoColumn gap="lg" style={{ width: '100%' }}>
             <Loader />
           </AutoColumn>
         </>

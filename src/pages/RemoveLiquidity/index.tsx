@@ -670,7 +670,7 @@ export default function RemoveLiquidity() {
             <div style={{ position: 'relative' }}>
               {!account ? (
                 <Button block onClick={onOpenDisclaimerModal}>
-                  Connect to a wallet
+                  Connect Wallet
                 </Button>
               ) : (
                 <div className="flex items-center gap-4">

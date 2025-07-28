@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader } from '@/components/ui/loader';
 import { PageHeader } from '@/components/ui/page-header';
 import { JSBI, TokenAmount } from '@pangolindex/sdk';
-import { ArrowLeftCircle } from 'lucide-react';
+import { ArrowLeftCircle, ExternalLink } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -72,12 +72,6 @@ export default function VotePage() {
         onDismiss={() => setShowModal(false)}
         proposalId={proposalData?.id}
         support={support}
-      />
-      <PageHeader
-        variant="vote"
-        title="Pangolin Governance"
-        description="PNG tokens represent voting shares in Pangolin governance. You can vote on each proposal yourself or delegate your votes to a third party"
-        image={voteImage}
       />
 
       <div className="bg-background p-8 rounded-lg flex flex-col space-y-4">

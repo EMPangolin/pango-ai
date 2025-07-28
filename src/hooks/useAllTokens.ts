@@ -4,15 +4,17 @@ import { useMemo } from 'react';
 import { useUserAddedTokens } from '../state/userv3/hooks';
 import { useActiveWeb3React } from '.';
 import { useSelectedTokenList } from '@/state/listsV3';
+import { useChainId } from '@/provider';
+;
 
 /**
  * get all tokens
  * @returns
  */
-export function useChainId() {
+/*export function useChainId() {
     const { chainId } = useActiveWeb3React()
     return (chainId || ChainId.AVALANCHE) as ChainId
-  }
+  }*/
 
 export function useAllTokens(): { [address: string]: Token } {
   const chainId = useChainId();

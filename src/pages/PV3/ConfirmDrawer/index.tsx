@@ -8,7 +8,6 @@ import { formatTickPrice } from 'src/utils/formatTickPrice';
 import { ErrorBox, ErrorWrapper, Footer, Header, Root, StateContainer } from './styled';
 import { ButtonPrimary } from '@/components/Button';
 import { useTranslation } from 'react-i18next';
-import { useChainId } from '@/provider';
 import { unwrappedTokenV3 } from '@/utils/wrappedCurrency';
 import { DoubleCurrencyLogo } from '@/components/DoubleCurrencyLogo';
 import { Box } from '@/components/BoxV3';
@@ -16,6 +15,9 @@ import { Text } from '@/components/TextV3';
 import { Stat } from '@/components/Stat';
 import TransactionCompleted from '@/components/TransactionCompleted';
 import Drawer from '@/components/Drawer';
+;
+import { useActiveWeb3React } from '@/hooks';
+import { useChainId } from '@/provider';
 
 interface Props {
   isOpen: boolean;

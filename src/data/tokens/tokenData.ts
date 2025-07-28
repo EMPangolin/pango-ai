@@ -161,6 +161,7 @@ export function useFetchedTokenDatas(tokenAddresses: string[]): {
     const twoDay: TokenFields | undefined = parsed48[address]
     const week: TokenFields | undefined = parsedWeek[address]
 
+
     const [volumeUSD, volumeUSDChange] =
       current && oneDay && twoDay
         ? get2DayChange(current.volumeUSD, oneDay.volumeUSD, twoDay.volumeUSD)

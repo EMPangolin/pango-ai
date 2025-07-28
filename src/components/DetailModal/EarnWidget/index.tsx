@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useActiveWeb3React, useConcLiqPositionFeesHook } from '@/hooks';
 import { usePool } from '@/hooks/common';
 import { MixPanelEvents, useMixpanel } from '@/hooks/mixpanel';
-import { useChainId, useLibrary } from '@/provider';
+import { useLibrary } from '@/provider';
 import { useElixirCollectEarnedFeesHook } from '@/state/wallet/hooks/index';
 import { unwrappedTokenV3 } from '@/utils/wrappedCurrency';
 import { Token } from '@pangolindex/sdk';
@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import RemoveDrawer from './RemoveDrawer';
 import { RewardWrapper, Root } from './styles';
 import { EarnWidgetProps } from './types';
+;
 
 const EarnWidget = ({ position }: EarnWidgetProps) => {
   const { t } = useTranslation();

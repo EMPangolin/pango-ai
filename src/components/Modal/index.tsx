@@ -1,11 +1,10 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
-import { animated, useTransition, useSpring } from 'react-spring';
-import { DialogOverlay, DialogContent } from '@reach/dialog';
-import { isMobile } from 'react-device-detect';
+import { Modal as PModal } from '@/components/ui/modal';
+import { DialogContent, DialogOverlay } from '@reach/dialog';
 import '@reach/dialog/styles.css';
-import { transparentize } from 'polished';
 import { useGesture } from '@use-gesture/react';
+import React from 'react';
+import { animated, useSpring, useTransition } from 'react-spring';
+import styled, { css } from 'styled-components';
 
 const AnimatedDialogOverlay = animated(DialogOverlay);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -97,24 +96,9 @@ export default function Modal({
       {fadeTransition.map(
         ({ item, key, props }) =>
           item && (
-            <StyledDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef}>
-              <StyledDialogContent
-                {...(isMobile
-                  ? {
-                      ...bind(),
-                      style: { transform: y?.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) },
-                    }
-                  : {})}
-                aria-label="dialog content"
-                minHeight={minHeight}
-                maxHeight={maxHeight}
-                mobile={isMobile}
-              >
-                {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
-                {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
-                {children}
-              </StyledDialogContent>
-            </StyledDialogOverlay>
+            <PModal title={null} isOpen={true} key={key} onClose={onDismiss}>
+              {children}
+            </PModal>
           ),
       )}
     </>

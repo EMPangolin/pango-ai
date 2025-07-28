@@ -5,6 +5,8 @@ import { useActiveWeb3React } from '../../hooks';
 import { useAllTransactions } from '../../state/transactions/hooks';
 import { getEtherscanLink } from '../../utils';
 import { RowFixed } from '../Row';
+import { useChainId } from '@/provider';
+;
 
 const TransactionWrapper = styled.div``;
 
@@ -33,7 +35,7 @@ const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
 `;
 
 export default function Transaction({ hash }: { hash: string }) {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
   const allTransactions = useAllTransactions();
 
   const tx = allTransactions?.[hash];

@@ -1,6 +1,9 @@
+import { useActiveWeb3React } from '@/hooks';
+import { useChainId } from '@/provider';
 import { CHAINS, ChainId } from '@pangolindex/sdk';
 import { GraphQLClient } from 'graphql-request';
-import { useChainId } from 'src/provider';
+//import { useChainId } from 'src/provider';
+;
 
 export enum SubgraphEnum {
   Exchange = 'exchange',

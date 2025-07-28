@@ -7,8 +7,10 @@ import { PairState, usePairs } from '../data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React, usePoolsHook } from './index'
-import { useChainId } from '@/provider'
+//import { useChainId } from '@/provider'
 import { PoolState } from './types'
+;
+import { useChainId } from '@/provider'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const { chainId } = useActiveWeb3React()

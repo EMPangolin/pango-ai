@@ -7,6 +7,8 @@ import { AppDispatch, AppState } from '../index';
 import { addTransaction } from './actions';
 import { TransactionDetails } from './reducer';
 import { useAccount } from 'wagmi';
+import { useChainId } from '@/provider';
+;
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -44,7 +46,7 @@ export function useTransactionAdder(): (
 
 // returns all the transactions for the current chain
 export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
 
   const state = useSelector<AppState, AppState['transactions']>(state => state.transactions);
 

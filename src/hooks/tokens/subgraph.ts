@@ -4,9 +4,12 @@ import { useShouldUseSubgraph } from 'src/state/applicationv3/hooks';
 import { useAllTokens } from '../useAllTokens';
 import { TokenReturnType } from './constant';
 import { useTokensContract } from './evm';
-import { useChainId } from '@/provider';
+//import { useChainId } from '@/provider';
 import { validateAddressMapping } from '@/utils/common';
 import { useSubgraphTokens } from '@/graphql/tokens';
+;
+import { useActiveWeb3React } from '..';
+import { useChainId } from '@/provider';
 /**
  * This hook format the tokens address to token object from sdk
  * @param tokensAddress token address array

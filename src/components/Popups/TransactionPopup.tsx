@@ -3,6 +3,8 @@ import { AlertCircle, CheckCircle } from 'react-feather';
 import { useActiveWeb3React } from '../../hooks';
 import { getEtherscanLink } from '../../utils';
 import { AutoColumn } from '../Column';
+import { useChainId } from '@/provider';
+;
 
 export default function TransactionPopup({
   hash,
@@ -13,7 +15,7 @@ export default function TransactionPopup({
   success?: boolean;
   summary?: string;
 }) {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
 
   return (
     <div className="flex-nowrap">

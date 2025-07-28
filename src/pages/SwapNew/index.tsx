@@ -38,7 +38,6 @@ import {
   useSwapState,
 } from '../../state/swap/hooks';
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks';
-import { LinkStyledButton } from '../../theme';
 import { maxAmountSpend } from '../../utils/maxAmountSpend';
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices';
 import { ClickableText } from '../Pool/styleds';
@@ -90,7 +89,7 @@ export default function Swap() {
   const [refreshInterval, setRefreshInterval] = useState(0);
   const {
     v1Trade,
-    v2Trade, 
+    v2Trade,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -101,7 +100,7 @@ export default function Swap() {
   useEffect(() => {
     const interval = setInterval(() => {
       //onUserInput(Field.INPUT, "10000");
-      setRefreshInterval((prev) => prev + 1);
+      setRefreshInterval(prev => prev + 1);
     }, 5000);
 
     return () => clearInterval(interval);
@@ -130,13 +129,13 @@ export default function Swap() {
 
   const parsedAmounts = showWrap
     ? {
-      [Field.INPUT]: parsedAmount,
-      [Field.OUTPUT]: parsedAmount,
-    }
+        [Field.INPUT]: parsedAmount,
+        [Field.OUTPUT]: parsedAmount,
+      }
     : {
-      [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-      [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
-    };
+        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+      };
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers();
   const isValid = !swapInputError;
@@ -299,16 +298,16 @@ export default function Swap() {
     [onCurrencySelection],
   );
 
-  const allTokens = useAllTokenData()
+  const allTokens = useAllTokenData();
 
   const formattedTokens = useMemo(() => {
     return Object.values(allTokens)
-      .map((t) => t.data)
-      .filter(notEmpty)
-  }, [allTokens])
+      .map(t => t.data)
+      .filter(notEmpty);
+  }, [allTokens]);
 
   const [selectedTokenAddress, setSelectedTokenAddress] = useState<string | null>(null);
-  const currency = useCurrency(selectedTokenAddress);
+  const currency = useCurrency(selectedTokenAddress || undefined);
 
   useEffect(() => {
     if (currency) {
@@ -318,9 +317,11 @@ export default function Swap() {
 
   return (
     <>
-      <TopTokenMovers handleOutputSelect={(tokenAddress) => {
-        setSelectedTokenAddress(tokenAddress); // ✅ Sadece state değiştiriyoruz
-      }}/>
+      <TopTokenMovers
+        handleOutputSelect={tokenAddress => {
+          setSelectedTokenAddress(tokenAddress); // ✅ Sadece state değiştiriyoruz
+        }}
+      />
       <TokenWarningModal
         isOpen={
           urlLoadedTokens.length > 0 &&
@@ -332,7 +333,7 @@ export default function Swap() {
         onConfirm={handleConfirmTokenWarning}
       />
       <div className="grid grid-rows-2 lg:grid-cols-3 lg:grid-rows-1 gap-4">
-        <div className="bg-white p-8 rounded-lg lg:col-span-2">
+        <div className="bg-background p-8 rounded-xl lg:col-span-2">
           <PairChart
             currency0={currencies[Field.INPUT]}
             currency1={currencies[Field.OUTPUT]}
@@ -340,7 +341,7 @@ export default function Swap() {
             color="#36d58f"
           />
         </div>
-        <div className="bg-white p-8 rounded-lg">
+        <div className="bg-background p-8 rounded-xl">
           {/* <SwapPoolTabs active={'swap'} /> */}
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -357,7 +358,7 @@ export default function Swap() {
           />
 
           <AutoColumn gap={'md'}>
-            <SettingsTab/>
+            <SettingsTab />
             <CurrencyInputPanel
               label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
               value={formattedAmounts[Field.INPUT]}
@@ -382,12 +383,11 @@ export default function Swap() {
                   />
                 </ArrowWrapper>
                 {recipient === null && !showWrap && isExpertMode ? (
-                  <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
+                  <a id="add-recipient-button" onClick={() => onChangeRecipient('')}>
                     + Add a send (optional)
-                  </LinkStyledButton>
+                  </a>
                 ) : null}
               </AutoRow>
-
             </AutoColumn>
             <CurrencyInputPanel
               value={formattedAmounts[Field.OUTPUT]}
@@ -403,23 +403,11 @@ export default function Swap() {
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                   <ArrowWrapper clickable={false}>
-                    <ArrowDown size="16" color={theme.text2} />
+                    <ArrowDown size="16" />
                   </ArrowWrapper>
-                  <button
-                    id="remove-recipient-button"
-                    type="button"
-                    onClick={() => onChangeRecipient(null)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: theme.primary1,
-                      cursor: 'pointer',
-                      padding: 0,
-                      font: 'inherit',
-                    }}
-                  >
+                  <a id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
                     - Remove send
-                  </button>
+                  </a>
                 </AutoRow>
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
@@ -429,7 +417,7 @@ export default function Swap() {
                 <AutoColumn gap="4px">
                   {Boolean(trade) && (
                     <RowBetween align="center">
-                      <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                      <Text fontWeight={500} fontSize={14}>
                         Price
                       </Text>
                       <TradePrice
@@ -441,10 +429,10 @@ export default function Swap() {
                   )}
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
                     <RowBetween align="center">
-                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                      <ClickableText fontWeight={500} fontSize={14} onClick={toggleSettings}>
                         Slippage Tolerance
                       </ClickableText>
-                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                      <ClickableText fontWeight={500} fontSize={14} onClick={toggleSettings}>
                         {allowedSlippage / 100}%
                       </ClickableText>
                     </RowBetween>
@@ -456,7 +444,7 @@ export default function Swap() {
           <BottomGrouping>
             {!account ? (
               <Button block onClick={onOpenDisclaimerModal}>
-                Connect to a wallet
+                Connect Wallet
               </Button>
             ) : showWrap ? (
               <Button disabled={Boolean(wrapInputError)} onClick={onWrap}>
@@ -481,8 +469,8 @@ export default function Swap() {
                   onClick={approveCallback}
                   loading={approval === ApprovalState.PENDING}
                   disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-                // altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
-                // confirmed={approval === ApprovalState.APPROVED}
+                  // altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
+                  // confirmed={approval === ApprovalState.APPROVED}
                 >
                   {approval === ApprovalState.PENDING ? (
                     <AutoRow gap="6px" justify="center">
@@ -514,7 +502,7 @@ export default function Swap() {
                   disabled={
                     !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
                   }
-                // error={isValid && priceImpactSeverity > 2}
+                  // error={isValid && priceImpactSeverity > 2}
                 >
                   {priceImpactSeverity > 3 && !isExpertMode
                     ? `Price Impact High`

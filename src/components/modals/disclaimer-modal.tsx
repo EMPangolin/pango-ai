@@ -87,7 +87,7 @@ export const DisclaimerModal = () => {
                       }}
                       type="button"
                     >
-                      Connect to a wallet
+                      Connect Wallet
                     </Button>
                   );
                 })()}

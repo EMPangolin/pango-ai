@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { useChainId } from '../../hooks';
+//import { useChainId } from '../../hooks';
 import Modal from '../Modal';
 import { AutoColumn, ColumnCenter } from '../Column';
 import styled, { ThemeContext } from 'styled-components';
@@ -11,6 +11,9 @@ import { getEtherscanLink } from '../../utils';
 import { TokenAmount } from '@pangolindex/sdk';
 import { useTranslation } from 'react-i18next';
 import { Icons } from '../icons';
+;
+import { useActiveWeb3React } from '@/hooks';
+import { useChainId } from '@/provider';
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -101,7 +104,6 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
             <Icons.x onClick={wrappedOndismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
@@ -115,10 +117,10 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
         <ConfirmOrLoadingWrapper>
           <RowBetween>
             <div />
-            <StyledClosed onClick={wrappedOndismiss} />
+            <Icons.x onClick={wrappedOndismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <ArrowUpCircle strokeWidth={0.5} size={90} />
+            <Icons.plus strokeWidth={0.5} size={90} />
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>

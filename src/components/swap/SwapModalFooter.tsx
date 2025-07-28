@@ -30,7 +30,7 @@ export default function SwapModalFooter({
   swapErrorMessage: string | undefined;
   disabledConfirm: boolean;
 }) {
-  //const { chainId } = useActiveWeb3React();
+  //const chainId = useChainId();
   const [showInverted, setShowInverted] = useState<boolean>(false);
   const theme = useContext(ThemeContext);
   /*const slippageAdjustedAmounts = useMemo(

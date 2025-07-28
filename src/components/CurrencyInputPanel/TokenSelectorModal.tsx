@@ -1,34 +1,25 @@
-import { Box } from '@/components/BoxV3';
-import Drawer from '@/components/Drawer';
 import { useTokenComparator } from '@/components/SearchModal/sorting';
 import { TextInput } from '@/components/TextInput';
-import { Text } from '@/components/TextV3';
+import { Button } from '@/components/ui/button';
 import { useTokenHook } from '@/hooks/tokens/index';
 import { useAllTokens } from '@/hooks/useAllTokens';
-import usePrevious from '@/hooks/usePrevious';
 import { useChainId } from '@/provider';
 import { useSelectedListInfo } from '@/state/listsV3';
 import { useAddUserToken } from '@/state/userv3';
-import { Field } from '@/types';
+import CurrencyGrid from '@/token-drawer/components/CurrencyGrid';
+import TokenListDrawer from '@/token-drawer/components/TokenListDrawer';
 import { isAddress } from '@/utils';
 import { filterTokenOrChain } from '@/utils/common';
-import { CAVAX, ChainId, Currency, currencyEquals, Token, WAVAX } from '@pangolindex/sdk';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CAVAX, ChainId, Currency, currencyEquals, Token } from '@pangolindex/sdk';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import CurrencyGrid from './components/CurrencyGrid';
-import TokenListDrawer from './components/TokenListDrawer';
-import { ListLogo } from './components/TokenListDrawer/styled';
-import { CurrencyList, ManageList } from './styled';
 
-interface Props {
-  isOpen: boolean;
-  onClose: () => void;
+interface TokenSelectorModalProps {
   onCurrencySelect: (currency: Currency) => void;
   selectedCurrency?: Currency;
   otherSelectedCurrency?: Currency;
-  seletedField?: Field;
 }
 
 const currencyKey = (columnIndex: number, rowIndex: number, data: Currency[], chainId: ChainId): string => {
@@ -42,34 +33,28 @@ const currencyKey = (columnIndex: number, rowIndex: number, data: Currency[], ch
       : `${rowIndex}-${columnIndex}`;
 };
 
-const TokenDrawer: React.FC<Props> = props => {
-  const { isOpen, onClose, onCurrencySelect, otherSelectedCurrency, selectedCurrency, seletedField } = props;
-  const chainId = useChainId();
+export const TokenSelectorModal: React.FC<TokenSelectorModalProps> = ({
+  onCurrencySelect,
+  selectedCurrency,
+  otherSelectedCurrency,
+}) => {
+  const chainId = useChainId() as ChainId;
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isTokenListOpen, setIsTokenListOpen] = useState<boolean>(false);
   const [invertSearchOrder] = useState<boolean>(false);
   const { t } = useTranslation();
   const useToken = useTokenHook[chainId];
   const inputRef = useRef<HTMLInputElement>(null);
-  const lastOpen = usePrevious(isOpen);
 
   const addToken = useAddUserToken();
 
   useEffect(() => {
-    if (isOpen && !lastOpen) {
-      setSearchQuery('');
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
+    if (inputRef.current) {
       setTimeout(() => {
         inputRef.current?.focus();
-      }, 500);
+      }, 100);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, []);
 
   const allTokens = useAllTokens();
   const selectedListInfo = useSelectedListInfo();
@@ -84,7 +69,7 @@ const TokenDrawer: React.FC<Props> = props => {
     const tokens = Object.values(allTokens);
     tokens.unshift(CAVAX[chainId] as Token);
     return filterTokenOrChain(tokens, searchQuery) as Token[];
-  }, [isAddressSearch, searchToken, allTokens, searchQuery]);
+  }, [isAddressSearch, searchToken, allTokens, searchQuery, chainId]);
 
   const filteredSortedTokens: Token[] = useMemo(() => {
     if (searchToken) return [searchToken];
@@ -105,35 +90,44 @@ const TokenDrawer: React.FC<Props> = props => {
 
   const currencies = useMemo(() => {
     const currency = CAVAX[chainId];
-    const wrappedCurrency = WAVAX[chainId];
 
     if (searchQuery === '') {
       // remove Currency from array and add in first position
       const _tokens = filteredSortedTokens.filter(token => token !== CAVAX[chainId]);
-      // Need to check when implement near
-      // return CHAINS[chainId]?.evm ? [CAVAX[chainId], ..._tokens] : [..._tokens];
       return [currency, ..._tokens];
     }
     return filteredSortedTokens;
-  }, [filteredSortedTokens, chainId]);
-  //const currencies = useMemo(() => [Currency.CAVAX, ...filteredSortedTokens], [filteredSortedTokens]);
+  }, [filteredSortedTokens, chainId, searchQuery]);
 
   const onSelect = useCallback(
-    currency => {
+    (currency: Currency) => {
       onCurrencySelect(currency);
       // workaround for now, if it's a custom token we will force add it
-      if (currency && !allTokens[currency?.address || '']) {
+      if (currency instanceof Token && !allTokens[currency?.address || '']) {
         addToken(currency);
       }
-      onClose();
     },
-    [onCurrencySelect, onClose],
+    [onCurrencySelect, allTokens, addToken],
+  );
+
+  const Item = useCallback(
+    ({ data, columnIndex, rowIndex }: any) => {
+      const index = rowIndex * 4 + columnIndex;
+      const currency: Currency = data?.[index];
+      const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency));
+      const otherSelected = Boolean(otherSelectedCurrency && currencyEquals(otherSelectedCurrency, currency));
+
+      return currency ? (
+        <CurrencyGrid currency={currency} isSelected={isSelected} onSelect={onSelect} otherSelected={otherSelected} />
+      ) : null;
+    },
+    [selectedCurrency, otherSelectedCurrency, onSelect],
   );
 
   return (
-    <Drawer title={t('currencyInputPanel.selectToken')} isOpen={isOpen} onClose={onClose}>
-      {/* Render Search Token Input */}
-      <Box padding="0px 10px">
+    <div className="flex flex-col gap-4 min-h-96 max-h-full">
+      {/* Search Input */}
+      <div>
         <TextInput
           placeholder={t('common.search')}
           onChange={(value: any) => {
@@ -147,9 +141,10 @@ const TokenDrawer: React.FC<Props> = props => {
             }
           }}
         />
-      </Box>
-      {/* Render All Selected Tokens */}
-      <CurrencyList>
+      </div>
+
+      {/* Currency List */}
+      <div className="flex flex-1 flex-col overflow-y-auto px-2.5 scrollbar-hide">
         {currencies.length > 0 ? (
           <AutoSizer>
             {({ height, width }) => (
@@ -177,61 +172,38 @@ const TokenDrawer: React.FC<Props> = props => {
             )}
           </AutoSizer>
         ) : (
-          <Box mt="10px" height="100%">
-            <Text color="text1" textAlign="center">
-              {t('common.notFound')}
-            </Text>
-          </Box>
+          <div className="mt-2.5 h-full">
+            <div className="text-center text-gray-600">{t('common.notFound')}</div>
+          </div>
         )}
-      </CurrencyList>
-      {/* Render Selected Token List Info */}
-      <ManageList onClick={() => setIsTokenListOpen(true)}>
+      </div>
+
+      {/* Token List Info */}
+      <div className="mt-2.5 cursor-pointer" onClick={() => setIsTokenListOpen(true)}>
         {selectedListInfo.multipleSelected ? (
-          <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
-            <Text fontSize={14} color="swapWidget.primary">
+          <div className="flex justify-between items-center w-full">
+            <span className="text-sm text-primary">
               {selectedListInfo.selectedCount} {t('searchModal.listsSelected')}
-            </Text>
-            <Text fontSize={12} color="swapWidget.primary">
-              {t('searchModal.change')}
-            </Text>
-          </Box>
+            </span>
+            <Button variant="outline">{t('searchModal.change')}</Button>
+          </div>
         ) : (
-          <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
-            <Box display="flex" alignItems="center" width="100%">
-              <ListLogo
-                size={24}
+          <div className="flex justify-between items-center w-full">
+            <div className="flex items-center w-full">
+              <img
+                className="w-6 h-6 mr-2.5"
                 src={selectedListInfo?.current?.logoURI}
                 alt={`${selectedListInfo?.current?.name} list logo`}
               />
-              <Text fontSize={14} color="swapWidget.primary">
-                {selectedListInfo?.current?.name}
-              </Text>
-            </Box>
-            <Text fontSize={12} color="swapWidget.primary">
-              {t('searchModal.change')}
-            </Text>
-          </Box>
+              <span className="text-sm text-primary">{selectedListInfo?.current?.name}</span>
+            </div>
+            <Button variant="outline">{t('searchModal.change')}</Button>
+          </div>
         )}
-      </ManageList>
-      {/* Render Token List Selection Drawer */}
+      </div>
+
+      {/* Token List Drawer */}
       <TokenListDrawer isOpen={isTokenListOpen} onClose={() => setIsTokenListOpen(false)} />
-    </Drawer>
+    </div>
   );
 };
-
-const SelectTokenDrawer = memo(TokenDrawer, (prevProps, nextProps) => {
-  const isEqual =
-    prevProps.isOpen === nextProps.isOpen &&
-    prevProps.onClose === nextProps.onClose &&
-    prevProps.onCurrencySelect === nextProps.onCurrencySelect &&
-    prevProps.seletedField == nextProps.seletedField &&
-    (!!prevProps.selectedCurrency && !!nextProps.selectedCurrency
-      ? prevProps.selectedCurrency.symbol === nextProps.selectedCurrency.symbol
-      : true) &&
-    (!!prevProps.otherSelectedCurrency && !!nextProps.otherSelectedCurrency
-      ? prevProps.otherSelectedCurrency.symbol === nextProps.otherSelectedCurrency.symbol
-      : true);
-  return isEqual;
-});
-
-export { SelectTokenDrawer };

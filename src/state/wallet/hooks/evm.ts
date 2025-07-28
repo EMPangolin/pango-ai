@@ -20,7 +20,7 @@ import {
   UseElixirPositionsResults,
 } from '../types';
 import { useSingleCallResult, useSingleContractMultipleData } from '@/state/multicallv3/hooks';
-import { useActiveWeb3React, useChainId } from '@/hooks';
+import { useActiveWeb3React } from '@/hooks';
 import { useTokensContract } from '@/state/stake/hooks';
 import { useCurrency } from '@/hooks/Tokens';
 import { useTransactionAdder } from '@/state/transactionsv3';
@@ -30,9 +30,10 @@ import { useMultipleContractSingleData } from 'src/state/multicall/hooks';
 import { wrappedCurrency } from '@/utils/wrappedCurrency';
 import { BIPS_BASE } from '@/constants';
 import { calculateGasMargin, isAddress, waitForTransaction } from '@/utils/common';
-import { useLibrary } from '@/provider';
+import { useChainId, useLibrary } from '@/provider';
 import { useMulticallContract } from '@/hooks/useContract';
 import ERC20_INTERFACE from '@/constants/abis/erc20';
+;
 
 // It returns the positions based on the tokenIds.
 export function useElixirPositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseElixirPositionsResults {

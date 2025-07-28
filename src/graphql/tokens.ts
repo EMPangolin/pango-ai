@@ -1,9 +1,12 @@
 import gql from 'graphql-tag'; // eslint-disable-line import/no-named-as-default
 import { useMemo } from 'react';
 import { useQuery } from 'react-query';
-import { useChainId } from 'src/provider';
+//import { useChainId } from 'src/provider';
 import { SubgraphEnum, useSubgraphClient } from './client';
 import { validateAddressMapping } from '@/utils/common';
+;
+import { useActiveWeb3React } from '@/hooks';
+import { useChainId } from '@/provider';
 
 export type SubgraphToken = {
   id: string;

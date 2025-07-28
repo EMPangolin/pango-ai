@@ -5,6 +5,8 @@ import { usePool } from '../common';
 import { FeeTierDistribution, PoolState } from '../types';
 import { wrappedCurrency } from '@/state/stake/hooks';
 import { useChainId } from '@/provider';
+//import { useChainId } from '@/provider';
+;
 
 export function useFeeTierDistribution(
   currencyA: Currency | undefined,

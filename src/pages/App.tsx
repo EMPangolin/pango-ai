@@ -48,8 +48,6 @@ export default function App() {
                 <Route path="/find" element={<PoolFinder />} />
                 <Route path="/pool" element={<PangolinV3 />} />
                 <Route path="/poolv2" element={<Pool />} />
-                <Route path="/pv3" element={<PangolinV3 />} />
-                <Route path="/pv3/:currencyIdA/:currencyIdB" element={<PV3AddLiquidity />} />
                 <Route path="/swap" element={<Swap />} />
                 <Route path="/paydece" element={<Paydece />} />
                 <Route path="/earn" element={<Earn />} />

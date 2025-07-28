@@ -3,6 +3,8 @@ import styled, { keyframes } from 'styled-components';
 import { useBlockNumber } from '../../state/application/hooks';
 import { getEtherscanLink } from '../../utils';
 import { useActiveWeb3React } from '../../hooks';
+import { useChainId } from '@/provider';
+;
 
 const StyledPolling = styled.div`
   position: fixed;
@@ -54,7 +56,7 @@ const Spinner = styled.div`
 `;
 
 export default function Polling() {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
 
   const blockNumber = useBlockNumber();
 

@@ -17,6 +17,8 @@ import { MouseoverTooltip } from '../Tooltip';
 import { FadedSpan, MenuItem } from './styleds';
 import { Icons } from '../icons';
 import { Button } from '../ui/button';
+import { useChainId } from '@/provider';
+;
 
 function currencyKey(currency: Currency, chainId: ChainId): string {
   return currency instanceof Token
@@ -176,7 +178,7 @@ export default function CurrencyList({
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>;
   showETH: boolean;
 }) {
-  const { chainId } = useActiveWeb3React();
+  const chainId = useChainId();
   const desiredSymbols = ['PNG', 'USDC', 'USDt', 'BTC.b', 'WETH.e', 'DAI.e'];
 
   const filteredItem = currencies
