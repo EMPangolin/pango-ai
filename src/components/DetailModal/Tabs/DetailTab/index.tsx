@@ -71,7 +71,6 @@ const DetailTab = ({ position }: DetailTabProps) => {
     return rewardAmountCall.result;
   }, [rewardAmountCall]);
 
-  const bonusEndTime = getBonusRewardEndTime(position?.token0, position?.token1, position?.fee);
   const bonusTokens = getBonusRewardTokens(position?.token0, position?.token1, position?.fee);
   const pendingRewards = getPendingRewards(
     position?.token0,

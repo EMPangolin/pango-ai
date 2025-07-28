@@ -93,14 +93,14 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   // }
 
   // if both prices are below 1, invert
-  if (position.token0PriceUpper.lessThan(JSBI.BigInt(1))) {
+  /*if (position.token0PriceUpper.lessThan(JSBI.BigInt(1))) {
     return {
       priceLower: position.token0PriceUpper.invert(),
       priceUpper: position.token0PriceLower.invert(),
       quote: token0,
       base: token1,
     };
-  }
+  }*/
 
   // otherwise, just return the default
   return {
