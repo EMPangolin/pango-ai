@@ -235,7 +235,7 @@ export function usePoolsViaSubgraph(
         const pool = PoolCache.getPool(
           token0,
           token1,
-          Number(poolData?.feeTier),
+          Number(poolData?.initialFee),
           Number(poolData?.initialFee),
           sqrtPrice,
           liquidity,

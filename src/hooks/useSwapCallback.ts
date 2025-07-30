@@ -177,8 +177,6 @@ export function useSwapCallback(
 
             };
 
-
-
             const response = await library.getSigner().sendTransaction(swapTx);
 
 
@@ -200,8 +198,6 @@ export function useSwapCallback(
               summary: swapTxMsg,
 
             });
-
-            console.log(response);
 
 
 
