@@ -124,7 +124,7 @@ const DetailTab = ({ position }: DetailTabProps) => {
   });
 
   //const inverted = position?.token0 ? base?.equals(position?.token0) : undefined;
-  const inverted = false;
+  const inverted = true;
   const currentPrice = pool && formatPrice(inverted ? pool?.token1Price : pool?.token0Price, NumberType.TokenTx);
 
   const minPrice = formatTickPrice({
