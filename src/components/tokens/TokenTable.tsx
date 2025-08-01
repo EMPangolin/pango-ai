@@ -15,6 +15,7 @@ import { LoadingRows } from '../LoaderInfo';
 import Percent from '../Percent';
 import { Arrow, Break, PageButtons } from '../shared';
 import { Label } from '../Text/Text';
+import { Wrapper } from '../swap/styleds';
 
 const ResponsiveGrid = styled.div`
   display: grid;
@@ -65,7 +66,7 @@ const ResponsiveLogo = styled(CurrencyLogo)`
 
 const DataRow = ({ tokenData, index }: { tokenData: TokenData; index: number }) => {
   return (
-    <LinkWrapper to={'tokens/' + tokenData.address}>
+    <Wrapper>
       <ResponsiveGrid>
         <small>{index + 1}</small>
         <div className="flex items-center gap-2">
@@ -85,7 +86,7 @@ const DataRow = ({ tokenData, index }: { tokenData: TokenData; index: number }) 
         <small className="text-right">{formatDollarAmount(tokenData.volumeUSD)}</small>
         <small className="text-right">{formatDollarAmount(tokenData.tvlUSD)}</small>
       </ResponsiveGrid>
-    </LinkWrapper>
+    </Wrapper>
   );
 };
 

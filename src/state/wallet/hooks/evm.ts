@@ -206,7 +206,7 @@ export function useElixirAddLiquidity() {
         const useNative =
           currencyA === CAVAX[chainId] ? currencyA : currencyB === CAVAX[chainId] ? currencyB : undefined;
 
-          //console.log(position)
+          console.log(position)
 
         const { calldata, value } =
           hasExistingPosition && tokenId

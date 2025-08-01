@@ -17,6 +17,7 @@ import Loader from '../Loader';
 import { LoadingRows } from '../LoaderInfo';
 import { Label } from '../Text/Text';
 import { Arrow, Break, PageButtons } from '../shared';
+import { Wrapper } from '../swap/styleds';
 
 const ResponsiveGrid = styled.div`
   display: grid;
@@ -66,7 +67,7 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
   const [activeNetwork] = useActiveNetworkVersion();
 
   return (
-    <LinkWrapper to={networkPrefix(activeNetwork) + 'pools/' + poolData.address}>
+    <Wrapper>
       <ResponsiveGrid>
         <Label>{index + 1}</Label>
         <div>
@@ -85,7 +86,7 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
         <small className="text-right">{formatDollarAmount(poolData.volumeUSD)}</small>
         <small className="text-right">{formatDollarAmount(poolData.volumeUSDWeek)}</small>
       </ResponsiveGrid>
-    </LinkWrapper>
+    </Wrapper>
   );
 };
 

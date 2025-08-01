@@ -163,7 +163,7 @@ export default function Footer() {
             </a>
             <a
               className="text-muted-foreground hover:text-primary transition-colors"
-              href="https://discord.gg/pangolin"
+              href="https://discord.gg/a6JJybnMhY"
               target="_blank"
             >
               Discord
@@ -244,7 +244,7 @@ export default function Footer() {
           </a>
           <a
             className="text-muted-foreground hover:text-primary transition-colors"
-            href="https://discord.gg/pangolin"
+            href="https://discord.gg/a6JJybnMhY"
             target="_blank"
             rel="noopener noreferrer"
           >

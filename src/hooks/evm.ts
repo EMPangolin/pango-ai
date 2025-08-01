@@ -108,7 +108,6 @@ class PoolCache {
             new Tick({ index: Number(tickIdx), liquidityGross, liquidityNet }),
         );
     }
-
     const pool = new ElixirPool(tokenA, tokenB, fee, initialFee, sqrtPriceX96, liquidity, tick, finalTicks);
     this.pools.unshift(pool);
     return pool;
@@ -235,7 +234,7 @@ export function usePoolsViaSubgraph(
         const pool = PoolCache.getPool(
           token0,
           token1,
-          Number(poolData?.initialFee),
+          Number(poolData?.feeTier),
           Number(poolData?.initialFee),
           sqrtPrice,
           liquidity,
