@@ -71,6 +71,7 @@ const DetailTab = ({ position }: DetailTabProps) => {
     return rewardAmountCall.result;
   }, [rewardAmountCall]);
 
+  const bonusEndTime = getBonusRewardEndTime(position?.token0, position?.token1, position?.fee);
   const bonusTokens = getBonusRewardTokens(position?.token0, position?.token1, position?.fee);
   const pendingRewards = getPendingRewards(
     position?.token0,
@@ -107,7 +108,16 @@ const DetailTab = ({ position }: DetailTabProps) => {
 
   // Claiming fees
   const [feeValue0, feeValue1] = useConcLiqPositionFees(pool ?? undefined, position?.tokenId);
-  const canClaim = (feeValue0?.greaterThan?.('0') ?? false) || (feeValue1?.greaterThan?.('0') ?? false);
+  
+  // Fee claim için ayrı kontrol
+  const canClaimFees = (feeValue0?.greaterThan?.('0') ?? false) || 
+                       (feeValue1?.greaterThan?.('0') ?? false);
+  
+  // Bonus claim için ayrı kontrol
+  const canClaimBonus = Boolean(pendingRewards?.amounts?.[0] && pendingRewards.amounts[0] > 0);
+  
+  // Genel claim (eski uyumluluk için)
+  const canClaim = canClaimFees || canClaimBonus;
 
   // these currencies will match the feeValue{0,1} currencies for the purposes of fee collection
   const currency0ForFeeCollectionPurposes = pool ? (unwrappedTokenV3(pool.token0, chainId) as Token) : undefined;
@@ -123,8 +133,7 @@ const DetailTab = ({ position }: DetailTabProps) => {
     invert: false, // we don't want to invert the price, just the tokens
   });
 
-  //const inverted = position?.token0 ? base?.equals(position?.token0) : undefined;
-  const inverted = true;
+  const inverted = position?.token0 ? base?.equals(position?.token0) : undefined;
   const currentPrice = pool && formatPrice(inverted ? pool?.token1Price : pool?.token0Price, NumberType.TokenTx);
 
   const minPrice = formatTickPrice({
@@ -173,11 +182,11 @@ const DetailTab = ({ position }: DetailTabProps) => {
 
   const claimData = [
     {
-      stat: feeValueUpper?.toSignificant(8) || '0',
+      stat: feeValueLower?.toSignificant(8) || '0',
       currency: currency0,
     },
     {
-      stat: feeValueLower?.toSignificant(8) || '0',
+      stat: feeValueUpper?.toSignificant(8) || '0',
       currency: currency1,
     },
   ];
@@ -261,7 +270,7 @@ const DetailTab = ({ position }: DetailTabProps) => {
           </div>
         </div>
         <div
-          className={`flex flex-row lg:grid ${pendingRewards?.amounts?.[0] > 0 ? 'lg:grid-cols-2' : 'lg:grid-cols-1'} gap-6`}
+          className="flex flex-row lg:grid lg:grid-cols-2 gap-6"
         >
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
@@ -270,7 +279,7 @@ const DetailTab = ({ position }: DetailTabProps) => {
             {!attempting && !hash && !error ? (
               <>
                 <div className="flex items-center justify-end gap-2">
-                  <Button disabled={!canClaim} onClick={onClaim}>
+                  <Button disabled={!canClaimFees} onClick={onClaim}>
                     {t('earn.claimReward', { symbol: '' })}
                   </Button>
                 </div>
@@ -283,7 +292,7 @@ const DetailTab = ({ position }: DetailTabProps) => {
             ) : (
               <>
                 <div className="flex items-center justify-end gap-2">
-                  <Button disabled={!canClaim} onClick={onClaim}>
+                  <Button disabled={!canClaimFees} onClick={onClaim}>
                     {t('earn.claimReward', { symbol: '' })}
                   </Button>
                 </div>
@@ -293,44 +302,42 @@ const DetailTab = ({ position }: DetailTabProps) => {
               </>
             )}
           </div>
-          {pendingRewards?.amounts?.[0] > 0 && (
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <h4>Bonus</h4>
-              </div>
-              {!attemptingBonus && !hashBonus && !errorBonus ? (
-                <>
-                  <div className="flex items-center justify-end gap-2">
-                    <Button
-                      disabled={!canClaim}
-                      onClick={() => {
-                        onHarvest();
-                      }}
-                    >
-                      {t('earn.claimRewardBonus', { symbol: '' })}
-                    </Button>
-                  </div>
-                  <div className="border border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50 dark:bg-primary/5">{listItems}</div>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center justify-end gap-2">
-                    <Button
-                      disabled={!canClaim}
-                      onClick={() => {
-                        onHarvest();
-                      }}
-                    >
-                      {t('earn.claimRewardBonus', { symbol: '' })}
-                    </Button>
-                  </div>
-                  <div className="border py-7 items-center border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50 dark:bg-primary/5">
-                    <Loader size="24px"></Loader>
-                  </div>
-                </>
-              )}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <h4>Bonus</h4>
             </div>
-          )}
+            {!attemptingBonus && !hashBonus && !errorBonus ? (
+              <>
+                <div className="flex items-center justify-end gap-2">
+                  <Button
+                    disabled={!canClaimBonus}
+                    onClick={() => {
+                      onHarvest();
+                    }}
+                  >
+                    {t('earn.claimRewardBonus', { symbol: '' })}
+                  </Button>
+                </div>
+                <div className="border border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50 dark:bg-primary/5">{listItems}</div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-end gap-2">
+                  <Button
+                    disabled={!canClaimBonus}
+                    onClick={() => {
+                      onHarvest();
+                    }}
+                  >
+                    {t('earn.claimRewardBonus', { symbol: '' })}
+                  </Button>
+                </div>
+                <div className="border py-7 items-center border-muted rounded-lg p-3 flex flex-col gap-2 bg-slate-50 dark:bg-primary/5">
+                  <Loader size="24px"></Loader>
+                </div>
+              </>
+            )}
+          </div>
         </div>
         <div className="col-span-2 flex flex-col gap-2">
           <h4>Price Range</h4>
