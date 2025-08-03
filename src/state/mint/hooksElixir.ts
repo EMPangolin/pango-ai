@@ -398,6 +398,22 @@ export function useDerivedMintInfo(existingPosition?: Position): DerivedMintInfo
     tickSpaceLimits,
   ]);
 
+  /*const ticks = useMemo(() => {
+    return {
+      [Bound.LOWER]:tickSpaceLimits[Bound.LOWER],
+      [Bound.UPPER]:tickSpaceLimits[Bound.UPPER],
+    };
+  }, [
+    existingPosition,
+    feeAmount,
+    invertPrice,
+    leftRangeTypedValue,
+    rightRangeTypedValue,
+    token0,
+    token1,
+    tickSpaceLimits,
+  ]);*/
+
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks || {};
 
   // specifies whether the lower and upper ticks is at the exteme bounds

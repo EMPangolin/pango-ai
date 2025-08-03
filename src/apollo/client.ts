@@ -4,7 +4,7 @@ import { HttpLink } from 'apollo-link-http'
 
 export const client = new ApolloClient({
   link: new HttpLink({
-    uri: 'https://gateway.thegraph.com/api/f2d0632512eab32ee18295ff38a272be/subgraphs/id/BoQbRerZRKwcvjGUXvq7s1MCHPenVtzonv1cVLhn1qe2',
+    uri: 'https://gateway.thegraph.com/api/f2d0632512eab32ee18295ff38a272be/deployments/id/QmXmhtnnxV1wrmKoFFWyCHpfeeqdQki4M6r5v5JzyHZPHZ',
     //https://thegraph.com/hosted-service/subgraph/canarydeveloper/canarydex-scroll
   }),
   cache: new InMemoryCache(),

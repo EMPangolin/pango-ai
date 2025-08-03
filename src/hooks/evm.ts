@@ -108,9 +108,17 @@ class PoolCache {
             new Tick({ index: Number(tickIdx), liquidityGross, liquidityNet }),
         );
     }
-    const pool = new ElixirPool(tokenA, tokenB, fee, initialFee, sqrtPriceX96, liquidity, tick, finalTicks);
-    this.pools.unshift(pool);
-    return pool;
+
+    try {
+      const pool = new ElixirPool(tokenA, tokenB, fee, initialFee, sqrtPriceX96, liquidity, tick, finalTicks);
+      this.pools.unshift(pool);
+      return pool;
+
+    } catch (error) {
+      const emptyPool = new ElixirPool(tokenA, tokenB, fee, initialFee, sqrtPriceX96, liquidity, tick, []);
+      this.pools.unshift(emptyPool);
+      return emptyPool;
+    }
   }
 }
 

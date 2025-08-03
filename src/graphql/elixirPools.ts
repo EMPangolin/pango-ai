@@ -39,7 +39,7 @@ export type ElixirPoolType = {
   volumeUSD: string;
 };
 
-export const GET_ELIXIR_POOLS = gql`
+/*export const GET_ELIXIR_POOLS = gql`
   query pools($where: Pool_filter, $first: Int) {
     pools(first: $first, orderBy: liquidity, orderDirection: desc, where: $where) {
       id
@@ -69,9 +69,9 @@ export const GET_ELIXIR_POOLS = gql`
       }
     }
   }
-`;
+`;*/
 
-/*export const GET_ELIXIR_POOLS = gql`
+export const GET_ELIXIR_POOLS = gql`
   query pools {
     pools {
       id
@@ -101,7 +101,7 @@ export const GET_ELIXIR_POOLS = gql`
       }
     }
   }
-`;*/
+`;
 
 /**
  * this hook is useful to find information of given elixir pool addresses from subgraph

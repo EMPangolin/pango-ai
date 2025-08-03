@@ -62,6 +62,7 @@ const AddLiquidity = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
   const hasExistingPosition = !!existingPositionDetails && !positionLoading;
   const { position: existingPosition } = useDerivedPositionInfo(existingPositionDetails);
 
+
   const {
     dependentField,
     noLiquidity,
