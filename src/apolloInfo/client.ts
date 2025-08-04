@@ -21,7 +21,7 @@ export const blockClient = new ApolloClient({
 })
 
 export const client = new ApolloClient({
-  uri: 'https://graph-pangolin-avalanche.canary.exchange/subgraphs/name/pangolinv3',//'https://graph-pangolin-avalanche.canary.exchange/subgraphs/name/pangolinv3',//
+  uri: 'https://gateway.thegraph.com/api/75b4f1fede4d0682187dd6a95a6212eb/subgraphs/id/Fz7s5upsgHoM1mv3bxHMZkiAT6xtFXUyp5YXmHX5tq35',//'https://graph-pangolin-avalanche.canary.exchange/subgraphs/name/pangolinv3',//
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -49,7 +49,7 @@ export const client = new ApolloClient({
 })
 
 export const avalancheClient = new ApolloClient({
-  uri: 'https://graph-pangolin-avalanche.canary.exchange/subgraphs/name/pangolinv3',//'https://graph-pangolin-avalanche.canary.exchange/subgraphs/name/pangolinv3',//
+  uri: 'https://gateway.thegraph.com/api/75b4f1fede4d0682187dd6a95a6212eb/subgraphs/id/Fz7s5upsgHoM1mv3bxHMZkiAT6xtFXUyp5YXmHX5tq35',//'https://graph-pangolin-avalanche.canary.exchange/subgraphs/name/pangolinv3',//
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -77,7 +77,7 @@ export const avalancheClient = new ApolloClient({
 })
 
 export const avalancheClient_test = new ApolloClient({
-  uri: 'https://graph-pangolin-avalanche.canary.exchange/subgraphs/name/pangolinv3',//'https://graph-pangolin-avalanche.canary.exchange/subgraphs/name/pangolinv3'
+  uri: 'https://gateway.thegraph.com/api/75b4f1fede4d0682187dd6a95a6212eb/subgraphs/id/Fz7s5upsgHoM1mv3bxHMZkiAT6xtFXUyp5YXmHX5tq35',//'https://graph-pangolin-avalanche.canary.exchange/subgraphs/name/pangolinv3'
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
