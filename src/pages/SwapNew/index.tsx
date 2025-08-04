@@ -51,6 +51,7 @@ import TopTokenMovers from '@/components/tokens/TopTokenMovers';
 import { SelectTokenDrawer } from '@/token-drawer';
 import { useInterval } from 'react-use';
 import SettingsTab from '@/components/Settings';
+import { usePool } from '@/hooks/common';
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch();
@@ -121,6 +122,7 @@ export default function Swap() {
   };
 
   const [, pair] = usePair(currencies[Field.INPUT], currencies[Field.OUTPUT]);
+  //const [, pool] = usePool(currencies[Field.INPUT], currencies[Field.OUTPUT],2500)
   const pairAddress = pair?.liquidityToken.address;
   const trade = showWrap ? undefined : tradesByVersion[toggledVersion];
   const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION];

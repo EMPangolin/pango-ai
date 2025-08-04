@@ -517,7 +517,6 @@ export function useUserPositions(account) {
       fetchData(account)
     }
   }, [account, positions, updatePositions, ethPrice, snapshots])
-  console.log(positions)
   return positions
 }
 

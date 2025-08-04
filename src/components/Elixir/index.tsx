@@ -491,7 +491,7 @@ const Elixir = () => {
           <Tabs defaultValue="v3-positions" className="w-full">
             <TabsList>
               <TabsTrigger value="v3-positions">V3 Positions</TabsTrigger>
-              <TabsTrigger value="v2-positions">V2 Positions</TabsTrigger>
+              <TabsTrigger value="v2-positions">V2 Positions</TabsTrigger>    
             </TabsList>
             <TabsContent value="v3-positions">
               <Tabs defaultValue={MenuType.allPositions} onValueChange={handleSetMenu}>

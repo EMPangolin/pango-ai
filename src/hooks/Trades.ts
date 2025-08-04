@@ -6,7 +6,7 @@ import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
-import { useActiveWeb3React, usePoolsHook } from './index'
+import { useActiveWeb3React, usePoolsHook, usePoolsHookForSwap } from './index'
 //import { useChainId } from '@/provider'
 import { PoolState } from './types'
 ;
@@ -118,7 +118,7 @@ function useAllElixirCommonPools(
 } {
   const chainId = useChainId();
 
-  const usePools = usePoolsHook[chainId];
+  const usePools = usePoolsHookForSwap[chainId];
 
   const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []; // eslint-disable-line react-hooks/exhaustive-deps
 
