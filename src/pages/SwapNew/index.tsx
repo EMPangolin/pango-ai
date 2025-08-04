@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { useActiveWeb3React } from '@/hooks';
-import { ChainId, Currency, CurrencyAmount, ElixirTrade, JSBI, Token, Trade } from '@pangolindex/sdk';
+import { ChainId, CHAINS, computePoolAddress, Currency, CurrencyAmount, ElixirTrade, FeeAmount, JSBI, Token, Trade } from '@pangolindex/sdk';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ArrowDown } from 'react-feather';
 import ReactGA from 'react-ga';
@@ -122,7 +122,6 @@ export default function Swap() {
   };
 
   const [, pair] = usePair(currencies[Field.INPUT], currencies[Field.OUTPUT]);
-  //const [, pool] = usePool(currencies[Field.INPUT], currencies[Field.OUTPUT],2500)
   const pairAddress = pair?.liquidityToken.address;
   const trade = showWrap ? undefined : tradesByVersion[toggledVersion];
   const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION];
