@@ -173,11 +173,11 @@ const DetailTab = ({ position }: DetailTabProps) => {
 
   const claimData = [
     {
-      stat: feeValueUpper?.toSignificant(8) || '0',
+      stat: feeValueUpper?.toSignificant(8) || <Loader/>,
       currency: currency0,
     },
     {
-      stat: feeValueLower?.toSignificant(8) || '0',
+      stat: feeValueLower?.toSignificant(8) || <Loader/>,
       currency: currency1,
     },
   ];
