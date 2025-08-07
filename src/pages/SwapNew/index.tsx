@@ -52,6 +52,8 @@ import { SelectTokenDrawer } from '@/token-drawer';
 import { useInterval } from 'react-use';
 import SettingsTab from '@/components/Settings';
 import { usePool } from '@/hooks/common';
+import { useV3PoolAddress } from '@/hooks/useV3PoolAddress';
+import { useFeeTierDistribution } from '@/hooks/FeeTier/evm';
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch();
@@ -121,8 +123,11 @@ export default function Swap() {
     [Version.v2]: v2Trade,
   };
 
-  const [, pair] = usePair(currencies[Field.INPUT], currencies[Field.OUTPUT]);
-  const pairAddress = pair?.liquidityToken.address;
+  //const [, pair] = usePair(currencies[Field.INPUT], currencies[Field.OUTPUT]);
+  //const pairAddress = pair?.liquidityToken.address;
+  const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencies[Field.INPUT], currencies[Field.OUTPUT]);
+  console.log(isLoading)
+  const poolAddress = useV3PoolAddress(currencies[Field.INPUT], currencies[Field.OUTPUT], largestUsageFeeTier);
   const trade = showWrap ? undefined : tradesByVersion[toggledVersion];
   const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION];
 
@@ -338,7 +343,7 @@ export default function Swap() {
           <PairChart
             currency0={currencies[Field.INPUT]}
             currency1={currencies[Field.OUTPUT]}
-            address={pairAddress?.toLowerCase()}
+            address={poolAddress?.toLocaleLowerCase()}
             color="#36d58f"
           />
         </div>
