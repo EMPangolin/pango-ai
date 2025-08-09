@@ -126,7 +126,6 @@ export default function Swap() {
   //const [, pair] = usePair(currencies[Field.INPUT], currencies[Field.OUTPUT]);
   //const pairAddress = pair?.liquidityToken.address;
   const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencies[Field.INPUT], currencies[Field.OUTPUT]);
-  console.log(isLoading)
   const poolAddress = useV3PoolAddress(currencies[Field.INPUT], currencies[Field.OUTPUT], largestUsageFeeTier);
   const trade = showWrap ? undefined : tradesByVersion[toggledVersion];
   const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION];

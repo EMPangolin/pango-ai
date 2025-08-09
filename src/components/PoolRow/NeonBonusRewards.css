@@ -17,7 +17,6 @@
   .neon-title {
     color: #d47705;
     font-size: 11px;
-    animation: flicker 1.5s infinite alternate;
     margin: 0;
     padding: 0;
     line-height: 1;
