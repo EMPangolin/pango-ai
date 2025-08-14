@@ -11,8 +11,8 @@ import { Link } from 'react-router-dom';
 import { Text } from 'rebass';
 import { GreyCard, LightCard } from '../Card';
 import { AutoColumn } from '../Column';
-import CurrencyLogo from '../CurrencyLogo';
-import DoubleCurrencyLogo from '../DoubleLogo';
+import CurrencyLogo from '../CurrencyLogoV3';
+import { DoubleCurrencyLogo } from '../DoubleCurrencyLogo';
 import { RowFixed } from '../Row';
 import { Dots } from '../swap/styleds';
 
@@ -55,7 +55,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <AccordionItem value="position" className="border-none">
               <AccordionTrigger className="hover:no-underline">
                 <div className="flex items-center gap-3">
-                  <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
+                  <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={24} />
                   <div className="flex flex-col items-start">
                     <Text fontWeight={500} fontSize={16}>
                       Your position
@@ -157,7 +157,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
       <AccordionItem value="position" className="border-none bg-muted rounded-lg">
         <AccordionTrigger className="hover:no-underline px-6 py-6">
           <div className="flex items-center gap-3">
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
+            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={24} />
             <Text fontWeight={500} fontSize={20}>
               {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
             </Text>
@@ -184,7 +184,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                   <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                     {token0Deposited?.toSignificant(6)}
                   </Text>
-                  <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
+                  <CurrencyLogo size={24} imageSize={48} style={{ marginLeft: '8px' }} currency={currency0} />
                 </RowFixed>
               ) : (
                 '-'
@@ -202,7 +202,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                   <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                     {token1Deposited?.toSignificant(6)}
                   </Text>
-                  <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
+                  <CurrencyLogo size={24} imageSize={48} style={{ marginLeft: '8px' }} currency={currency1} />
                 </RowFixed>
               ) : (
                 '-'

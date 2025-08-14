@@ -3,7 +3,7 @@ import { Fragment, memo, useContext } from 'react';
 import { Flex } from 'rebass';
 import { ThemeContext } from 'styled-components';
 import { TYPE } from '../../theme';
-import CurrencyLogo from '../CurrencyLogo';
+import CurrencyLogo from '../CurrencyLogoV3';
 import { Icons } from '../icons';
 
 export default memo(function SwapRoute({ trade }: { trade: Trade | ElixirTrade }) {
@@ -16,7 +16,7 @@ export default memo(function SwapRoute({ trade }: { trade: Trade | ElixirTrade }
         return (
           <Fragment key={i}>
             <div className="flex items-center shrink-0 gap-2 px-2">
-              <CurrencyLogo currency={token} size="1.5rem" />
+              <CurrencyLogo currency={token} size={24} imageSize={48} />
               <small>{token.symbol}</small>
             </div>
             {isLastItem ? null : <Icons.chevronRight className="size-4" />}

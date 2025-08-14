@@ -1,7 +1,7 @@
 import { Currency } from '@pangolindex/sdk'
 import React from 'react'
 import styled from 'styled-components'
-import CurrencyLogo from '../CurrencyLogo'
+import CurrencyLogo from '../CurrencyLogoV3'
 
 const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`
   position: relative;
@@ -31,10 +31,11 @@ export default function DoubleCurrencyLogo({
   size = 16,
   margin = false
 }: DoubleCurrencyLogoProps) {
+  const logoSize = size as any; // type conversion
   return (
     <Wrapper sizeraw={size} margin={margin}>
-      {currency0 && <HigherLogo currency={currency0} size={size.toString() + 'px'} />}
-      {currency1 && <CoveredLogo currency={currency1} size={size.toString() + 'px'} sizeraw={size} />}
+      {currency0 && <HigherLogo currency={currency0} size={logoSize} imageSize={48} />}
+      {currency1 && <CoveredLogo currency={currency1} size={logoSize} imageSize={48} sizeraw={size} />}
     </Wrapper>
   )
 }

@@ -81,7 +81,7 @@ export default function Header() {
       url: '',
       type: 'more',
       items: [
-        {
+        /* {
           label: 'Buy',
           type: 'dropdown',
           items: [
@@ -109,7 +109,7 @@ export default function Header() {
               soon: true,
             },
           ],
-        },
+        }, */
         {
           label: 'Vote',
           url: '/vote',

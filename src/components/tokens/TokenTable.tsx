@@ -10,12 +10,15 @@ import { TOKEN_HIDE } from '../../constants/index';
 import { TokenData } from '../../state/tokens/reducer';
 import { AutoColumn } from '../Column';
 import CurrencyLogo from '../CurrencyLogoInfo';
+import CurrencyLogoV3 from '../CurrencyLogoV3';
 import Loader from '../Loader';
 import { LoadingRows } from '../LoaderInfo';
 import Percent from '../Percent';
 import { Arrow, Break, PageButtons } from '../shared';
 import { Label } from '../Text/Text';
 import { Wrapper } from '../swap/styleds';
+import { Token } from '@pangolindex/sdk';
+import { useChainId } from '@/provider';
 
 const ResponsiveGrid = styled.div`
   display: grid;
@@ -58,6 +61,16 @@ const LinkWrapper = styled(Link)`
 `;
 
 const ResponsiveLogo = styled(CurrencyLogo)`
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: auto;
+  
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: auto;
+  }
+  
   @media screen and (max-width: 670px) {
     width: 16px;
     height: 16px;
@@ -65,12 +78,33 @@ const ResponsiveLogo = styled(CurrencyLogo)`
 `;
 
 const DataRow = ({ tokenData, index }: { tokenData: TokenData; index: number }) => {
+  const chainId = useChainId();
+  
+  // TokenData'dan Token objesi oluştur
+  const token = useMemo(() => {
+    try {
+      return new Token(
+        chainId,
+        getAddress(tokenData.address),
+        18, // decimals - genelde 18 kullanılır
+        tokenData.symbol,
+        tokenData.name
+      );
+    } catch {
+      return undefined;
+    }
+  }, [chainId, tokenData.address, tokenData.symbol, tokenData.name]);
+
   return (
     <Wrapper>
       <ResponsiveGrid>
         <small>{index + 1}</small>
         <div className="flex items-center gap-2">
-          <ResponsiveLogo address={getAddress(tokenData.address)} />
+          {token ? (
+            <CurrencyLogoV3 currency={token} size={24} imageSize={48} />
+          ) : (
+            <ResponsiveLogo address={getAddress(tokenData.address)} size={24} imageSize={48} />
+          )}
           {/* <small>{tokenData.symbol}</small> */}
           <small style={{ marginLeft: '10px' }}>
             <div className="flex items-center gap-1">

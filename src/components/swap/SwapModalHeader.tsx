@@ -1,5 +1,5 @@
 import { AutoColumn } from '@/components/Column';
-import CurrencyLogo from '@/components/CurrencyLogo';
+import CurrencyLogo from '@/components/CurrencyLogoV3';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/state/swap/actions';
@@ -30,7 +30,7 @@ export default function SwapModalHeader({
     <div className='flex flex-col gap-4'>
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <CurrencyLogo currency={trade.inputAmount.currency} />
+          <CurrencyLogo currency={trade.inputAmount.currency} size={24} imageSize={48} />
           <h3
             className={cn(
               'w-full truncate',
@@ -47,7 +47,7 @@ export default function SwapModalHeader({
       </div>
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <CurrencyLogo currency={trade.outputAmount.currency} />
+          <CurrencyLogo currency={trade.outputAmount.currency} size={24} imageSize={48} />
           <h3
             className={cn(
               'w-full truncate',

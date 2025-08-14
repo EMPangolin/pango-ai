@@ -7,7 +7,7 @@ import { SUGGESTED_BASES } from '../../constants';
 import { AutoColumn } from '../Column';
 import QuestionHelper from '../QuestionHelper';
 import { AutoRow } from '../Row';
-import CurrencyLogo from '../CurrencyLogo';
+import CurrencyLogo from '../CurrencyLogoV3';
 import { Button } from '../ui/button';
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
@@ -46,7 +46,7 @@ export default function CommonBases({
           }}
           disabled={selectedCurrency === CAVAX[chainId ?? ChainId.AVALANCHE]}
         >
-          <CurrencyLogo currency={CAVAX[chainId ?? ChainId.AVALANCHE]} size='13px' />
+          <CurrencyLogo currency={CAVAX[chainId ?? ChainId.AVALANCHE]} size={24} imageSize={48} />
           <small>
             {/*chainId == ChainId.SCROLL ? 'ETH' : */ 'AVAX'}
           </small>
@@ -55,7 +55,7 @@ export default function CommonBases({
           const selected = selectedCurrency instanceof Token && selectedCurrency.address === token.address;
           return (
             <Button className='flex items-center gap-2' variant="outline" onClick={() => !selected && onSelect(token)} disabled={selected} key={token.address}>
-              <CurrencyLogo currency={token} size='13px' />
+              <CurrencyLogo currency={token} size={24} imageSize={48} />
               <small>
                 {token.symbol}
               </small>

@@ -1,24 +1,17 @@
 import { Badge } from '@/components/ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { ChainId } from '@pangolindex/sdk';
-import { ChevronDown } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import MenuIcon from '../../assets/images/menu.svg';
 import { useActiveWeb3React } from '../../hooks';
 import { ApplicationModal } from '../../state/application/actions';
 import { useModalOpen, useToggleModal } from '../../state/application/hooks';
-;
+import { cn } from '@/utils';
 
 const MenuSoon = () => <Badge>Soon</Badge>;
 
 export default function MenuMob() {
-  const chainId = useChainId();
+  const { chainId } = useActiveWeb3React();
   const open = useModalOpen(ApplicationModal.MENUMOB);
   const toggle = useToggleModal(ApplicationModal.MENUMOB);
 
@@ -42,9 +35,10 @@ export default function MenuMob() {
       {open && (
         <div className="pt-20 fixed top-0 left-0 w-full h-full">
           <div className="bg-background flex flex-col p-4 h-full">
-            <NavLink to="/swap" className={menuItemClassName} activeClassName={activeClassName} onClick={toggle}>
+            <NavLink to="/swap" className={({ isActive }) => cn(menuItemClassName, isActive && activeClassName)} onClick={toggle}>
               Trade
             </NavLink>
+            {/* Buy dropdown is disabled 
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <div className="flex items-center space-x-1 px-5 py-3 hover:bg-[#f1f1f1] rounded-md">
@@ -54,7 +48,7 @@ export default function MenuMob() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 <DropdownMenuItem>
-                  <NavLink to="/paydece" className="w-full py-1 px-1" activeClassName="text-primary" onClick={toggle}>
+                  <NavLink to="/paydece" className="w-full py-1 px-1" onClick={toggle}>
                     Paydece
                   </NavLink>
                 </DropdownMenuItem>
@@ -75,33 +69,33 @@ export default function MenuMob() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <NavLink to="/pool" className={menuItemClassName} activeClassName={activeClassName} onClick={toggle}>
+            */}
+            <NavLink to="/pool" className={({ isActive }) => cn(menuItemClassName, isActive && activeClassName)} onClick={toggle}>
               Pool
             </NavLink>
             {chainId === ChainId.AVALANCHE && (
               <NavLink
                 to="/superfarmsv2"
-                className={menuItemClassName}
-                activeClassName={activeClassName}
+                className={({ isActive }) => cn(menuItemClassName, isActive && activeClassName)}
                 onClick={toggle}
               >
                 SuyperFarms
               </NavLink>
             )}
             {chainId === ChainId.AVALANCHE && (
-              <NavLink to="/earn" className={menuItemClassName} activeClassName={activeClassName} onClick={toggle}>
+              <NavLink to="/earn" className={({ isActive }) => cn(menuItemClassName, isActive && activeClassName)} onClick={toggle}>
                 Farm
               </NavLink>
             )}
             {chainId === ChainId.AVALANCHE && (
-              <NavLink to="/stake" className={menuItemClassName} activeClassName={activeClassName} onClick={toggle}>
+              <NavLink to="/stake" className={({ isActive }) => cn(menuItemClassName, isActive && activeClassName)} onClick={toggle}>
                 Stake
               </NavLink>
             )}
-            <NavLink to="/airdrop" className={menuItemClassName} activeClassName={activeClassName} onClick={toggle}>
+            <NavLink to="/airdrop" className={({ isActive }) => cn(menuItemClassName, isActive && activeClassName)} onClick={toggle}>
               OKX Airdrop
             </NavLink>
-            <NavLink to="/vote" className={menuItemClassName} activeClassName={activeClassName} onClick={toggle}>
+            <NavLink to="/vote" className={({ isActive }) => cn(menuItemClassName, isActive && activeClassName)} onClick={toggle}>
               Vote
             </NavLink>
             <a

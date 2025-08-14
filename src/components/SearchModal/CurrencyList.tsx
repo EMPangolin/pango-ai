@@ -11,7 +11,7 @@ import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks
 import { useCurrencyBalance } from '../../state/wallet/hooks';
 import { isTokenOnList } from '../../utils';
 import Column from '../Column';
-import CurrencyLogo from '../CurrencyLogo';
+import CurrencyLogo from '../CurrencyLogoV3';
 import { RowFixed } from '../Row';
 import { MouseoverTooltip } from '../Tooltip';
 import { FadedSpan, MenuItem } from './styleds';
@@ -119,7 +119,7 @@ function CurrencyRow({
       disabled={isSelected}
       selected={otherSelected}
     >
-      <CurrencyLogo currency={currency} size={'24px'} />
+      <CurrencyLogo currency={currency} size={24} imageSize={48} />
       <Column>
         <Text title={currency.name} fontWeight={500}>
           {currency.symbol}
@@ -182,12 +182,12 @@ export default function CurrencyList({
   const desiredSymbols = ['PNG', 'USDC', 'USDt', 'BTC.b', 'WETH.e', 'DAI.e'];
 
   const filteredItem = currencies
-    .filter(item => desiredSymbols.includes(item.symbol))
-    .sort((a, b) => desiredSymbols.indexOf(a.symbol) - desiredSymbols.indexOf(b.symbol));
+    .filter(item => item.symbol && desiredSymbols.includes(item.symbol))
+    .sort((a, b) => desiredSymbols.indexOf(a.symbol!) - desiredSymbols.indexOf(b.symbol!));
 
   const sortedItem = [...currencies]
     .filter(item => !filteredItem.includes(item))
-    .sort((a, b) => a.symbol.localeCompare(b.symbol));
+    .sort((a, b) => (a.symbol || '').localeCompare(b.symbol || ''));
 
   const itemData = useMemo(
     () => (showETH ? [Currency.CURRENCY[chainId ?? ChainId.AVALANCHE], ...filteredItem, ...sortedItem] : currencies),
@@ -195,7 +195,7 @@ export default function CurrencyList({
   );
 
   const Row = useCallback(
-    ({ data, index, style }) => {
+    ({ data, index, style }: { data: Currency[]; index: number; style: any }) => {
       const currency: Currency = data[index];
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency));
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency));
