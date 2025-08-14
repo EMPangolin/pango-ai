@@ -112,6 +112,8 @@ function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(refreshInterval?: number) {
   const { account, chainId } = useActiveWeb3React();
+  const { address: wagmiAccount } = useAccount();
+  const finalAccount = account || wagmiAccount;
 
   const toggledVersion = useToggledVersion();
 
@@ -126,9 +128,9 @@ export function useDerivedSwapInfo(refreshInterval?: number) {
   const inputCurrency = useCurrency(inputCurrencyId);
   const outputCurrency = useCurrency(outputCurrencyId);
   const recipientAddress = isAddress(recipient);
-  const to: string | null = (recipientAddress ? recipientAddress : account) ?? null;
+  const to: string | null = (recipientAddress ? recipientAddress : finalAccount) ?? null;
 
-  const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
+  const relevantTokenBalances = useCurrencyBalances(finalAccount ?? undefined, [
     inputCurrency ?? undefined,
     outputCurrency ?? undefined,
   ]);
@@ -189,7 +191,7 @@ export function useDerivedSwapInfo(refreshInterval?: number) {
   };
 
   let inputError: string | undefined;
-  if (!account) {
+  if (!finalAccount) {
     inputError = 'Connect Wallet';
   }
 

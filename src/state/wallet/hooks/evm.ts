@@ -33,6 +33,7 @@ import { calculateGasMargin, isAddress, waitForTransaction } from '@/utils/commo
 import { useChainId, useLibrary } from '@/provider';
 import { useMulticallContract } from '@/hooks/useContract';
 import ERC20_INTERFACE from '@/constants/abis/erc20';
+import { useAccount } from 'wagmi';
 ;
 
 // It returns the positions based on the tokenIds.
@@ -78,27 +79,29 @@ export function useElixirPositionsFromTokenIds(tokenIds: BigNumber[] | undefined
 // It return the positions of the user.
 export function useGetUserPositions() {
   const { account } = useActiveWeb3React();
+  const { address: wagmiAccount } = useAccount();
+  const finalAccount = account || wagmiAccount;
   const positionManager = useElixirNFTPositionManagerContract();
 
   const chainId = useChainId();
   //const useTokens = useTokensHook[chainId];
 
   const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(positionManager, 'balanceOf', [
-    account ?? undefined,
+    finalAccount ?? undefined,
   ]);
 
   const accountBalance: number | undefined = balanceResult?.[0]?.toNumber();
 
   const tokenIdsArgs = useMemo(() => {
-    if (accountBalance && account) {
+    if (accountBalance && finalAccount) {
       const tokenRequests = [] as any;
       for (let i = 0; i < accountBalance; i++) {
-        tokenRequests.push([account, i]);
+        tokenRequests.push([finalAccount, i]);
       }
       return tokenRequests;
     }
     return [];
-  }, [account, accountBalance]);
+  }, [finalAccount, accountBalance]);
 
   const tokenIdResults = useSingleContractMultipleData(positionManager, 'tokenOfOwnerByIndex', tokenIdsArgs);
   const someTokenIdsLoading = useMemo(() => tokenIdResults.some(({ loading }) => loading), [tokenIdResults]);
@@ -106,14 +109,14 @@ export function useGetUserPositions() {
   // If you're trying to access data related to user's liquidity positions,
   // you need the tokenIds for those positions
   const tokenIds = useMemo(() => {
-    if (account) {
+    if (finalAccount) {
       return tokenIdResults
         .map(({ result }) => result)
         .filter((result): result is any => !!result)
         .map((result) => BigNumber.from(result[0]));
     }
     return [];
-  }, [account, tokenIdResults]);
+  }, [finalAccount, tokenIdResults]);
 
   const { positions, loading: positionsLoading } = useElixirPositionsFromTokenIds(tokenIds);
 
@@ -380,6 +383,8 @@ export function useTokenBalances(
   address?: string,
   tokens?: (Token | undefined)[],
 ): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
+  const { address: wagmiAccount } = useAccount();
+  const finalAddress = address || wagmiAccount;
   const validatedTokens: Token[] = useMemo(
     () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
     [tokens],
@@ -387,13 +392,13 @@ export function useTokenBalances(
 
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens]);
 
-  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address]);
+  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [finalAddress]);
 
   const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances]);
 
   const tokenBalances = useMemo(
     () =>
-      address && validatedTokens.length > 0
+      finalAddress && validatedTokens.length > 0
         ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
             const value = balances?.[i]?.result?.[0];
             const amount = value ? JSBI.BigInt(value.toString()) : undefined;
@@ -403,7 +408,7 @@ export function useTokenBalances(
             return memo;
           }, {})
         : {},
-    [address, validatedTokens, balances],
+    [finalAddress, validatedTokens, balances],
   );
   return [tokenBalances, anyLoading];
 }

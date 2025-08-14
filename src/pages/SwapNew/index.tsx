@@ -51,6 +51,7 @@ import TopTokenMovers from '@/components/tokens/TopTokenMovers';
 import { SelectTokenDrawer } from '@/token-drawer';
 import { useInterval } from 'react-use';
 import SettingsTab from '@/components/Settings';
+import { useAccount } from 'wagmi';
 import { usePool } from '@/hooks/common';
 import { useV3PoolAddress } from '@/hooks/useV3PoolAddress';
 import { useFeeTierDistribution } from '@/hooks/FeeTier/evm';
@@ -73,6 +74,8 @@ export default function Swap() {
   }, []);
 
   const { account, chainId } = useActiveWeb3React();
+  const { address: wagmiAccount } = useAccount();
+  const finalAccount = account || wagmiAccount;
   const theme = useContext(ThemeContext);
 
   // toggle wallet when disconnected
@@ -236,7 +239,7 @@ export default function Swap() {
           action:
             recipient === null
               ? 'Swap w/o Send'
-              : (recipientAddress ?? recipient) === account
+              : (recipientAddress ?? recipient) === finalAccount
                 ? 'Swap w/o Send + recipient'
                 : 'Swap w/ Send',
           label: [trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, Version.v2].join('/'),
@@ -251,7 +254,7 @@ export default function Swap() {
           txHash: undefined,
         });
       });
-  }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade]);
+  }, [tradeToConfirm, finalAccount, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade]);
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false);
@@ -447,7 +450,7 @@ export default function Swap() {
             )}
           </AutoColumn>
           <BottomGrouping>
-            {!account ? (
+            {!finalAccount ? (
               <Button block onClick={onOpenDisclaimerModal}>
                 Connect Wallet
               </Button>

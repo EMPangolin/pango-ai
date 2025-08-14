@@ -6,6 +6,15 @@ import viteTsconfigPaths from 'vite-tsconfig-paths'
 export default defineConfig({
   base: '/',
   plugins: [react(), viteTsconfigPaths()],
+  server: {
+    proxy: {
+      '/graphql': {
+        target: 'https://api.thegraph.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/graphql/, '/index-node/graphql')
+      }
+    }
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

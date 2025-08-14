@@ -302,7 +302,6 @@ const DetailTab = ({ position }: DetailTabProps) => {
                 <>
                   <div className="flex items-center justify-end gap-2">
                     <Button
-                      disabled={!canClaim}
                       onClick={() => {
                         onHarvest();
                       }}
@@ -316,7 +315,6 @@ const DetailTab = ({ position }: DetailTabProps) => {
                 <>
                   <div className="flex items-center justify-end gap-2">
                     <Button
-                      disabled={!canClaim}
                       onClick={() => {
                         onHarvest();
                       }}
