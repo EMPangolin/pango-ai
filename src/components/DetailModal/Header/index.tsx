@@ -117,7 +117,7 @@ const Header = ({ position, statItems, token0, token1, addModal }: HeaderProps) 
                   variant="destructive"
                   onClick={() => setShowRemoveDrawer(true)}
                   className="flex items-center"
-                  disabled={pendingRewards?.amounts?.[0] > 0}
+                  disabled={true}
                 >
                   <Icons.x className="size-4 mr-2" />
                   Remove

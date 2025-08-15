@@ -80,8 +80,6 @@ const DetailTab = ({ position }: DetailTabProps) => {
     position?.fee,
   );
 
-  console.log(pendingRewards)
-
   const listItems = bonusTokens?.[0]?.map((address: string, index: number) => (
     <BonusTokenItem key={address} address={address} rewardValue={pendingRewards?.amounts?.[index]} chainId={chainId} />
   ));
