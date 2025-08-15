@@ -76,7 +76,7 @@ const DetailTab = ({ position }: DetailTabProps) => {
     position?.token0,
     position?.token1,
     Number(position?.tokenId),
-    rewardAmount?.totalReward,
+    rewardAmount?.totalReward.toString(),
     position?.fee,
   );
 
