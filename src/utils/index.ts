@@ -86,7 +86,7 @@ export function getEtherscanLink(
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
-  const prefix = chainId === ChainId.AVALANCHE ? `https://snowtrace.io` : `https://scrollscan.com`
+  const prefix = chainId === ChainId.AVALANCHE ? `https://snowtrace.io` : `https://snowtrace.io`
 
   switch (type) {
     case 'transaction': {

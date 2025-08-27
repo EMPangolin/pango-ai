@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader } from '@/components/ui/loader';
 import { PageHeader } from '@/components/ui/page-header';
 import { JSBI, TokenAmount } from '@pangolindex/sdk';
-import { ArrowLeftCircle, ExternalLink } from 'lucide-react';
+import { ArrowLeftCircle } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +19,7 @@ import voteImage from '../../assets/images/Vote.webp';
 import { RowFixed } from '../../components/Row';
 import VoteModal from '../../components/vote/VoteModal';
 import { useActiveWeb3React } from '../../hooks';
+import { ExternalLink } from '@/theme';
 
 const Progress = styled.div<{ status: 'for' | 'against'; percentageString?: string }>`
   height: 4px;
@@ -60,7 +61,7 @@ export default function VotePage() {
 
   const linkIfAddress = (content: string) => {
     if (isAddress(content) && chainId) {
-      return <ExternalLink href={getEtherscanLink(chainId, content, 'address')}>{content}</ExternalLink>;
+      return <ExternalLink className="text-orange-500 hover:underline" href={getEtherscanLink(chainId, content, 'address')}>{content}</ExternalLink>;
     }
     return <span>{content}</span>;
   };
@@ -175,6 +176,10 @@ export default function VotePage() {
               </div>
             </div>
             <div>
+              <h6 className="font-semibold text-xl">Overview</h6>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{`${proposalData?.description}`}</ReactMarkdown>
+            </div>
+            <div>
               <h6 className="font-semibold text-xl">Details</h6>
               {proposalData?.details?.map((d, i) => {
                 return (
@@ -192,10 +197,6 @@ export default function VotePage() {
                   </DetailText>
                 );
               })}
-            </div>
-            <div>
-              <h6 className="font-semibold text-xl">Overview</h6>
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{`${proposalData?.description}`}</ReactMarkdown>
             </div>
             <div>
               <h6 className="font-semibold text-xl">Proposer</h6>
