@@ -1,7 +1,7 @@
 import { cn } from '@/utils';
 import { Currency } from '@pangolindex/sdk';
 import React from 'react';
-import CurrencyLogo from '../CurrencyLogo';
+import CurrencyLogo from '../CurrencyLogoV3';
 
 interface DoubleCurrencyLogoProps {
   margin?: boolean;
@@ -18,10 +18,12 @@ export function DoubleCurrencyLogo({
   margin = false,
   isDead = false,
 }: DoubleCurrencyLogoProps) {
+  const logoSize = size <= 24 ? 24 : size <= 32 ? 32 : 48;
+  
   return (
     <div className={cn(isDead && 'grayscale')}>
-      {currency0 && <CurrencyLogo currency={currency0} size={size.toString() + 'px'} />}
-      {currency1 && <CurrencyLogo currency={currency1} size={size.toString() + 'px'} />}
+      {currency0 && <CurrencyLogo currency={currency0} size={logoSize} imageSize={48} />}
+      {currency1 && <CurrencyLogo currency={currency1} size={logoSize} imageSize={48} />}
     </div>
   );
 }
@@ -36,10 +38,10 @@ export function DoubleCurrencyLogoV2({
   return (
     <div className={cn('relative flex items-center', isDead && 'grayscale')}>
       <div className="relative size-6 lg:size-8 rounded-full overflow-hidden">
-        {currency0 && <CurrencyLogo style={{ width: '100%', height: '100%' }} currency={currency0} />}
+        {currency0 && <CurrencyLogo style={{ width: '100%', height: '100%' }} currency={currency0} size={24} imageSize={48} />}
       </div>
       <div className="relative -ml-3 size-6 lg:size-8 rounded-full">
-        {currency1 && <CurrencyLogo style={{ width: '100%', height: '100%', }} currency={currency1} />}
+        {currency1 && <CurrencyLogo style={{ width: '100%', height: '100%' }} currency={currency1} size={24} imageSize={48} />}
       </div>
     </div>
   );

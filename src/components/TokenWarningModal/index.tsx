@@ -7,9 +7,10 @@ import { useAllTokens } from '../../hooks/Tokens';
 import { getEtherscanLink, shortenAddress } from '../../utils';
 import { ButtonError } from '../Button';
 import { AutoColumn } from '../Column';
-import CurrencyLogo from '../CurrencyLogo';
+import CurrencyLogo from '../CurrencyLogoV3';
 import Modal from '../Modal';
 import { AutoRow, RowBetween } from '../Row';
+import { useChainId } from '@/provider';
 ;
 
 const Wrapper = styled.div<{ error: boolean }>`
@@ -59,7 +60,7 @@ function TokenWarningCard({ token }: TokenWarningCardProps) {
     <Wrapper error={duplicateNameOrSymbol}>
       <AutoRow gap="6px">
         <AutoColumn gap="24px">
-          <CurrencyLogo currency={token} size={'16px'} />
+          <CurrencyLogo currency={token} size={24} imageSize={48} />
           <div> </div>
         </AutoColumn>
         <AutoColumn gap="10px" justify="flex-start">

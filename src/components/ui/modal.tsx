@@ -46,8 +46,8 @@ export const Modal = ({
         className={cn(
           'max-h-full overflow-y-auto',
           size === 'sm' && 'max-w-sm',
-          size === 'md' && 'max-w-md',
-          size === 'lg' && 'max-w-6xl',
+          size === 'md' && 'max-w-md md:max-w-lg',
+          size === 'lg' && 'max-w-[95vw] sm:max-w-2xl md:max-w-4xl lg:max-w-6xl',
         )}
         style={{
           ...(maxWidth && { maxWidth }),

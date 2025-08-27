@@ -17,7 +17,7 @@ export const DisclaimerModal = () => {
   };
 
   return (
-    <Modal title="Disclaimer" isOpen={isOpen} onClose={modalClose}>
+    <Modal title="Disclaimer" isOpen={isOpen} onClose={modalClose} size="lg">
       <div>
         <p>Please do your own research and consult a financial advisor before making any investment decisions.</p>
         <p>DeFi investments have seven main risk categories:</p>
@@ -48,7 +48,7 @@ export const DisclaimerModal = () => {
           Legal Notices
         </Link>
         <div className="flex items-center space-x-2 py-4">
-          <Checkbox id="agree" checked={agree} onCheckedChange={setAgree} />
+          <Checkbox id="agree" checked={agree} onCheckedChange={(checked) => setAgree(checked === true)} />
           <label
             htmlFor="agree"
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

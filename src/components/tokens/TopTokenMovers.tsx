@@ -35,7 +35,7 @@ const DataCard = ({ tokenData, onClick }: { tokenData: TokenData; onClick: () =>
     >
       <div className="px-2">
         <div className="flex items-center bg-background p-4 gap-3 rounded-xl cursor-pointer hover:bg-muted/80 transition-colors">
-          <CurrencyLogo address={tokenData.address} />
+          <CurrencyLogo address={tokenData.address} size={24} imageSize={48} />
           <div className="flex flex-col w-full">
             <div className="flex justify-between items-center w-full gap-2">
               <p className="font-semibold">{tokenData.symbol}</p>

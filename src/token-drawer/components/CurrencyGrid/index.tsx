@@ -1,4 +1,4 @@
-import CurrencyLogo from '@/components/CurrencyLogo';
+import CurrencyLogo from '@/components/CurrencyLogoV3';
 import Loader from '@/components/Loader';
 import { Button } from '@/components/ui/button';
 import { useActiveWeb3React } from '@/hooks';
@@ -38,7 +38,7 @@ const CurrencyGrid: React.FC<Props> = props => {
       )}
       onClick={handleSelect}
     >
-      <CurrencyLogo currency={currency} className="size-9" />
+      <CurrencyLogo currency={currency} size={32} imageSize={48} className="size-9" />
       <div className="flex flex-col items-center gap-1">
         <small>{currency?.symbol}</small>
         <span>{balance ? balance.toSignificant(4) : finalAccount ? <Loader /> : null}</span>
