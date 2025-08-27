@@ -11,7 +11,6 @@ import { getEtherscanLink } from '../../utils';
 import { TokenAmount } from '@pangolindex/sdk';
 import { useTranslation } from 'react-i18next';
 import { Icons } from '../icons';
-;
 import { useActiveWeb3React } from '@/hooks';
 import { useChainId } from '@/provider';
 

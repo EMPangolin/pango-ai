@@ -7,6 +7,7 @@ import { getEtherscanLink } from '../../utils';
 import { AutoColumn, ColumnCenter } from '../Column';
 import { Icons } from '../icons';
 import { RowBetween } from '../Row';
+import { useChainId } from '@/provider';
 ;
 
 const ConfirmOrLoadingWrapper = styled.div`
