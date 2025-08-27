@@ -8,6 +8,7 @@ import { cn } from '@/utils';
 import { Currency } from '@pangolindex/sdk';
 import { LoaderIcon } from 'lucide-react';
 import React, { useCallback } from 'react';
+import { useAccount } from 'wagmi';
 interface Props {
   currency: Currency;
   onSelect: (currency: Currency) => void;
@@ -18,9 +19,11 @@ interface Props {
 const CurrencyGrid: React.FC<Props> = props => {
   const { currency, onSelect, isSelected, otherSelected } = props;
   const { account } = useActiveWeb3React();
+  const { address: wagmiAccount } = useAccount();
+  const finalAccount = account || wagmiAccount;
   const chainId = useChainId();
 
-  const balance = useCurrencyBalanceV3(chainId, account ?? undefined, currency);
+  const balance = useCurrencyBalanceV3(chainId, finalAccount ?? undefined, currency);
 
   const handleSelect = useCallback(() => {
     onSelect(currency);
@@ -38,7 +41,7 @@ const CurrencyGrid: React.FC<Props> = props => {
       <CurrencyLogo currency={currency} size={32} imageSize={48} className="size-9" />
       <div className="flex flex-col items-center gap-1">
         <small>{currency?.symbol}</small>
-        <span>{balance ? balance.toSignificant(4) : account ? <Loader /> : null}</span>
+        <span>{balance ? balance.toSignificant(4) : finalAccount ? <Loader /> : null}</span>
       </div>
     </div>
   );

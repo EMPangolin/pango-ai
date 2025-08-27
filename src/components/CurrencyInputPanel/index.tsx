@@ -8,7 +8,8 @@ import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { useActiveWeb3React } from '@/hooks';
 import { useCurrencyBalance } from '@/state/wallet/hooks';
-import CurrencyLogo from '../CurrencyLogoV3';
+import { useAccount } from 'wagmi';
+import CurrencyLogo from '../CurrencyLogo';
 import DoubleCurrencyLogo from '../DoubleLogo';
 import { NumericalInput } from '../NumericalInput';
 import { TokenSelectorModal } from './TokenSelectorModal';
@@ -71,7 +72,9 @@ export function CurrencyInputPanel({
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const { account } = useActiveWeb3React();
-  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined);
+  const { address: wagmiAccount } = useAccount();
+  const finalAccount = account || wagmiAccount;
+  const selectedCurrencyBalance = useCurrencyBalance(finalAccount ?? undefined, currency ?? undefined);
   const currencyPrice = useUSDCPrice(currency ?? undefined);
 
   const handleDismissSearch = useCallback(() => {
@@ -200,6 +203,8 @@ export function CurrencyInputPanelV2({
   customBalanceText,
 }: CurrencyInputPanelProps) {
   const { account } = useActiveWeb3React();
+  const { address: wagmiAccount } = useAccount();
+  const finalAccount = account || wagmiAccount;
 
   return (
     <InputPanel id={id}>

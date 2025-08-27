@@ -70,7 +70,7 @@ const Header = ({ position, statItems, token0, token1, addModal }: HeaderProps) 
     return rewardAmountCall.result;
   }, [rewardAmountCall]);
 
-  const pendingRewards = getPendingRewards(position?.token0, position?.token1, Number(position?.tokenId), rewardAmount?.totalReward, position?.fee);
+  const pendingRewards = getPendingRewards(position?.token0, position?.token1, Number(position?.tokenId), rewardAmount?.totalReward.toString(), position?.fee);
 
   return (
     <div className="flex items-center justify-between gap-4 flex-col lg:flex-row">

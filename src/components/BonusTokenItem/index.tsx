@@ -21,12 +21,12 @@ const BonusTokenItem: React.FC<BonusTokenItemProps> = ({ address, rewardValue, c
   const logoUrl = getTokenLogoURL(address, chainId, 24);
 
   return (
-    <div style={{ display: "flex", gap: "0.5rem", justifyContent: "space-between", alignItems: "center" }}>
-      <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+    <div className="flex items-center gap-2 justify-between">
+      <div className="flex items-center gap-2">
         <img src={logoUrl} alt="token logo" />
         {tokenSymbol || '-'}
       </div>
-      {userBalance.toFixed(4)}
+      <small>{userBalance.toFixed(8)}</small>
     </div>
   );
 };

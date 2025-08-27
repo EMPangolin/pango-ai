@@ -468,7 +468,7 @@ export function getPendingRewards(
     poolAddress !== undefined &&
       tokenId !== undefined &&
       rewardAmount !== undefined
-      ? [poolAddress, tokenId, Number(rewardAmount)]
+      ? [poolAddress, tokenId, rewardAmount]
       : ["0x0000000000000000000000000000000000000000", 0, 0]
 
   const PangolinV3RewarderContract = usePangolinV3Rewarder(PANGOLIN_V3_REWARDER_ADDRESS);

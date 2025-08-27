@@ -8,6 +8,7 @@ import { isAddress } from '../../utils'
 import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
 import { useTokenBalancesHook } from './hooks/index'
 import { useAccountBalanceHook } from './hooks/index'
+import { useAccount } from 'wagmi';
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -168,26 +169,28 @@ export function useCurrencyBalances(
   currencies?: (Currency | undefined)[]
 ): (CurrencyAmount | undefined)[] {
   const { chainId } = useActiveWeb3React()
+  const { address: wagmiAccount } = useAccount();
+  const finalAccount = account || wagmiAccount;
   const tokens = useMemo(() => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [], [
     currencies
   ])
 
-  const tokenBalances = useTokenBalances(account, tokens)
+  const tokenBalances = useTokenBalances(finalAccount, tokens)
   const containsETH: boolean = useMemo(
     () => currencies?.some(currency => currency === CAVAX[chainId ?? ChainId.AVALANCHE]) ?? false,
     [chainId, currencies]
   )
-  const ethBalance = useETHBalances(containsETH ? [account] : [])
+  const ethBalance = useETHBalances(containsETH ? [finalAccount] : [])
 
   return useMemo(
     () =>
       currencies?.map(currency => {
-        if (!account || !currency) return undefined
+        if (!finalAccount || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
-        if (currency === CAVAX[chainId ?? ChainId.AVALANCHE]) return ethBalance[account]
+        if (currency === CAVAX[chainId ?? ChainId.AVALANCHE]) return ethBalance[finalAccount]
         return undefined
       }) ?? [],
-    [account, chainId, currencies, ethBalance, tokenBalances]
+    [finalAccount, chainId, currencies, ethBalance, tokenBalances]
   )
 }
 
@@ -196,6 +199,8 @@ export function useCurrencyBalancesV3(
   account?: string,
   currencies?: (Currency | undefined)[],
 ): (CurrencyAmount | undefined)[] {
+  const { address: wagmiAccount } = useAccount();
+  const finalAccount = account || wagmiAccount;
   const tokens = useMemo(
     () => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [],
     [currencies],
@@ -204,25 +209,25 @@ export function useCurrencyBalancesV3(
   const useTokenBalances_ = useTokenBalancesHook[chainId];
   const useETHBalances_ = useAccountBalanceHook[chainId];
 
-  const [tokenBalances] = useTokenBalances_(account, tokens);
+  const [tokenBalances] = useTokenBalances_(finalAccount, tokens);
   const containsETH: boolean = useMemo(
     () => currencies?.some((currency) => chainId && currency === CAVAX[chainId]) ?? false,
     [chainId, currencies],
   );
 
-  const accountArr = useMemo(() => [account], [account]);
+  const accountArr = useMemo(() => [finalAccount], [finalAccount]);
   const memoArr = useMemo(() => [], []);
   const ethBalance = useETHBalances_(chainId, containsETH ? accountArr : memoArr);
 
   return useMemo(
     () =>
       currencies?.map((currency) => {
-        if (!account || !currency) return undefined;
+        if (!finalAccount || !currency) return undefined;
         if (currency instanceof Token) return tokenBalances[currency.address];
-        if (currency === CAVAX[chainId]) return ethBalance?.[account];
+        if (currency === CAVAX[chainId]) return ethBalance?.[finalAccount];
         return undefined;
       }) ?? [],
-    [chainId, account, currencies, ethBalance, tokenBalances],
+    [chainId, finalAccount, currencies, ethBalance, tokenBalances],
   );
 }
 

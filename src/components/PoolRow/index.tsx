@@ -13,14 +13,17 @@ import ReactTooltip from 'react-tooltip';
 import { getTokenLogoURL } from '../CurrencyLogoV3/getTokenLogoURL';
 import { DoubleCurrencyLogoV2 } from '../DoubleLogoNew';
 import './NeonBonusRewards.css';
+import { useAccount } from 'wagmi';
 
 interface PoolRowProps {
-  //pool: PoolData;
+  pool: any;
   onOpenAddLiquidityModal: (currency0: Currency, currency1: Currency, fee: FeeAmount) => void;
 }
 
 export const PoolRow: FC<PoolRowProps> = ({ pool, onOpenAddLiquidityModal }) => {
   const { account } = useActiveWeb3React();
+  const { address: wagmiAccount } = useAccount(); // RainbowKit/wagmi account
+  const finalAccount = account || wagmiAccount;
   const chainId = useChainId();
 
   const rewardDay = { '0x11476e10eB79ddfFa6F2585BE526d2bd840C3E20': 10 };
@@ -57,10 +60,10 @@ export const PoolRow: FC<PoolRowProps> = ({ pool, onOpenAddLiquidityModal }) => 
 
   const aprList =
     Number(bonusEndTime) > Date.now() / 1000 && Number(bonusEndTime) !== 0
-      ? listItems2.filter((apr): apr is number => apr !== undefined)
+      ? listItems2.filter((apr: any): apr is number => apr !== undefined)
       : [];
 
-  const totalBonusAPR = aprList.reduce((acc, curr) => acc + curr, 0);
+  const totalBonusAPR = aprList.reduce((acc: number, curr: number) => acc + curr, 0);
 
   const displayedAPR = aprList.length > 0 ? apr + totalBonusAPR : apr;
 
@@ -130,7 +133,7 @@ export const PoolRow: FC<PoolRowProps> = ({ pool, onOpenAddLiquidityModal }) => 
         </div>
       </div>
       <div className="lg:w-[160px]">
-        {!account ? (
+        {!finalAccount ? (
           <ConnectWalletButtonRainbow />
         ) : (
           <Button onClick={() => onOpenAddLiquidityModal(currency0!, currency1!, pool?.initialFee)}>

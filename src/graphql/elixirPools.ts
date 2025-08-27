@@ -122,18 +122,26 @@ export const useElixirPools = (poolAddresses?: (string | undefined)[]) => {
   return useQuery<ElixirPoolType[] | null>({
     queryKey: ['get-subgraph-elixir-pools', chainId, poolsToFind],
     queryFn: async () => {
-      if (!avalancheClient) {
+      if (!avalancheClient || !poolsToFind || poolsToFind.length === 0) {
         return null;
       }
+
       const result = await avalancheClient.query({
-        query: GET_ELIXIR_POOLS
+        query: GET_ELIXIR_POOLS,
+        variables: {
+          where: {
+            id_in: poolsToFind
+          },
+          first: 1000
+        }
       });
+
       const data = result.data;
-      return (
-        (data?.pools as ElixirPoolType[])
-          .map((item) => ({ ...item, id: validateAddress(item.id) as string }))
-          .filter((item) => typeof item.id === 'string')
-      );
+      const pools = (data?.pools as ElixirPoolType[])
+        .map((item) => ({ ...item, id: validateAddress(item.id) as string }))
+        .filter((item) => typeof item.id === 'string');
+
+      return pools;
     },
   });
 };
