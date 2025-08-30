@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 const ChatWidget: React.FC = () => {
-  // ✅ Set your deployed chat.html here or via env
   const CHAT_SRC =
     (import.meta as any)?.env?.VITE_CHAT_SRC ||
+    (process as any)?.env?.REACT_APP_CHAT_SRC ||
     "https://pangoai.app/chat/chat.html";
 
-  // Derive the allowed origin from CHAT_SRC
   const CHAT_ORIGIN = useMemo(() => {
     try {
       return new URL(CHAT_SRC).origin;
@@ -16,9 +15,9 @@ const ChatWidget: React.FC = () => {
   }, [CHAT_SRC]);
 
   const [expanded, setExpanded] = useState(false);
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const expandedRef = useRef(false);
 
-  // 🔒 Prevent background scroll when expanded
+  // lock background scroll when expanded
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -26,11 +25,9 @@ const ChatWidget: React.FC = () => {
       const prevHtmlOverflow = html.style.overflow;
       const prevBodyOverflow = body.style.overflow;
       const prevTouchAction = (body.style as any).touchAction;
-
       html.style.overflow = "hidden";
       body.style.overflow = "hidden";
       (body.style as any).touchAction = "none";
-
       return () => {
         html.style.overflow = prevHtmlOverflow;
         body.style.overflow = prevBodyOverflow;
@@ -39,10 +36,10 @@ const ChatWidget: React.FC = () => {
     }
   }, [expanded]);
 
-  // 📏 Mobile 100vh fix using measured innerHeight
+  // measure real viewport height for mobile fullscreen
   useEffect(() => {
     const setMeasuredVh = () => {
-      const vh = window.innerHeight; // visible viewport height
+      const vh = window.innerHeight;
       document.documentElement.style.setProperty("--chat-vh", `${vh}px`);
     };
     setMeasuredVh();
@@ -54,21 +51,20 @@ const ChatWidget: React.FC = () => {
     };
   }, []);
 
-  // 📨 Listen for expand/shrink messages from chat.html
+  // listen to expand/shrink from chat.html
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       if (CHAT_ORIGIN !== "*" && event.origin !== CHAT_ORIGIN) return;
       const action = (event.data && (event.data as any).action) || "";
-      if (action === "expandChat") setExpanded(true);
-      if (action === "shrinkChat") setExpanded(false);
+      if (action === "expandChat") { setExpanded(true); expandedRef.current = true; }
+      if (action === "shrinkChat") { setExpanded(false); expandedRef.current = false; }
     };
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
   }, [CHAT_ORIGIN]);
 
-  // ♻️ Keep full-screen sizing correct after rotation/resize
   useEffect(() => {
-    const reapply = () => setExpanded((e) => e); // trigger rerender
+    const reapply = () => { if (expandedRef.current) setExpanded(e => e); };
     window.addEventListener("resize", reapply);
     window.addEventListener("orientationchange", reapply);
     return () => {
@@ -77,44 +73,39 @@ const ChatWidget: React.FC = () => {
     };
   }, []);
 
-  // 🎯 Styles
-  const baseStyle: React.CSSProperties = {
+  // styles
+  const base: React.CSSProperties = {
     position: "fixed",
-    border: "none",
-    zIndex: 2147483647, // on top of everything
+    border: 0,
+    zIndex: 2147483647,
     background: "transparent",
-    overflow: "hidden",
-    boxShadow: "0 10px 30px rgba(0,0,0,.2)",
+    overflow: "hidden",         // ✅ hard-clip contents to the circle
     transition: "all 0.28s ease-in-out",
     pointerEvents: "auto",
   };
 
-  const collapsedStyle: React.CSSProperties = {
+  const collapsed: React.CSSProperties = {
     right: 16,
     bottom: 16,
     width: 120,
     height: 120,
     borderRadius: "50%",
+    boxShadow: "none",          // ✅ no glow while collapsed
   };
 
-  // Full-screen (true viewport) with multiple fallbacks:
-  // height uses measured var(--chat-vh) to avoid mobile 100vh bugs.
   const expandedStyle: React.CSSProperties = {
     top: 0,
     left: 0,
     width: "100vw",
-    height: "var(--chat-vh)", // measured visible viewport height
-    borderRadius: 0,
+    height: "var(--chat-vh)",   // true fullscreen height
+    borderRadius: 12,
+    boxShadow: "0 10px 30px rgba(0,0,0,.2)",
   };
 
-  const style: React.CSSProperties = {
-    ...baseStyle,
-    ...(expanded ? expandedStyle : collapsedStyle),
-  };
+  const style = { ...base, ...(expanded ? expandedStyle : collapsed) };
 
   return (
     <iframe
-      ref={iframeRef}
       src={CHAT_SRC}
       allow="clipboard-write; clipboard-read; fullscreen"
       title="Pangolin AI Chat"
