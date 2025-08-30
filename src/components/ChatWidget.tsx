@@ -117,12 +117,14 @@ const ChatWidget: React.FC = () => {
     pointerEvents: "auto",
   };
 
-  // Round launcher (no glow)
+  // Collapsed launcher sizes:
+  // - Desktop: 120x120
+  // - Mobile:  60x60 (2× smaller)
   const collapsed: React.CSSProperties = {
     right: 16,
     bottom: 16,
-    width: 120,
-    height: 120,
+    width: isMobile ? 60 : 120,
+    height: isMobile ? 60 : 120,
     borderRadius: "50%",
     boxShadow: "none",
   };
