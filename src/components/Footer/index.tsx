@@ -10,7 +10,7 @@ import './footer.css';
 import { useTheme } from '@/provider/theme-provider';
 import { useMediaQuery } from '@mui/material';
 
-import ChatWidget from '../ChatWidget';
+import ChatIntegration from '../ChatWidget';
 
 export default function Footer() {
   const footerRef = useRef(null);
@@ -302,20 +302,7 @@ export default function Footer() {
           </Link>
         </div>
       </div>
-      {!footerVisible && !chatOpen && (
-        <div className="pangolin-ai-fixed">
-          <h5 className="font-semibold text-lg mb-2" style={{ paddingLeft: '10px' }}>
-            Pango AI
-          </h5>
-          <a
-            className="text-muted-foreground hover:text-primary transition-colors"
-            onClick={() => window.dispatchEvent(new Event('open-chat'))}
-          >
-            <video src={PangolinAI} autoPlay width={'100'} />
-          </a>
-        </div>
-      )}
-      <ChatWidget/>
+      <ChatIntegration/>
     </div>
   );
 }
